@@ -4,6 +4,13 @@ WORKDIR /app
 
 RUN corepack enable
 
+# Install CLI providers used by Claw-Empire agent runtime
+RUN npm install -g \
+  @anthropic-ai/claude-code \
+  @openai/codex \
+  @google/gemini-cli \
+  opencode
+
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
