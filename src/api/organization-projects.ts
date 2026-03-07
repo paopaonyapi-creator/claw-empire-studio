@@ -10,7 +10,6 @@ import type {
   TaskLog,
   TaskStatus,
   TaskType,
-  TaskWorkPhase,
   WorkflowPackKey,
 } from "../types";
 
@@ -199,7 +198,6 @@ export async function getTasks(filters?: {
   agent_id?: string;
   project_id?: string;
   workflow_pack_key?: WorkflowPackKey;
-  work_phase?: TaskWorkPhase;
 }): Promise<Task[]> {
   const params = new URLSearchParams();
   if (filters?.status) params.set("status", filters.status);
@@ -207,7 +205,6 @@ export async function getTasks(filters?: {
   if (filters?.agent_id) params.set("agent_id", filters.agent_id);
   if (filters?.project_id) params.set("project_id", filters.project_id);
   if (filters?.workflow_pack_key) params.set("workflow_pack_key", filters.workflow_pack_key);
-  if (filters?.work_phase) params.set("work_phase", filters.work_phase);
   const q = params.toString();
   const j = await request<{ tasks: Task[] }>(`/api/tasks${q ? "?" + q : ""}`);
   return j.tasks;
@@ -222,7 +219,6 @@ export async function createTask(input: {
   description?: string;
   department_id?: string;
   task_type?: TaskType;
-  work_phase?: TaskWorkPhase | null;
   priority?: number;
   project_id?: string;
   project_path?: string;
@@ -245,7 +241,6 @@ export async function updateTask(
       | "status"
       | "priority"
       | "task_type"
-      | "work_phase"
       | "department_id"
       | "project_id"
       | "project_path"
