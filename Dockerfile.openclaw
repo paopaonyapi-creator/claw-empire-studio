@@ -9,7 +9,7 @@ RUN npm install -g \
   @anthropic-ai/claude-code \
   @openai/codex \
   @google/gemini-cli \
-  opencode
+  @opencode-ai/opencode
 
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
