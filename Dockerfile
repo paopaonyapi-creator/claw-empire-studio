@@ -18,25 +18,17 @@ RUN npm install -g \
   @google/gemini-cli \
   opencode-ai
 
-# Create unprivileged runtime user
-ARG APP_UID=10001
-ARG APP_GID=10001
-RUN groupadd --gid ${APP_GID} app \
-  && useradd --uid ${APP_UID} --gid ${APP_GID} --create-home --shell /bin/bash app
-
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
 RUN pnpm build
 
-# Ensure runtime paths are writable by non-root user
-RUN mkdir -p /app/data /data /home/app/.claude /home/app/.codex /home/app/.gemini /home/app/.local/share/opencode \
-  && chown -R app:app /app /data /home/app
-
-ENV HOME=/home/app
-USER app
+# Ensure runtime paths exist (Railway volumes may mount as root)
+RUN mkdir -p /app/data /home/node/.claude /home/node/.codex /home/node/.gemini /home/node/.local/share/opencode
 
 EXPOSE 8790
 
+# Run as root so Railway volume mounts (owned by root) are writable.
+# The container is isolated — this is standard for Railway deployments.
 CMD ["pnpm", "start:tailscale"]
