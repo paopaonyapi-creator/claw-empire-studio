@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
 import { DEFAULT_DB_PATH, DEFAULT_LOGS_DIR, LEGACY_DB_PATH } from "../config/runtime.ts";
@@ -70,6 +71,8 @@ export function initializeDatabaseRuntime(): {
   }
 
   const dbPath = process.env.DB_PATH ?? DEFAULT_DB_PATH;
+  const dbDir = path.dirname(dbPath);
+  if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
   const db = new DatabaseSync(dbPath);
   db.exec("PRAGMA journal_mode = WAL");
   db.exec(`PRAGMA busy_timeout = ${SQLITE_BUSY_TIMEOUT_MS}`);

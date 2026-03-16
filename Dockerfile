@@ -31,8 +31,8 @@ COPY . .
 RUN pnpm build
 
 # Ensure runtime paths are writable by non-root user
-RUN mkdir -p /app/data /home/app/.claude /home/app/.codex /home/app/.gemini /home/app/.local/share/opencode \
-  && chown -R app:app /app /home/app
+RUN mkdir -p /app/data /data /home/app/.claude /home/app/.codex /home/app/.gemini /home/app/.local/share/opencode \
+  && chown -R app:app /app /data /home/app
 
 ENV HOME=/home/app
 USER app

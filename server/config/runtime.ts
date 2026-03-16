@@ -96,6 +96,10 @@ function resolveDefaultDataRoot(): string {
   const dockerDataRoot = "/app/data";
   if (fs.existsSync(dockerDataRoot)) return dockerDataRoot;
 
+  // Railway volumes may be mounted at /data
+  const railwayDataRoot = "/data";
+  if (fs.existsSync(railwayDataRoot)) return railwayDataRoot;
+
   return process.cwd();
 }
 
