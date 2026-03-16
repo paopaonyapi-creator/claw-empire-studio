@@ -31,10 +31,11 @@ describe("affiliate_studio pack registration", () => {
 
   it("seed has output template sections", () => {
     const seed = DEFAULT_WORKFLOW_PACK_SEEDS.find((s) => s.key === "affiliate_studio")!;
-    expect(seed.outputTemplate.sections.length).toBeGreaterThanOrEqual(10);
-    expect(seed.outputTemplate.sections).toContain("hooks");
-    expect(seed.outputTemplate.sections).toContain("tiktok_affiliate_script");
-    expect(seed.outputTemplate.sections).toContain("publish_package");
+    const sections = (seed.outputTemplate as { sections: string[] }).sections;
+    expect(sections.length).toBeGreaterThanOrEqual(10);
+    expect(sections).toContain("hooks");
+    expect(sections).toContain("tiktok_affiliate_script");
+    expect(sections).toContain("publish_package");
   });
 });
 
