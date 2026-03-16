@@ -81,6 +81,12 @@ function classifyWorkflowPack(text: string): WorkflowRouteResult {
     addScore("video_preprod", 0.77);
   if (matcher(/(역할\s*놀이|roleplay|rp\b|캐릭터\s*대화|in\s*character)/i)) addScore("roleplay", 0.79);
   if (matcher(/(코드|개발|버그|테스트|fix|refactor|build|api|feature|deploy)/i)) addScore("development", 0.72);
+  if (
+    matcher(
+      /(affiliate|product\s*link|tiktok\s*(affiliate|basket)|shopee|lazada|ปักตะกร้า|สินค้า|คอนเทนต์|แอฟฟิลิเอท|content\s*studio|hook|cta|제휴|상품|콘텐츠|숏폼|アフィリエイト|商品)/i,
+    )
+  )
+    addScore("affiliate_studio", 0.80);
 
   if (scoreByPack.size <= 0) {
     addScore("development", 0.5);
@@ -120,6 +126,7 @@ export function registerWorkflowPackRoutes(
           WHEN 'roleplay' THEN 4
           WHEN 'novel' THEN 5
           WHEN 'video_preprod' THEN 6
+          WHEN 'affiliate_studio' THEN 7
           ELSE 99
         END,
         key

@@ -14,7 +14,7 @@ describe("buildWorkflowPackExecutionGuidance", () => {
     expect(guidance).toContain("8~12개 이상 샷");
   });
 
-  it("video_preprod 외 워크플로우 팩은 추가 규칙을 주지 않는다", () => {
+  it("video_preprod/affiliate_studio 외 워크플로우 팩은 추가 규칙을 주지 않는다", () => {
     expect(buildWorkflowPackExecutionGuidance("development", "ko")).toBe("");
     expect(buildWorkflowPackExecutionGuidance("report", "en")).toBe("");
   });
@@ -23,4 +23,29 @@ describe("buildWorkflowPackExecutionGuidance", () => {
     const guidance = buildWorkflowPackExecutionGuidance("video_preprod", null);
     expect(guidance).toContain("Fixed order:");
   });
+
+  it("affiliate_studio provides content pipeline execution guidance in English", () => {
+    const guidance = buildWorkflowPackExecutionGuidance("affiliate_studio", "en");
+    expect(guidance).not.toBe("");
+    expect(guidance).toContain("Affiliate Content Studio");
+    expect(guidance).toContain("Content Production Pipeline");
+    expect(guidance).toContain("Product Analysis");
+    expect(guidance).toContain("Hook Generation");
+    expect(guidance).toContain("Publish Package");
+    expect(guidance).toContain("ปักตะกร้า");
+    expect(guidance).toContain("TikTok Affiliate");
+    expect(guidance).toContain("Shopee/Lazada");
+  });
+
+  it("affiliate_studio provides guidance in Korean", () => {
+    const guidance = buildWorkflowPackExecutionGuidance("affiliate_studio", "ko");
+    expect(guidance).toContain("실행 파이프라인");
+    expect(guidance).toContain("상품 분석");
+  });
+
+  it("affiliate_studio falls back to English when language is null", () => {
+    const guidance = buildWorkflowPackExecutionGuidance("affiliate_studio", null);
+    expect(guidance).toContain("Content Production Pipeline");
+  });
 });
+
