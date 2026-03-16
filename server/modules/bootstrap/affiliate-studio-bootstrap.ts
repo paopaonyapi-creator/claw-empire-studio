@@ -8,10 +8,12 @@
  */
 
 import type { DatabaseSync } from "node:sqlite";
+import { randomUUID } from "node:crypto";
 import {
   AFFILIATE_STUDIO_DEPARTMENTS,
   AFFILIATE_STUDIO_AGENTS,
 } from "../workflow/packs/affiliate-studio-profile.ts";
+import { encryptSecret } from "../../oauth/helpers.ts";
 
 type DbLike = Pick<DatabaseSync, "prepare">;
 
@@ -121,3 +123,90 @@ export function seedAffiliateStudioProfile(db: DbLike): void {
     `[Affiliate Studio] Seeded office pack profile: ${AFFILIATE_STUDIO_DEPARTMENTS.length} departments, ${AFFILIATE_STUDIO_AGENTS.length} agents`,
   );
 }
+
+/**
+ * Seeds API providers (Anthropic, OpenAI, Google) into the `api_providers`
+ * table so agents configured with `cli_provider: 'api'` can use them.
+ *
+ * Also registers CLI-based providers as API-accessible alternatives.
+ * CLI tools (claude, codex, gemini) are installed globally, so agents
+ * can use either CLI or API pathways.
+ *
+ * Idempotent — skips providers that already exist.
+ */
+export function seedAnthropicApiProvider(db: DbLike): void {
+  const sessionSecret = process.env.SESSION_SECRET ?? process.env.OAUTH_ENCRYPTION_SECRET ?? "";
+  if (!sessionSecret) {
+    console.log("[Affiliate Studio] Skipping API provider seed — SESSION_SECRET not set");
+    return;
+  }
+
+  const providers = [
+    {
+      envKey: "ANTHROPIC_API_KEY",
+      name: "Anthropic",
+      type: "anthropic",
+      base_url: "https://api.anthropic.com/v1",
+      models: ["claude-sonnet-4-20250514", "claude-haiku-35-20241022"],
+    },
+    {
+      envKey: "OPENAI_API_KEY",
+      name: "OpenAI",
+      type: "openai",
+      base_url: "https://api.openai.com/v1",
+      models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo"],
+    },
+    {
+      envKey: "GOOGLE_AI_API_KEY",
+      name: "Google AI",
+      type: "google",
+      base_url: "https://generativelanguage.googleapis.com/v1beta",
+      models: ["gemini-2.0-flash", "gemini-2.0-pro"],
+    },
+  ];
+
+  for (const prov of providers) {
+    const apiKey = process.env[prov.envKey] ?? "";
+    if (!apiKey) {
+      console.log(`[Affiliate Studio] Skipping ${prov.name} provider — ${prov.envKey} not set`);
+      continue;
+    }
+
+    // Check if this provider type already exists
+    const existingRow = db
+      .prepare(`SELECT id FROM api_providers WHERE type = ? LIMIT 1`)
+      .get(prov.type) as { id?: string } | undefined;
+
+    if (existingRow?.id) {
+      console.log(`[Affiliate Studio] ${prov.name} API provider already exists: ${existingRow.id}`);
+      continue;
+    }
+
+    const providerId = randomUUID();
+    const now = Date.now();
+
+    try {
+      db.prepare(
+        `INSERT INTO api_providers (
+          id, name, type, base_url, api_key_enc, preset_key, enabled,
+          models_cache, models_cached_at, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?)`,
+      ).run(
+        providerId,
+        prov.name,
+        prov.type,
+        prov.base_url,
+        encryptSecret(apiKey),
+        null,
+        JSON.stringify(prov.models),
+        now,
+        now,
+        now,
+      );
+      console.log(`[Affiliate Studio] Seeded ${prov.name} API provider: ${providerId}`);
+    } catch (err: any) {
+      console.error(`[Affiliate Studio] Failed to seed ${prov.name} provider: ${err.message}`);
+    }
+  }
+}
+
