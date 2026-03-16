@@ -60,12 +60,19 @@ export function DashboardHeroHeader({
             </span>
           </div>
           <p className="text-xs" style={{ color: "var(--th-text-muted)" }}>
-            {t({
-              ko: "에이전트들이 실시간으로 미션을 수행 중입니다",
-              en: "Agents are executing missions in real time",
-              ja: "エージェントがリアルタイムでミッションを実行中です",
-              zh: "代理正在实时执行任务",
-            })}
+            {/content\s*studio|affiliate/i.test(companyName)
+              ? t({
+                  ko: "콘텐츠 크리에이터들이 실시간으로 애필리에이트 콘텐츠를 제작 중입니다",
+                  en: "Content creators are producing affiliate content in real time",
+                  ja: "コンテンツクリエイターがリアルタイムでアフィリエイトコンテンツを制作中です",
+                  zh: "内容创作者正在实时制作联盟内容",
+                })
+              : t({
+                  ko: "에이전트들이 실시간으로 미션을 수행 중입니다",
+                  en: "Agents are executing missions in real time",
+                  ja: "エージェントがリアルタイムでミッションを実行中です",
+                  zh: "代理正在实时执行任务",
+                })}
           </p>
         </div>
 
