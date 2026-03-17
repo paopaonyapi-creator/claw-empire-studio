@@ -2,18 +2,19 @@
 set -e
 
 # ---------- Fix ownership for non-root user ----------
-# Railway volumes mount as root, and CLI tools refuse to run as root.
-# chown the entire /app so the 'app' user can:
-#   - write to /app/.git  (worktree creation)
-#   - write to /app/.climpire-worktrees
-#   - create/modify files during agent execution
 chown -R app:app /app 2>/dev/null || true
 chown -R app:app /home/app 2>/dev/null || true
 
+# ---------- Set git identity globally (needed before any git commit) ----------
+git config --global user.email "studio@claw-empire.local"
+git config --global user.name "Content Studio"
+# Mark /app as safe for git operations under any user
+git config --global --add safe.directory /app
+
 # ---------- Bootstrap git repo ----------
-# Docker COPY doesn't include .git. Agent runner needs git worktrees.
-if [ ! -d "/app/.git" ]; then
+if [ ! -d "/app/.git" ] || ! git -C /app rev-parse HEAD >/dev/null 2>&1; then
   cd /app
+  echo "==> Bootstrapping git repo at /app..."
 
   # Create .gitignore BEFORE git add to skip large dirs
   cat > /app/.gitignore <<'EOF'
@@ -26,11 +27,11 @@ dist/
 /data/
 EOF
 
-  git init --quiet -b main
-  git config user.email "studio@claw-empire.local"
-  git config user.name "Content Studio"
+  # Init, add, commit — abort on failure (no silent suppress)
+  git init --quiet -b main 2>/dev/null || git init --quiet
   git add -A
-  git commit -m "initial" --quiet 2>/dev/null || true
+  git commit -m "initial" --quiet --allow-empty
+  echo "==> Git repo initialized with $(git rev-parse --short HEAD)"
   chown -R app:app /app/.git /app/.gitignore
 fi
 
