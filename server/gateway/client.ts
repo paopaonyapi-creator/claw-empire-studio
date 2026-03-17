@@ -1,5 +1,6 @@
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { notifyTelegramTaskStatus } from "../modules/telegram-notifier.ts";
 import { DatabaseSync } from "node:sqlite";
 import { promisify } from "node:util";
 
@@ -984,6 +985,9 @@ export function notifyTaskStatus(taskId: string, title: string, status: string, 
     text: `${emoji} [${label}] ${title}`,
     debounceMs: 5_000,
   });
+
+  // Real-time Telegram notification
+  notifyTelegramTaskStatus(taskId, title, status);
 }
 
 export async function gatewayHttpInvoke(_req: {
