@@ -10,6 +10,8 @@
  */
 
 import { PORT } from "../config/runtime.ts";
+import { handlePipelineCommand } from "./auto-pipeline.ts";
+import { handleLinkCommand } from "./link-tracker.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -223,26 +225,45 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
   } else if (trimmed === "/help" || trimmed === "/ช่วย") {
     reply =
       `🤖 <b>CEO Commands</b>\n\n` +
-      `📊 /status — ดูสถานะ Studio\n` +
+      `📊 /status — ดูสถานะ\n` +
       `📈 /today — สรุปวันนี้\n` +
-      `🚀 /run <task> — สั่งงาน\n` +
-      `📝 /template — ดู quick templates\n\n` +
-      `<b>Quick Templates:</b>\n` +
-      `🎬 /tiktok <สินค้า>\n` +
-      `⭐ /review <สินค้า>\n` +
-      `🔍 /trend <หมวด>\n` +
-      `🎨 /thumbnail <หัวข้อ>\n` +
-      `⚖️ /compare <สินค้า>\n` +
-      `📦 /unbox <สินค้า>\n\n` +
-      `💬 หรือพิมพ์อะไรก็ได้ — Gemini AI จะตอบ ✨`;
+      `🚀 /run <task> — สั่งงาน\n\n` +
+      `<b>📝 Templates:</b>\n` +
+      `/template — ดูรายการ\n` +
+      `/tiktok /review /trend /thumbnail /compare /unbox\n\n` +
+      `<b>🔄 Pipelines (auto-chain):</b>\n` +
+      `/pipeline — ดูรายการ\n` +
+      `/pipeline-tiktok <สินค้า>\n` +
+      `/pipeline-review <สินค้า>\n` +
+      `/pipeline-unbox <สินค้า>\n\n` +
+      `<b>📎 Links:</b>\n` +
+      `/link — ดู links\n` +
+      `/link <url> — สร้าง short link\n` +
+      `/link stats — สถิติ\n\n` +
+      `💬 หรือพิมพ์อะไรก็ได้ — Gemini ✨`;
   } else {
     // Check template shortcuts
-    const cmdMatch = trimmed.match(/^(\/\w+)\s+(.+)/);
+    const cmdMatch = trimmed.match(/^(\/[\w-]+)\s*(.*)/s);
     if (cmdMatch) {
       const [, cmd, arg] = cmdMatch;
+
+      // Template shortcuts
       const shortcut = TEMPLATE_SHORTCUTS[cmd];
       if (shortcut) {
         reply = await handleTemplateCommand(shortcut.templateId, shortcut.variableKey, arg, shortcut.label);
+        await sendTg(reply);
+        return;
+      }
+
+      // Pipeline commands
+      if (cmd === "/pipeline" || cmd.startsWith("/pipeline-")) {
+        reply = await handlePipelineCommand(cmd, arg);
+        if (reply) { await sendTg(reply); return; }
+      }
+
+      // Link commands
+      if (cmd === "/link") {
+        reply = handleLinkCommand(arg);
         await sendTg(reply);
         return;
       }

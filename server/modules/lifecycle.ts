@@ -14,6 +14,8 @@ import { startSupabaseSyncAndExtras } from "./supabase-sync-extras.ts";
 import { applyAgentSpecialization, registerSpecializationRoutes } from "./agent-specialization.ts";
 import { registerTemplateRoutes } from "./content-templates.ts";
 import { registerTelegramWebhookRoutes, autoSetupTelegramWebhook } from "./telegram-webhook.ts";
+import { registerAutoPipelineRoutes } from "./auto-pipeline.ts";
+import { registerLinkTrackerRoutes } from "./link-tracker.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -67,6 +69,8 @@ export function startLifecycle(ctx: RuntimeContext): void {
   applyAgentSpecialization(db);
   registerTemplateRoutes(app, db);
   registerTelegramWebhookRoutes(app);
+  registerAutoPipelineRoutes(app);
+  registerLinkTrackerRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
 
   // ---------------------------------------------------------------------------
