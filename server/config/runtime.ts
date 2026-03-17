@@ -93,12 +93,12 @@ function resolveDefaultDataRoot(): string {
   const envDataRoot = normalizePathEnv(process.env.APP_DATA_DIR);
   if (envDataRoot) return envDataRoot;
 
-  const dockerDataRoot = "/app/data";
-  if (fs.existsSync(dockerDataRoot)) return dockerDataRoot;
-
-  // Railway volumes may be mounted at /data
+  // Railway volumes are mounted at /data — check FIRST so data persists across redeploys
   const railwayDataRoot = "/data";
   if (fs.existsSync(railwayDataRoot)) return railwayDataRoot;
+
+  const dockerDataRoot = "/app/data";
+  if (fs.existsSync(dockerDataRoot)) return dockerDataRoot;
 
   return process.cwd();
 }
