@@ -10,8 +10,8 @@
  * Also includes auto-retry logic for failed tasks.
  */
 
-const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8614741415:AAFUSyh1gwnbFIQU_9SqYI11GipLJex_P3Y";
-const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "7724670451";
+const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
+const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
 // Debounce to prevent spam
 const recentNotifications = new Map<string, number>();

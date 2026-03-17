@@ -13,7 +13,7 @@
 import type { DatabaseSync } from "node:sqlite";
 
 const OPENROUTER_KEY =
-  process.env.OPENROUTER_API_KEY || "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";
+  process.env.OPENROUTER_API_KEY || "";
 
 // ---------------------------------------------------------------------------
 // Model Mapping: agent name pattern → optimal model

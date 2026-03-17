@@ -11,9 +11,9 @@
 
 import { PORT } from "../config/runtime.ts";
 
-const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8614741415:AAFUSyh1gwnbFIQU_9SqYI11GipLJex_P3Y";
-const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "7724670451";
-const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || "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";
+const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
+const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
+const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || "";
 
 async function sendTg(text: string): Promise<void> {
   try {
