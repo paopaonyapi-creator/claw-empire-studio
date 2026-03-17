@@ -10,6 +10,7 @@ import {
 } from "./dashboard/HeroSections";
 import { DashboardDeptAndSquad, DashboardMissionLog, type DepartmentPerformance } from "./dashboard/OpsSections";
 import { DashboardTodayKpi } from "./dashboard/TodayKpiSection";
+import { PerformanceCharts } from "./dashboard/PerformanceCharts";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -193,6 +194,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       <DashboardHudStats hudStats={hudStats} numberFormatter={numberFormatter} />
 
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
+
+      <PerformanceCharts />
 
       <DashboardRankingBoard
         topAgents={topAgents}

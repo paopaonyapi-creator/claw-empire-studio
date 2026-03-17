@@ -366,6 +366,179 @@ export function registerDashboardEnhancedRoutes(app: any, db: DatabaseSync): voi
 }
 
 // ---------------------------------------------------------------------------
+// Supabase Restore — Pull data back from cloud
+// ---------------------------------------------------------------------------
+
+export function registerSupabaseRestoreRoutes(app: any, db: DatabaseSync): void {
+  // POST /api/supabase/restore — restore content jobs from Supabase
+  app.post("/api/supabase/restore", async (_req: any, res: any) => {
+    if (!isSupabaseConfigured()) {
+      return res.status(400).json({ error: "Supabase not configured" });
+    }
+
+    const supabaseUrl = process.env.SUPABASE_URL || "";
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || "";
+
+    if (!supabaseUrl || !supabaseKey) {
+      return res.status(400).json({ error: "Supabase credentials missing" });
+    }
+
+    try {
+      // Fetch content_jobs directly from Supabase REST API
+      const fetchRes = await fetch(`${supabaseUrl}/rest/v1/content_jobs?select=*&order=created_at.desc&limit=100`, {
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!fetchRes.ok) {
+        const text = await fetchRes.text().catch(() => "");
+        return res.json({ ok: true, restored: 0, message: `Supabase returned ${fetchRes.status}: ${text.slice(0, 200)}` });
+      }
+
+      const jobs = (await fetchRes.json()) as Array<{
+        id?: string;
+        title?: string;
+        main_copy?: string;
+        status?: string;
+        content_type?: string;
+        claw_empire_task_id?: string;
+        created_at?: string;
+      }>;
+
+      if (!Array.isArray(jobs) || jobs.length === 0) {
+        return res.json({ ok: true, restored: 0, message: "No content jobs found in Supabase" });
+      }
+
+      let restored = 0;
+      for (const job of jobs) {
+        // Check if task already exists
+        const checkId = job.claw_empire_task_id || job.id || "";
+        if (!checkId) continue;
+        const existing = db.prepare("SELECT id FROM tasks WHERE id = ?").get(checkId);
+        if (existing) continue;
+
+        const taskId = checkId || `restored-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        try {
+          db.prepare(
+            `INSERT OR IGNORE INTO tasks (id, title, description, status, created_at, completed_at, task_type)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          ).run(
+            taskId,
+            job.title || "Restored from Supabase",
+            job.main_copy || null,
+            job.status === "done" ? "done" : "inbox",
+            job.created_at ? new Date(job.created_at).getTime() : Date.now(),
+            job.status === "done" ? Date.now() : null,
+            job.content_type || "general",
+          );
+          restored++;
+        } catch {
+          // skip duplicates
+        }
+      }
+
+      console.log(`[SupabaseRestore] ☁️→💾 Restored ${restored} tasks from Supabase`);
+      res.json({ ok: true, restored, total_in_supabase: jobs.length });
+    } catch (err) {
+      console.error("[SupabaseRestore] ❌", err instanceof Error ? err.message : err);
+      res.status(500).json({ error: "restore_failed", detail: err instanceof Error ? err.message : String(err) });
+    }
+  });
+
+  // GET /api/supabase/status — check Supabase connection
+  app.get("/api/supabase/status", async (_req: any, res: any) => {
+    res.json({
+      ok: true,
+      configured: isSupabaseConfigured(),
+      supabase_url: process.env.SUPABASE_URL ? "✅ set" : "❌ missing",
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Performance Charts API — 7-day data for frontend charts
+// ---------------------------------------------------------------------------
+
+export function registerChartsRoutes(app: any, db: DatabaseSync): void {
+  app.get("/api/dashboard/charts", (_req: any, res: any) => {
+    const now = Date.now();
+    const bkkOffset = 7 * 60 * 60 * 1000;
+    const days = 7;
+
+    // 1. Daily task completion (7 days)
+    const dailyCompletion: Array<{ date: string; done: number; created: number }> = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const dayDate = new Date(now + bkkOffset - i * 24 * 60 * 60 * 1000);
+      const dateKey = `${dayDate.getUTCFullYear()}-${String(dayDate.getUTCMonth() + 1).padStart(2, "0")}-${String(dayDate.getUTCDate()).padStart(2, "0")}`;
+      const dayStart = new Date(Date.UTC(dayDate.getUTCFullYear(), dayDate.getUTCMonth(), dayDate.getUTCDate())).getTime() - bkkOffset;
+      const dayEnd = dayStart + 24 * 60 * 60 * 1000;
+
+      const done = (
+        db.prepare("SELECT COUNT(*) as cnt FROM tasks WHERE status = 'done' AND completed_at >= ? AND completed_at < ?").get(dayStart, dayEnd) as { cnt: number }
+      ).cnt;
+      const created = (
+        db.prepare("SELECT COUNT(*) as cnt FROM tasks WHERE created_at >= ? AND created_at < ?").get(dayStart, dayEnd) as { cnt: number }
+      ).cnt;
+
+      dailyCompletion.push({ date: dateKey, done, created });
+    }
+
+    // 2. Agent productivity (top 10)
+    const agentProductivity = db
+      .prepare(
+        `SELECT a.name, a.stats_tasks_done as total_done, a.stats_xp as xp,
+                COUNT(CASE WHEN t.completed_at >= ? THEN 1 END) as week_done
+         FROM agents a
+         LEFT JOIN tasks t ON t.assigned_agent_id = a.id AND t.status = 'done'
+         GROUP BY a.id
+         ORDER BY week_done DESC, a.stats_xp DESC
+         LIMIT 10`,
+      )
+      .all(now - days * 24 * 60 * 60 * 1000) as Array<{
+      name: string;
+      total_done: number;
+      xp: number;
+      week_done: number;
+    }>;
+
+    // 3. Pipeline throughput (weekly)
+    const weekStart = now - days * 24 * 60 * 60 * 1000;
+    const pipelineTypes = [
+      { key: "trends", pattern: "%Trend%" },
+      { key: "scripts", pattern: "%Script%" },
+      { key: "thumbnails", pattern: "%Thumbnail%" },
+      { key: "reviews", pattern: "%Review%" },
+    ];
+    const pipeline: Record<string, number> = {};
+    for (const { key, pattern } of pipelineTypes) {
+      const row = db
+        .prepare("SELECT COUNT(*) as cnt FROM tasks WHERE title LIKE ? AND created_at >= ?")
+        .get(pattern, weekStart) as { cnt: number };
+      pipeline[key] = row.cnt;
+    }
+
+    // 4. Status distribution
+    const statusDist = db
+      .prepare(
+        `SELECT status, COUNT(*) as cnt FROM tasks GROUP BY status`,
+      )
+      .all() as Array<{ status: string; cnt: number }>;
+
+    res.json({
+      ok: true,
+      period: `${days} days`,
+      daily_completion: dailyCompletion,
+      agent_productivity: agentProductivity,
+      pipeline_throughput: pipeline,
+      status_distribution: statusDist,
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Start all services
 // ---------------------------------------------------------------------------
 
@@ -374,6 +547,8 @@ export function startSupabaseSyncAndExtras(app: any, db: DatabaseSync): void {
   registerContentCalendarRoutes(app, db);
   registerAutoPostRoutes(app, db);
   registerDashboardEnhancedRoutes(app, db);
+  registerSupabaseRestoreRoutes(app, db);
+  registerChartsRoutes(app, db);
 
   // Start Supabase sync if configured
   if (isSupabaseConfigured()) {
@@ -386,5 +561,7 @@ export function startSupabaseSyncAndExtras(app: any, db: DatabaseSync): void {
 
   console.log("[ContentCalendar] ✅ API ready: /api/content-calendar, /api/content-calendar/today");
   console.log("[AutoPost] ✅ API ready: /api/auto-post/draft, /api/auto-post/drafts");
-  console.log("[Dashboard+] ✅ API ready: /api/dashboard/today");
+  console.log("[Dashboard+] ✅ API ready: /api/dashboard/today, /api/dashboard/charts");
+  console.log("[SupabaseRestore] ✅ API ready: /api/supabase/restore, /api/supabase/status");
 }
+
