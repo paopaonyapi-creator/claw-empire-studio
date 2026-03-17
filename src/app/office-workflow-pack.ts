@@ -452,6 +452,61 @@ const PACK_PRESETS: Record<WorkflowPackKey, PackPreset> = {
       nonLeaderDeptCycle: ["planning", "design", "dev", "design", "qa", "planning", "operations", "design"],
     },
   },
+  affiliate_studio: {
+    key: "affiliate_studio",
+    slug: "AFF",
+    label: {
+      ko: "어필리에이트 콘텐츠 스튜디오",
+      en: "Affiliate Content Studio",
+      ja: "アフィリエイトスタジオ",
+      zh: "联盟营销内容工作室",
+    },
+    summary: {
+      ko: "TikTok/Facebook 어필리에이트 콘텐츠 제작",
+      en: "TikTok & Facebook affiliate content production",
+      ja: "TikTok/Facebookアフィリエイトコンテンツ制作",
+      zh: "TikTok/Facebook联盟营销内容制作",
+    },
+    roomThemes: {
+      ceoOffice: { floor1: 0xfff3e0, floor2: 0xffe0b2, wall: 0xe65100, accent: 0xff6d00 },
+      planning: { floor1: 0xede7f6, floor2: 0xd1c4e9, wall: 0x4527a0, accent: 0x651fff },
+      dev: { floor1: 0xfff8e1, floor2: 0xffecb3, wall: 0xf57f17, accent: 0xffc400 },
+      design: { floor1: 0xfce4ec, floor2: 0xf8bbd0, wall: 0xad1457, accent: 0xf50057 },
+      qa: { floor1: 0xe8f5e9, floor2: 0xc8e6c9, wall: 0x2e7d32, accent: 0x00c853 },
+      devsecops: { floor1: 0xe3f2fd, floor2: 0xbbdefb, wall: 0x1565c0, accent: 0x2979ff },
+      operations: { floor1: 0xe0f2f1, floor2: 0xb2dfdb, wall: 0x00695c, accent: 0x00bfa5 },
+      breakRoom: { floor1: 0xfff3e0, floor2: 0xffe0b2, wall: 0xef6c00, accent: 0xffa726 },
+    },
+    departments: {
+      planning: {
+        name: { ko: "전략기획실", en: "Strategy & Insights", ja: "戦略企画室", zh: "策略与洞察" },
+        icon: "🎯",
+        agentPrefix: { ko: "전략가", en: "Strategist", ja: "ストラテジスト", zh: "策略师" },
+        avatarPool: ["🎯", "🔍", "🧠"],
+      },
+      dev: {
+        name: { ko: "콘텐츠제작팀", en: "Content Production", ja: "コンテンツ制作", zh: "内容制作" },
+        icon: "✍️",
+        agentPrefix: { ko: "콘텐츠 작가", en: "Content Writer", ja: "コンテンツライター", zh: "内容撰稿人" },
+        avatarPool: ["✍️", "🪝", "📝"],
+      },
+      design: {
+        name: { ko: "크리에이티브 스튜디오", en: "Creative Studio", ja: "クリエイティブスタジオ", zh: "创意工作室" },
+        icon: "🎨",
+        agentPrefix: { ko: "크리에이터", en: "Creative", ja: "クリエイター", zh: "创意师" },
+        avatarPool: ["🎨", "🎬", "📷"],
+      },
+      qa: {
+        name: { ko: "배포분석팀", en: "Distribution & Analytics", ja: "配信分析", zh: "分发与分析" },
+        icon: "📊",
+        agentPrefix: { ko: "분석가", en: "Analyst", ja: "アナリスト", zh: "分析师" },
+        avatarPool: ["📊", "📅", "📢"],
+      },
+    },
+    staff: {
+      nonLeaderDeptCycle: ["planning", "planning", "dev", "dev", "design", "design", "qa", "qa", "qa"],
+    },
+  },
 };
 
 export function normalizeOfficeWorkflowPack(value: unknown): WorkflowPackKey {
