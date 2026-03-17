@@ -10,6 +10,7 @@ import { startTelegramReceiver } from "../messenger/telegram-receiver.ts";
 import { registerGracefulShutdownHandlers } from "./lifecycle/register-graceful-shutdown.ts";
 import { startContentScheduler } from "./content-scheduler.ts";
 import { startAutoRetryAndArchive, registerContentArchiveRoutes } from "./auto-retry-archive.ts";
+import { startSupabaseSyncAndExtras } from "./supabase-sync-extras.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -482,6 +483,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   startContentScheduler();
   startAutoRetryAndArchive(db);
   registerContentArchiveRoutes(app, db);
+  startSupabaseSyncAndExtras(app, db);
   const telegramReceiver = startTelegramReceiver({ db });
   const discordReceiver = startDiscordReceiver({ db });
 
