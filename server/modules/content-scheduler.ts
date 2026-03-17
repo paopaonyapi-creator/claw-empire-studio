@@ -97,6 +97,36 @@ async function dispatchDirective(content: string, scheduleId: string): Promise<v
     const status = res.status;
     if (status >= 200 && status < 300) {
       console.log(`[ContentScheduler] ✅ Dispatched "${scheduleId}" (HTTP ${status})`);
+
+      // Auto-run: find the newest inbox task and trigger execution
+      setTimeout(async () => {
+        try {
+          const tasksRes = await fetch(`http://127.0.0.1:${PORT}/api/tasks?status=inbox&limit=5`, {
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!tasksRes.ok) return;
+          const tasksData = (await tasksRes.json()) as { tasks?: Array<{ id: string; title: string; assigned_agent_id?: string }> };
+          const tasks = tasksData.tasks || [];
+          if (tasks.length === 0) return;
+
+          // Run the most recent inbox task (should be the one we just created)
+          const task = tasks[0];
+          if (!task.assigned_agent_id) {
+            console.log(`[ContentScheduler] ⏳ "${task.title}" has no agent assigned — skipping auto-run`);
+            return;
+          }
+
+          const runRes = await fetch(`http://127.0.0.1:${PORT}/api/tasks/${task.id}/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
+          console.log(
+            `[ContentScheduler] 🤖 Auto-run "${task.title}": ${runRes.ok ? "✅ STARTED" : `⚠️ HTTP ${runRes.status}`}`,
+          );
+        } catch (err) {
+          console.error("[ContentScheduler] Auto-run failed:", err instanceof Error ? err.message : err);
+        }
+      }, 5_000); // Wait 5s for task to be fully created and assigned
     } else {
       const text = await res.text().catch(() => "");
       console.warn(`[ContentScheduler] ⚠️ "${scheduleId}" responded ${status}: ${text.slice(0, 200)}`);
