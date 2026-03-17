@@ -171,7 +171,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "strategy",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "codex",
+    cli_provider: "claude",
     avatar_emoji: "🎯",
     personality: [
       "# Audience Insight Planner",
@@ -216,7 +216,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "production",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "codex",
+    cli_provider: "claude",
     avatar_emoji: "✍️",
     personality: [
       "# Content Writer",
@@ -263,7 +263,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "production",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "codex",
+    cli_provider: "claude",
     avatar_emoji: "🪝",
     personality: [
       "# Hook & Copywriting Specialist",
@@ -363,7 +363,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "creative",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "codex",
+    cli_provider: "claude",
     avatar_emoji: "🎬",
     personality: [
       "# Video Script Producer",
@@ -428,7 +428,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "distribution",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "codex",
+    cli_provider: "claude",
     avatar_emoji: "📅",
     personality: [
       "# Content Calendar Manager",
@@ -475,7 +475,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "distribution",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "codex",
+    cli_provider: "claude",
     avatar_emoji: "📢",
     personality: [
       "# Publisher & Community Manager",

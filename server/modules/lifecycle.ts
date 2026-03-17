@@ -8,6 +8,7 @@ import { notifyTaskStatus } from "../gateway/client.ts";
 import { startDiscordReceiver } from "../messenger/discord-receiver.ts";
 import { startTelegramReceiver } from "../messenger/telegram-receiver.ts";
 import { registerGracefulShutdownHandlers } from "./lifecycle/register-graceful-shutdown.ts";
+import { startContentScheduler } from "./content-scheduler.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -460,6 +461,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   setTimeout(sweepPendingSubtaskDelegations, 4_000);
   setInterval(sweepPendingSubtaskDelegations, SUBTASK_DELEGATION_SWEEP_MS);
   setTimeout(autoAssignAgentProviders, 4_000);
+  startContentScheduler();
   const telegramReceiver = startTelegramReceiver({ db });
   const discordReceiver = startDiscordReceiver({ db });
 

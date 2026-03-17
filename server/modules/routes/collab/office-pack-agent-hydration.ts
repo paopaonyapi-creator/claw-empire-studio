@@ -110,7 +110,7 @@ function normalizeOfficePackProfileAgent(raw: unknown, nowMs: number): OfficePac
     role: VALID_AGENT_ROLES.has(roleRaw) ? roleRaw : "senior",
     acts_as_planning_leader:
       roleRaw === "team_leader" && normalizePositiveInt(obj.acts_as_planning_leader, 0) > 0 ? 1 : 0,
-    cli_provider: VALID_CLI_PROVIDERS.has(cliProviderRaw) ? cliProviderRaw : "codex",
+    cli_provider: VALID_CLI_PROVIDERS.has(cliProviderRaw) ? cliProviderRaw : "claude",
     cli_model: normalizeOptionalText(obj.cli_model),
     cli_reasoning_level: normalizeOptionalText(obj.cli_reasoning_level),
     avatar_emoji: normalizeText(obj.avatar_emoji) || "🤖",
