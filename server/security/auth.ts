@@ -137,6 +137,7 @@ export function isPublicApiPath(pathname: string): boolean {
   if (pathname === "/api/docs" || pathname.startsWith("/api/docs/")) return true;
   if (pathname === "/api/oauth/start") return true;
   if (pathname.startsWith("/api/oauth/callback/")) return true;
+  if (pathname === "/api/telegram/webhook") return true; // Telegram sends unauthenticated POSTs
   return false;
 }
 
