@@ -1,26 +1,42 @@
 #!/bin/bash
 set -e
 
-# Fix volume ownership — Railway volumes mount as root
-# but CLI tools (claude, codex, gemini) refuse to run as root
-chown -R app:app /app/data 2>/dev/null || true
+# ---------- Fix ownership for non-root user ----------
+# Railway volumes mount as root, and CLI tools refuse to run as root.
+# chown the entire /app so the 'app' user can:
+#   - write to /app/.git  (worktree creation)
+#   - write to /app/.climpire-worktrees
+#   - create/modify files during agent execution
+chown -R app:app /app 2>/dev/null || true
 chown -R app:app /home/app 2>/dev/null || true
 
-# Initialize git repo if not present (COPY doesn't include .git)
-# Agent runner needs git worktrees for task isolation
+# ---------- Bootstrap git repo ----------
+# Docker COPY doesn't include .git. Agent runner needs git worktrees.
 if [ ! -d "/app/.git" ]; then
   cd /app
-  git init --quiet
+
+  # Create .gitignore BEFORE git add to skip large dirs
+  cat > /app/.gitignore <<'EOF'
+node_modules/
+dist/
+.climpire-worktrees/
+.climpire/
+*.log
+.DS_Store
+/data/
+EOF
+
+  git init --quiet -b main
   git config user.email "studio@claw-empire.local"
   git config user.name "Content Studio"
   git add -A
-  git commit -m "initial" --quiet --allow-empty 2>/dev/null || true
-  chown -R app:app /app/.git
+  git commit -m "initial" --quiet 2>/dev/null || true
+  chown -R app:app /app/.git /app/.gitignore
 fi
 
-# Ensure worktree directory exists and is writable
+# ---------- Ensure worktree directory ----------
 mkdir -p /app/.climpire-worktrees
-chown -R app:app /app/.climpire-worktrees
+chown app:app /app/.climpire-worktrees
 
-# Drop to non-root user and exec the command
+# ---------- Drop to non-root user ----------
 exec gosu app "$@"
