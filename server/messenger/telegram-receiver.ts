@@ -2,6 +2,7 @@ import type { DatabaseSync } from "node:sqlite";
 import { INBOX_WEBHOOK_SECRET, OAUTH_BASE_HOST, PORT } from "../config/runtime.ts";
 import { buildMessengerSourceWithTokenHint, buildMessengerTokenKey } from "./token-hint.ts";
 import { decryptMessengerTokenForRuntime } from "./token-crypto.ts";
+import { processCeoTelegramMessage } from "../modules/ceo-chat.ts";
 
 const MESSENGER_SETTINGS_KEY = "messengerChannels";
 const TELEGRAM_RECEIVER_OFFSET_KEY = "telegramReceiverOffset";
@@ -329,6 +330,13 @@ async function forwardTelegramUpdate(params: {
   const text = normalizeText(message.text) || normalizeText(message.caption);
   if (!text) {
     return "skipped";
+  }
+
+  // CEO Chat: intercept commands and smart replies
+  const ceoChatId = process.env.TELEGRAM_CHAT_ID || "7724670451";
+  if (chatId === ceoChatId && (text.startsWith("/") || !text.startsWith("$"))) {
+    processCeoTelegramMessage(text).catch(() => {});
+    // Still forward to inbox for logging, but CEO gets instant reply
   }
 
   const messageId =
