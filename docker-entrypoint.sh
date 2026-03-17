@@ -39,5 +39,25 @@ fi
 mkdir -p /app/.climpire-worktrees
 chown app:app /app/.climpire-worktrees
 
+# ---------- SQLite hourly backup ----------
+BACKUP_DIR="/app/data/backups"
+mkdir -p "$BACKUP_DIR"
+chown app:app "$BACKUP_DIR"
+
+# Background backup loop: every hour, keep last 24
+(
+  while true; do
+    sleep 3600
+    DB="/app/data/claw-empire.sqlite"
+    if [ -f "$DB" ]; then
+      STAMP=$(date +%Y%m%d_%H%M%S)
+      cp "$DB" "$BACKUP_DIR/backup_${STAMP}.sqlite" 2>/dev/null && \
+        echo "==> SQLite backup: backup_${STAMP}.sqlite"
+      # Rotate: keep only last 24 backups
+      ls -1t "$BACKUP_DIR"/backup_*.sqlite 2>/dev/null | tail -n +25 | xargs rm -f 2>/dev/null
+    fi
+  done
+) &
+
 # ---------- Drop to non-root user ----------
 exec gosu app "$@"

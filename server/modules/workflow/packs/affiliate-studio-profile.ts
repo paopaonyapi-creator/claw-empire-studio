@@ -77,7 +77,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "strategy",
     role: "team_leader",
     acts_as_planning_leader: 1,
-    cli_provider: "codex",
+    cli_provider: "claude",
     avatar_emoji: "🧠",
     personality: [
       "# Chief Content Strategist",
@@ -124,7 +124,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "strategy",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "gemini",
+    cli_provider: "claude",
     avatar_emoji: "🔍",
     personality: [
       "# Trend Hunter",
@@ -312,7 +312,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "creative",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "gemini",
+    cli_provider: "claude",
     avatar_emoji: "🎨",
     personality: [
       "# Visual Designer",
@@ -524,7 +524,7 @@ export const AFFILIATE_STUDIO_AGENTS = [
     department_id: "distribution",
     role: "senior",
     acts_as_planning_leader: 0,
-    cli_provider: "gemini",
+    cli_provider: "claude",
     avatar_emoji: "📈",
     personality: [
       "# Performance Analyst",
