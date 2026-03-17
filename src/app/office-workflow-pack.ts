@@ -765,7 +765,7 @@ export function resolveOfficePackSeedProvider(params: {
   seedIndex: number;
   seedOrderInDepartment?: number;
 }): OfficePackSeedProvider {
-  if (params.packKey === "development") return "claude";
+  if (params.packKey === "development" || params.packKey === "affiliate_studio") return "claude";
   const dept = String(params.departmentId ?? "")
     .trim()
     .toLowerCase();
