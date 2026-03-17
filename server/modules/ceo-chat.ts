@@ -10,6 +10,7 @@
  */
 
 import { PORT } from "../config/runtime.ts";
+import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
@@ -104,6 +105,26 @@ async function handleRunCommand(taskTitle: string): Promise<string> {
 }
 
 async function handleSmartReply(message: string): Promise<string> {
+  const systemPrompt =
+    "คุณเป็น CEO Assistant ของ Content Studio ที่ทำ affiliate marketing" +
+    " ตอบสั้นๆ ตรงประเด็น ภาษาไทย พร้อมแนะนำ action ที่ CEO ควรทำ" +
+    " คำสั่งที่ใช้ได้: /status, /today, /run <task>, /help";
+
+  // Try Gemini first (free!)
+  if (isGeminiConfigured()) {
+    const result = await geminiChat({
+      messages: [{ role: "user", content: message }],
+      systemInstruction: systemPrompt,
+      maxTokens: 300,
+    });
+
+    if (result.text) {
+      return `🤖✨ ${result.text}`;
+    }
+    console.log("[CeoChat] Gemini failed, falling back to OpenRouter:", result.error);
+  }
+
+  // Fallback to OpenRouter
   try {
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -114,13 +135,7 @@ async function handleSmartReply(message: string): Promise<string> {
       body: JSON.stringify({
         model: "openai/gpt-4o-mini",
         messages: [
-          {
-            role: "system",
-            content:
-              "คุณเป็น CEO Assistant ของ Content Studio ที่ทำ affiliate marketing" +
-              " ตอบสั้นๆ ตรงประเด็น ภาษาไทย พร้อมแนะนำ action ที่ CEO ควรทำ" +
-              " คำสั่งที่ใช้ได้: /status, /today, /run <task>",
-          },
+          { role: "system", content: systemPrompt },
           { role: "user", content: message },
         ],
         max_tokens: 300,

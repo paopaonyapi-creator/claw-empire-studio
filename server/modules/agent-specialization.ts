@@ -1,19 +1,17 @@
 /**
  * Agent Specialization — Assign optimal AI models per role
  *
- * Maps each agent role to the best model via OpenRouter:
- * - Research roles → GPT-4o (best at analysis & search)
- * - Writing roles → Claude 3.5 Sonnet (best at creative writing)
- * - Design roles → GPT-4o (best at visual descriptions)
- * - Analytics roles → GPT-4o-mini (cost-efficient for data)
+ * Primary: Google Gemini 2.0 Flash (free!)
+ * Fallback: OpenRouter (paid)
  *
- * Runs on startup and can be triggered via API.
+ * Gemini handles all roles efficiently with free tier.
+ * OpenRouter kept as fallback if Gemini is unavailable.
  */
 
 import type { DatabaseSync } from "node:sqlite";
+import { isGeminiConfigured, testGeminiConnection, GEMINI_MODELS } from "./gemini-provider.ts";
 
-const OPENROUTER_KEY =
-  process.env.OPENROUTER_API_KEY || "";
+const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || "";
 
 // ---------------------------------------------------------------------------
 // Model Mapping: agent name pattern → optimal model
@@ -25,54 +23,68 @@ interface ModelSpec {
   reason: string;
 }
 
-const AGENT_MODEL_MAP: Array<{ pattern: RegExp; spec: ModelSpec }> = [
-  // Strategy & Research — need strong reasoning
+const GEMINI_AGENT_MAP: Array<{ pattern: RegExp; spec: ModelSpec }> = [
+  // Strategy & Research — Gemini Flash is excellent at analysis
   {
     pattern: /chief.*content|strategist/i,
-    spec: { provider: "openrouter", model: "anthropic/claude-3.5-sonnet", reason: "strategic planning" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "strategic planning (Gemini)" },
   },
   {
     pattern: /trend.*hunter/i,
-    spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "trend research & analysis" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "trend research (Gemini)" },
   },
   {
     pattern: /audience.*insight|planner/i,
-    spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "audience data analysis" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "audience analysis (Gemini)" },
   },
 
-  // Content Production — need creative writing
+  // Content Production — Gemini Flash great for Thai content
   {
     pattern: /content.*writer/i,
-    spec: { provider: "openrouter", model: "anthropic/claude-3.5-sonnet", reason: "creative writing" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "creative writing (Gemini)" },
   },
   {
     pattern: /hook.*copy|specialist/i,
-    spec: { provider: "openrouter", model: "anthropic/claude-3.5-sonnet", reason: "copywriting & hooks" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "copywriting (Gemini)" },
   },
 
-  // Creative Studio — visual descriptions
+  // Creative Studio
   {
     pattern: /visual.*designer/i,
-    spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "visual concept generation" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "visual concepts (Gemini)" },
   },
   {
     pattern: /video.*script|producer/i,
-    spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "video production scripting" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "video scripting (Gemini)" },
   },
 
-  // Distribution & Analytics — cost-efficient
+  // Distribution & Analytics
   {
     pattern: /calendar.*manager/i,
-    spec: { provider: "openrouter", model: "openai/gpt-4o-mini", reason: "scheduling (cost-efficient)" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "scheduling (Gemini)" },
   },
   {
     pattern: /publisher|community/i,
-    spec: { provider: "openrouter", model: "openai/gpt-4o-mini", reason: "publishing tasks (cost-efficient)" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "publishing (Gemini)" },
   },
   {
     pattern: /performance.*analyst/i,
-    spec: { provider: "openrouter", model: "openai/gpt-4o-mini", reason: "analytics (cost-efficient)" },
+    spec: { provider: "gemini", model: GEMINI_MODELS.flash, reason: "analytics (Gemini)" },
   },
+];
+
+// OpenRouter fallback map
+const OPENROUTER_AGENT_MAP: Array<{ pattern: RegExp; spec: ModelSpec }> = [
+  { pattern: /chief.*content|strategist/i, spec: { provider: "openrouter", model: "anthropic/claude-3.5-sonnet", reason: "strategic planning" } },
+  { pattern: /trend.*hunter/i, spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "trend research" } },
+  { pattern: /audience.*insight|planner/i, spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "audience analysis" } },
+  { pattern: /content.*writer/i, spec: { provider: "openrouter", model: "anthropic/claude-3.5-sonnet", reason: "creative writing" } },
+  { pattern: /hook.*copy|specialist/i, spec: { provider: "openrouter", model: "anthropic/claude-3.5-sonnet", reason: "copywriting" } },
+  { pattern: /visual.*designer/i, spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "visual concepts" } },
+  { pattern: /video.*script|producer/i, spec: { provider: "openrouter", model: "openai/gpt-4o", reason: "video scripting" } },
+  { pattern: /calendar.*manager/i, spec: { provider: "openrouter", model: "openai/gpt-4o-mini", reason: "scheduling" } },
+  { pattern: /publisher|community/i, spec: { provider: "openrouter", model: "openai/gpt-4o-mini", reason: "publishing" } },
+  { pattern: /performance.*analyst/i, spec: { provider: "openrouter", model: "openai/gpt-4o-mini", reason: "analytics" } },
 ];
 
 // ---------------------------------------------------------------------------
@@ -80,7 +92,9 @@ const AGENT_MODEL_MAP: Array<{ pattern: RegExp; spec: ModelSpec }> = [
 // ---------------------------------------------------------------------------
 
 export function getModelForAgent(agentName: string): ModelSpec | null {
-  for (const entry of AGENT_MODEL_MAP) {
+  // Prefer Gemini if configured
+  const map = isGeminiConfigured() ? GEMINI_AGENT_MAP : OPENROUTER_AGENT_MAP;
+  for (const entry of map) {
     if (entry.pattern.test(agentName)) {
       return entry.spec;
     }
@@ -89,51 +103,87 @@ export function getModelForAgent(agentName: string): ModelSpec | null {
 }
 
 export function applyAgentSpecialization(db: DatabaseSync): void {
-  if (!OPENROUTER_KEY) {
-    console.log("[AgentSpec] ⏭️ Skipped: no OpenRouter API key");
+  const hasGemini = isGeminiConfigured();
+  const hasOpenRouter = !!OPENROUTER_KEY;
+
+  if (!hasGemini && !hasOpenRouter) {
+    console.log("[AgentSpec] ⏭️ Skipped: no AI API key configured");
     return;
   }
+
+  const providerLabel = hasGemini ? "Gemini 2.0 Flash ✨" : "OpenRouter";
+  console.log(`[AgentSpec] 🧠 Using ${providerLabel} as primary AI provider`);
 
   const agents = db
     .prepare("SELECT id, name, cli_provider FROM agents")
     .all() as Array<{ id: string; name: string; cli_provider: string | null }>;
 
   let updated = 0;
+  const targetProvider = hasGemini ? "opencode" : "openrouter";
 
   for (const agent of agents) {
     const spec = getModelForAgent(agent.name);
     if (!spec) continue;
 
-    // Only update if currently using default claude or no provider
-    if (agent.cli_provider === "claude" || !agent.cli_provider) {
-      db.prepare("UPDATE agents SET cli_provider = ? WHERE id = ?").run(spec.provider, agent.id);
-      console.log(
-        `[AgentSpec] 🧠 ${agent.name}: ${agent.cli_provider || "none"} → ${spec.provider} (${spec.model}) — ${spec.reason}`,
-      );
+    // Update provider if needed
+    if (agent.cli_provider !== targetProvider) {
+      db.prepare("UPDATE agents SET cli_provider = ? WHERE id = ?").run(targetProvider, agent.id);
+      console.log(`[AgentSpec] 🧠 ${agent.name}: ${agent.cli_provider || "none"} → ${targetProvider} (${spec.model}) — ${spec.reason}`);
       updated++;
     }
   }
 
   if (updated > 0) {
-    console.log(`[AgentSpec] ✅ Specialized ${updated}/${agents.length} agents with OpenRouter models`);
+    console.log(`[AgentSpec] ✅ Specialized ${updated}/${agents.length} agents with ${providerLabel}`);
   } else {
     console.log(`[AgentSpec] ℹ️ All agents already specialized`);
   }
 }
 
 // ---------------------------------------------------------------------------
-// API: Register routes for specialization
+// API routes
 // ---------------------------------------------------------------------------
 
 export function registerSpecializationRoutes(app: any): void {
   // GET /api/agent-models — list all model assignments
   app.get("/api/agent-models", (_req: any, res: any) => {
-    const assignments = AGENT_MODEL_MAP.map((entry) => ({
+    const hasGemini = isGeminiConfigured();
+    const map = hasGemini ? GEMINI_AGENT_MAP : OPENROUTER_AGENT_MAP;
+    const assignments = map.map((entry) => ({
       pattern: entry.pattern.source,
       provider: entry.spec.provider,
       model: entry.spec.model,
       reason: entry.spec.reason,
     }));
-    res.json({ models: assignments, openrouter_configured: !!OPENROUTER_KEY });
+    res.json({
+      models: assignments,
+      primary_provider: hasGemini ? "gemini" : "openrouter",
+      gemini_configured: hasGemini,
+      openrouter_configured: !!OPENROUTER_KEY,
+    });
+  });
+
+  // GET /api/gemini/status — check Gemini connection
+  app.get("/api/gemini/status", async (_req: any, res: any) => {
+    const result = await testGeminiConnection();
+    res.json(result);
+  });
+
+  // POST /api/gemini/test — test generate with Gemini
+  app.post("/api/gemini/test", async (req: any, res: any) => {
+    const { prompt = "สวัสดี ระบบพร้อมทำงาน" } = req.body || {};
+
+    if (!isGeminiConfigured()) {
+      return res.status(400).json({ error: "GEMINI_API_KEY not configured" });
+    }
+
+    const { geminiGenerate } = await import("./gemini-provider.ts");
+    const result = await geminiGenerate({ prompt, maxTokens: 200 });
+    res.json({
+      ok: !result.error,
+      model: GEMINI_MODELS.flash,
+      response: result.text,
+      error: result.error,
+    });
   });
 }
