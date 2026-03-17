@@ -11,6 +11,7 @@ import {
 import { DashboardDeptAndSquad, DashboardMissionLog, type DepartmentPerformance } from "./dashboard/OpsSections";
 import { DashboardTodayKpi } from "./dashboard/TodayKpiSection";
 import { PerformanceCharts } from "./dashboard/PerformanceCharts";
+import { TemplateSelector } from "./dashboard/TemplateSelector";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -192,6 +193,10 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       />
 
       <DashboardHudStats hudStats={hudStats} numberFormatter={numberFormatter} />
+
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+        <TemplateSelector />
+      </div>
 
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
 

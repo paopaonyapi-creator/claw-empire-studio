@@ -154,6 +154,54 @@ async function handleSmartReply(message: string): Promise<string> {
 }
 
 // ---------------------------------------------------------------------------
+// Template Quick Commands — create & run from TG
+// ---------------------------------------------------------------------------
+
+const TEMPLATE_SHORTCUTS: Record<string, { templateId: string; variableKey: string; label: string }> = {
+  "/tiktok": { templateId: "tiktok-script", variableKey: "product", label: "TikTok Script" },
+  "/review": { templateId: "product-review", variableKey: "product", label: "Product Review" },
+  "/trend": { templateId: "trend-research", variableKey: "category", label: "Trend Research" },
+  "/thumbnail": { templateId: "thumbnail-brief", variableKey: "topic", label: "Thumbnail Brief" },
+  "/compare": { templateId: "comparison-post", variableKey: "product_list", label: "Comparison Post" },
+  "/unbox": { templateId: "unboxing-script", variableKey: "product", label: "Unboxing Script" },
+};
+
+async function handleTemplateCommand(templateId: string, variableKey: string, value: string, label: string): Promise<string> {
+  try {
+    const res = await fetch(`http://127.0.0.1:${PORT}/api/templates/${templateId}/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ variables: { [variableKey]: value } }),
+    });
+
+    if (!res.ok) return `⚠️ ไม่สามารถสร้าง ${label} ได้ (HTTP ${res.status})`;
+
+    const data = (await res.json()) as { ok?: boolean; task?: { id: string; title: string } };
+    if (data.ok && data.task) {
+      // Auto-run the task
+      fetch(`http://127.0.0.1:${PORT}/api/tasks/${data.task.id}/run`, { method: "POST" }).catch(() => {});
+      return `🚀 <b>${label}</b> สร้างแล้ว!\n\n📝 "${value}"\n🤖 Agent กำลังทำงาน...\n\nดู progress ได้ที่ Dashboard`;
+    }
+    return `⚠️ Error creating ${label}`;
+  } catch {
+    return `❌ Error creating ${label}`;
+  }
+}
+
+async function handleTemplateListCommand(): Promise<string> {
+  return (
+    `📝 <b>Quick Templates</b>\n\n` +
+    `🎬 /tiktok <สินค้า> — TikTok Script\n` +
+    `⭐ /review <สินค้า> — Product Review\n` +
+    `🔍 /trend <หมวด> — Trend Research\n` +
+    `🎨 /thumbnail <หัวข้อ> — Thumbnail Brief\n` +
+    `⚖️ /compare <สินค้า> — Comparison\n` +
+    `📦 /unbox <สินค้า> — Unboxing\n\n` +
+    `💡 ตัวอย่าง: /tiktok เครื่องปั่น Philips`
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Public: Process incoming TG message
 // ---------------------------------------------------------------------------
 
@@ -170,17 +218,39 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
   } else if (trimmed.startsWith("/run ") || trimmed.startsWith("/สั่ง ")) {
     const taskTitle = trimmed.replace(/^\/(run|สั่ง)\s+/, "");
     reply = await handleRunCommand(taskTitle);
+  } else if (trimmed === "/template" || trimmed === "/templates" || trimmed === "/t") {
+    reply = await handleTemplateListCommand();
   } else if (trimmed === "/help" || trimmed === "/ช่วย") {
     reply =
       `🤖 <b>CEO Commands</b>\n\n` +
-      `/status — ดูสถานะ Studio\n` +
-      `/today — สรุปวันนี้\n` +
-      `/run <task> — สั่งงาน agent\n` +
-      `/help — คำสั่งทั้งหมด\n\n` +
-      `💬 หรือพิมพ์อะไรก็ได้ — AI จะตอบ`;
+      `📊 /status — ดูสถานะ Studio\n` +
+      `📈 /today — สรุปวันนี้\n` +
+      `🚀 /run <task> — สั่งงาน\n` +
+      `📝 /template — ดู quick templates\n\n` +
+      `<b>Quick Templates:</b>\n` +
+      `🎬 /tiktok <สินค้า>\n` +
+      `⭐ /review <สินค้า>\n` +
+      `🔍 /trend <หมวด>\n` +
+      `🎨 /thumbnail <หัวข้อ>\n` +
+      `⚖️ /compare <สินค้า>\n` +
+      `📦 /unbox <สินค้า>\n\n` +
+      `💬 หรือพิมพ์อะไรก็ได้ — Gemini AI จะตอบ ✨`;
   } else {
+    // Check template shortcuts
+    const cmdMatch = trimmed.match(/^(\/\w+)\s+(.+)/);
+    if (cmdMatch) {
+      const [, cmd, arg] = cmdMatch;
+      const shortcut = TEMPLATE_SHORTCUTS[cmd];
+      if (shortcut) {
+        reply = await handleTemplateCommand(shortcut.templateId, shortcut.variableKey, arg, shortcut.label);
+        await sendTg(reply);
+        return;
+      }
+    }
+
     reply = await handleSmartReply(trimmed);
   }
 
   await sendTg(reply);
 }
+
