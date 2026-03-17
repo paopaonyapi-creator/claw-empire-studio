@@ -461,6 +461,23 @@ export function startLifecycle(ctx: RuntimeContext): void {
   setTimeout(sweepPendingSubtaskDelegations, 4_000);
   setInterval(sweepPendingSubtaskDelegations, SUBTASK_DELEGATION_SWEEP_MS);
   setTimeout(autoAssignAgentProviders, 4_000);
+
+  // ---------------------------------------------------------------------------
+  // Force-fix: codex → claude on every startup (permanent provider fix)
+  // ---------------------------------------------------------------------------
+  (() => {
+    const codexAgents = db
+      .prepare("SELECT id, name FROM agents WHERE cli_provider = 'codex'")
+      .all() as Array<{ id: string; name: string }>;
+    if (codexAgents.length > 0) {
+      db.prepare("UPDATE agents SET cli_provider = 'claude' WHERE cli_provider = 'codex'").run();
+      for (const a of codexAgents) {
+        broadcast("agent_status", db.prepare("SELECT * FROM agents WHERE id = ?").get(a.id));
+      }
+      console.log(`[Claw-Empire] Startup: forced ${codexAgents.length} agent(s) from codex → claude`);
+    }
+  })();
+
   startContentScheduler();
   const telegramReceiver = startTelegramReceiver({ db });
   const discordReceiver = startDiscordReceiver({ db });
