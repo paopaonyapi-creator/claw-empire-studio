@@ -54,6 +54,14 @@ export function startLifecycle(ctx: RuntimeContext): void {
   } = ctx as any;
 
   // ---------------------------------------------------------------------------
+  // Register custom API routes BEFORE static serving (Express order matters)
+  // ---------------------------------------------------------------------------
+  startContentScheduler();
+  startAutoRetryAndArchive(db);
+  registerContentArchiveRoutes(app, db);
+  startSupabaseSyncAndExtras(app, db);
+
+  // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/
   // ---------------------------------------------------------------------------
   if (isProduction) {
@@ -480,10 +488,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
     }
   })();
 
-  startContentScheduler();
-  startAutoRetryAndArchive(db);
-  registerContentArchiveRoutes(app, db);
-  startSupabaseSyncAndExtras(app, db);
+  // (Custom API routes registered above, before SPA fallback)
   const telegramReceiver = startTelegramReceiver({ db });
   const discordReceiver = startDiscordReceiver({ db });
 
