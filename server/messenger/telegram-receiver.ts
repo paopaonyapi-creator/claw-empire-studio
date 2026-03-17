@@ -160,6 +160,10 @@ function resolveTelegramConfig(db: DatabaseSync): TelegramReceiverConfig {
   if (Object.prototype.hasOwnProperty.call(telegram, "token")) {
     channelToken = decryptMessengerTokenForRuntime("telegram", telegram.token);
   }
+  // Fallback: use TELEGRAM_BOT_TOKEN env var when DB token is missing (e.g. after redeploy)
+  if (!channelToken && process.env.TELEGRAM_BOT_TOKEN) {
+    channelToken = process.env.TELEGRAM_BOT_TOKEN;
+  }
 
   if (typeof telegram.receiveEnabled === "boolean") {
     receiveEnabled = telegram.receiveEnabled;

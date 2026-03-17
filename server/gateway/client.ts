@@ -182,6 +182,8 @@ function mergeChannelConfig(
   }
 
   const nextToken = hasOwn(persisted, "token") ? decryptMessengerTokenForRuntime(channel, persisted.token) : base.token;
+  // Fallback: use env var when DB token is missing (e.g. after redeploy)
+  const effectiveToken = nextToken || (channel === "telegram" ? (process.env.TELEGRAM_BOT_TOKEN ?? "") : "");
 
   let nextSessions = base.sessions;
   if (hasOwn(persisted, "sessions") && Array.isArray(persisted.sessions)) {
@@ -191,7 +193,7 @@ function mergeChannelConfig(
   }
 
   return {
-    token: nextToken,
+    token: effectiveToken,
     sessions: nextSessions,
   };
 }
