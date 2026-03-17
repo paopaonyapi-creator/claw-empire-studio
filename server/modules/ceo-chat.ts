@@ -12,6 +12,7 @@
 import { PORT } from "../config/runtime.ts";
 import { handlePipelineCommand } from "./auto-pipeline.ts";
 import { handleLinkCommand } from "./link-tracker.ts";
+import { handleReportCommand } from "./daily-report.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -222,6 +223,8 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
     reply = await handleRunCommand(taskTitle);
   } else if (trimmed === "/template" || trimmed === "/templates" || trimmed === "/t") {
     reply = await handleTemplateListCommand();
+  } else if (trimmed === "/report" || trimmed === "/รายงาน") {
+    reply = await handleReportCommand();
   } else if (trimmed === "/help" || trimmed === "/ช่วย") {
     reply =
       `🤖 <b>CEO Commands</b>\n\n` +

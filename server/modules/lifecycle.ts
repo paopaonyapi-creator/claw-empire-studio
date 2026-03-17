@@ -16,6 +16,7 @@ import { registerTemplateRoutes } from "./content-templates.ts";
 import { registerTelegramWebhookRoutes, autoSetupTelegramWebhook } from "./telegram-webhook.ts";
 import { registerAutoPipelineRoutes } from "./auto-pipeline.ts";
 import { registerLinkTrackerRoutes } from "./link-tracker.ts";
+import { startDailyReportScheduler } from "./daily-report.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -72,6 +73,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerAutoPipelineRoutes(app);
   registerLinkTrackerRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
+  startDailyReportScheduler();
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/

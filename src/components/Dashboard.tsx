@@ -12,6 +12,7 @@ import { DashboardDeptAndSquad, DashboardMissionLog, type DepartmentPerformance 
 import { DashboardTodayKpi } from "./dashboard/TodayKpiSection";
 import { PerformanceCharts } from "./dashboard/PerformanceCharts";
 import { TemplateSelector } from "./dashboard/TemplateSelector";
+import { ContentLibrary } from "./dashboard/ContentLibrary";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -201,6 +202,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
 
       <PerformanceCharts />
+
+      <ContentLibrary />
 
       <DashboardRankingBoard
         topAgents={topAgents}
