@@ -12,6 +12,8 @@ import { startContentScheduler } from "./content-scheduler.ts";
 import { startAutoRetryAndArchive, registerContentArchiveRoutes } from "./auto-retry-archive.ts";
 import { startSupabaseSyncAndExtras } from "./supabase-sync-extras.ts";
 import { applyAgentSpecialization, registerSpecializationRoutes } from "./agent-specialization.ts";
+import { registerTemplateRoutes } from "./content-templates.ts";
+import { registerTelegramWebhookRoutes, autoSetupTelegramWebhook } from "./telegram-webhook.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -63,6 +65,9 @@ export function startLifecycle(ctx: RuntimeContext): void {
   startSupabaseSyncAndExtras(app, db);
   registerSpecializationRoutes(app);
   applyAgentSpecialization(db);
+  registerTemplateRoutes(app, db);
+  registerTelegramWebhookRoutes(app);
+  autoSetupTelegramWebhook().catch(() => {});
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/
