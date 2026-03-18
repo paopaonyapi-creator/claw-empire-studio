@@ -200,7 +200,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
                             disabled={groupCurrent <= 0}
                             className="rounded border border-slate-700 px-2 py-0.5 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                           >
-                            {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页" })}
+                            {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页", th: "ก่อนหน้า" })}
                           </button>
                           <span className="text-[11px] text-slate-400">
                             {groupCurrent + 1} / {groupTotal}
@@ -211,7 +211,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
                             disabled={groupCurrent >= groupTotal - 1}
                             className="rounded border border-slate-700 px-2 py-0.5 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                           >
-                            {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页" })}
+                            {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页", th: "ถัดไป" })}
                           </button>
                         </div>
                       </div>
@@ -243,7 +243,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
                     disabled={currentPage <= 0}
                     className="rounded border border-slate-700 px-2 py-0.5 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页" })}
+                    {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页", th: "ก่อนหน้า" })}
                   </button>
                   <span className="text-[11px] text-slate-400">
                     {currentPage + 1} / {totalPages}
@@ -254,7 +254,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
                     disabled={currentPage >= totalPages - 1}
                     className="rounded border border-slate-700 px-2 py-0.5 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页" })}
+                    {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页", th: "ถัดไป" })}
                   </button>
                 </div>
               )}
@@ -262,7 +262,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
                 onClick={onClose}
                 className="rounded-lg bg-slate-700 px-4 py-1.5 text-sm font-medium text-slate-300 transition hover:bg-slate-600"
               >
-                {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+                {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
               </button>
             </div>
           </div>

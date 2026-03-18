@@ -53,7 +53,7 @@ export default function SkillsHeader({
             })}
           >
             <span className="text-base">✏️</span>
-            {t({ ko: "커스텀 스킬 추가", en: "Add Custom Skill", ja: "カスタムスキル追加", zh: "添加自定义技能" })}
+            {t({ ko: "커스텀 스킬 추가", en: "Add Custom Skill", ja: "カスタムスキル追加", zh: "添加自定义技能", th: "เพิ่มทักษะกำหนดเอง" })}
           </button>
           <div className="text-right">
             <div className="text-2xl font-bold text-empire-gold">{skillsCount}</div>

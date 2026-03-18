@@ -72,7 +72,7 @@ export default function MissingPathPromptDialog({
             onClick={onCancel}
             className="rounded-md border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-800"
           >
-            {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+            {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
           </button>
           <button
             type="button"
@@ -80,7 +80,7 @@ export default function MissingPathPromptDialog({
             onClick={onConfirmCreate}
             className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {t({ ko: "예", en: "Yes", ja: "はい", zh: "是" })}
+            {t({ ko: "예", en: "Yes", ja: "はい", zh: "是", th: "ใช่" })}
           </button>
         </div>
       </div>

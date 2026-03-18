@@ -68,7 +68,7 @@ export default function ChatEditorModal({
             onClick={closeEditorModal}
             className="px-2 py-1 text-xs rounded border border-slate-600 text-slate-300 hover:bg-slate-800"
           >
-            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
           </button>
         </div>
 
@@ -110,8 +110,8 @@ export default function ChatEditorModal({
                 className="accent-blue-500"
               />
               {editor.enabled
-                ? t({ ko: "활성", en: "Enabled", ja: "有効", zh: "启用" })
-                : t({ ko: "비활성", en: "Disabled", ja: "無効", zh: "禁用" })}
+                ? t({ ko: "활성", en: "Enabled", ja: "有効", zh: "启用", th: "ใช้งาน" })
+                : t({ ko: "비활성", en: "Disabled", ja: "無効", zh: "禁用", th: "ไม่ใช้งาน" })}
             </label>
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function ChatEditorModal({
             {workflowPackOptions.map((pack) => (
               <option key={pack.key} value={pack.key} disabled={!pack.enabled && pack.key !== editor.workflowPackKey}>
                 {pack.name}
-                {!pack.enabled ? ` (${t({ ko: "비활성", en: "disabled", ja: "無効", zh: "禁用" })})` : ""}
+                {!pack.enabled ? ` (${t({ ko: "비활성", en: "disabled", ja: "無効", zh: "禁用", th: "ไม่ใช้งาน" })})` : ""}
               </option>
             ))}
           </select>
@@ -316,13 +316,13 @@ export default function ChatEditorModal({
             onClick={closeEditorModal}
             className="px-3 py-1.5 text-xs rounded border border-slate-600 text-slate-300 hover:bg-slate-800"
           >
-            {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+            {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
           </button>
           <button
             onClick={handleSaveEditor}
             className="px-3 py-1.5 text-xs rounded bg-blue-600 text-white hover:bg-blue-500"
           >
-            {t({ ko: "확인", en: "Confirm", ja: "確認", zh: "确认" })}
+            {t({ ko: "확인", en: "Confirm", ja: "確認", zh: "确认", th: "ยืนยัน" })}
           </button>
         </div>
       </div>

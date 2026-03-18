@@ -125,7 +125,7 @@ export function defaultWorkflowPackLabel(t: ChannelSettingsTabProps["t"], key: W
     case "novel":
       return t({ ko: "소설", en: "Novel", ja: "小説", zh: "小说" });
     case "report":
-      return t({ ko: "보고서", en: "Report", ja: "レポート", zh: "报告" });
+      return t({ ko: "보고서", en: "Report", ja: "レポート", zh: "报告", th: "รายงาน" });
     case "video_preprod":
       return t({ ko: "영상기획", en: "Video Preprod", ja: "映像企画", zh: "视频策划" });
     case "web_research_report":

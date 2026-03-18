@@ -170,7 +170,7 @@ export default function CreateTaskModalOverlays({
                 onClick={onCloseSubmitWithoutProjectPrompt}
                 className="rounded-md border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-800"
               >
-                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
               </button>
               <button
                 type="button"
@@ -242,7 +242,7 @@ export default function CreateTaskModalOverlays({
                 onClick={onCloseMissingPathPrompt}
                 className="rounded-md border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-800"
               >
-                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
               </button>
               <button
                 type="button"
@@ -250,7 +250,7 @@ export default function CreateTaskModalOverlays({
                 onClick={onConfirmCreateMissingPath}
                 className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {t({ ko: "예", en: "Yes", ja: "はい", zh: "是" })}
+                {t({ ko: "예", en: "Yes", ja: "はい", zh: "是", th: "ใช่" })}
               </button>
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function CreateTaskModalOverlays({
                   onClick={onManualPathRefresh}
                   className="rounded-md border border-slate-600 px-2.5 py-1 text-xs font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {t({ ko: "새로고침", en: "Refresh", ja: "更新", zh: "刷新" })}
+                  {t({ ko: "새로고침", en: "Refresh", ja: "更新", zh: "刷新", th: "รีเฟรช" })}
                 </button>
               </div>
               <div className="max-h-[45dvh] overflow-y-auto rounded-lg border border-slate-700 bg-slate-800/50">
@@ -360,7 +360,7 @@ export default function CreateTaskModalOverlays({
                 onClick={onCloseManualPathPicker}
                 className="rounded-md border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-800"
               >
-                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
               </button>
               <button
                 type="button"
@@ -397,7 +397,7 @@ export default function CreateTaskModalOverlays({
                 type="button"
                 onClick={onCloseDraftModal}
                 className="rounded-md px-2 py-1 text-xs text-slate-400 transition hover:bg-slate-800 hover:text-white"
-                title={t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+                title={t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
               >
                 ✕
               </button>
@@ -447,7 +447,7 @@ export default function CreateTaskModalOverlays({
                           onClick={() => onDeleteDraft(draft.id)}
                           className="rounded-md border border-red-500/70 px-2.5 py-1 text-xs font-semibold text-red-300 transition hover:bg-red-500/10"
                         >
-                          {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除" })}
+                          {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除", th: "ลบ" })}
                         </button>
                       </div>
                     </div>

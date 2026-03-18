@@ -340,8 +340,8 @@ export default function ProjectEditorPanel({
             className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-500 disabled:opacity-40"
           >
             {editingProjectId
-              ? t({ ko: "수정 저장", en: "Save", ja: "保存", zh: "保存" })
-              : t({ ko: "프로젝트 등록", en: "Create", ja: "作成", zh: "创建" })}
+              ? t({ ko: "수정 저장", en: "Save", ja: "保存", zh: "保存", th: "บันทึก" })
+              : t({ ko: "프로젝트 등록", en: "Create", ja: "作成", zh: "创建", th: "สร้าง" })}
           </button>
         )}
         {(isCreating || !!editingProjectId) && (
@@ -350,7 +350,7 @@ export default function ProjectEditorPanel({
             onClick={onCancelEdit}
             className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-300"
           >
-            {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+            {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
           </button>
         )}
         <button
@@ -367,7 +367,7 @@ export default function ProjectEditorPanel({
           disabled={!selectedProject}
           className="rounded-lg border border-red-700/70 px-3 py-1.5 text-xs text-red-300 disabled:opacity-40"
         >
-          {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除" })}
+          {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除", th: "ลบ" })}
         </button>
       </div>
     </div>

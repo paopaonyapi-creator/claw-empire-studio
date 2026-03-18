@@ -67,9 +67,9 @@ export function oauthAccountLabel(account: OAuthAccountInfo): string {
 export function statusLabel(status: string, t: TFunction) {
   switch (status) {
     case "idle":
-      return t({ ko: "대기중", en: "Idle", ja: "待機中", zh: "空闲" });
+      return t({ ko: "대기중", en: "Idle", ja: "待機中", zh: "空闲", th: "ว่าง" });
     case "working":
-      return t({ ko: "근무중", en: "Working", ja: "作業中", zh: "工作中" });
+      return t({ ko: "근무중", en: "Working", ja: "作業中", zh: "工作中", th: "กำลังทำงาน" });
     case "break":
       return t({ ko: "휴식중", en: "Break", ja: "休憩中", zh: "休息中" });
     case "offline":
@@ -84,17 +84,17 @@ export function taskStatusLabel(status: string, t: TFunction) {
     case "inbox":
       return t({ ko: "수신함", en: "Inbox", ja: "受信箱", zh: "收件箱" });
     case "planned":
-      return t({ ko: "계획됨", en: "Planned", ja: "計画済み", zh: "已计划" });
+      return t({ ko: "계획됨", en: "Planned", ja: "計画済み", zh: "已计划", th: "วางแผนแล้ว" });
     case "in_progress":
-      return t({ ko: "진행 중", en: "In Progress", ja: "進行中", zh: "进行中" });
+      return t({ ko: "진행 중", en: "In Progress", ja: "進行中", zh: "进行中", th: "กำลังทำ" });
     case "review":
-      return t({ ko: "검토", en: "Review", ja: "レビュー", zh: "审核" });
+      return t({ ko: "검토", en: "Review", ja: "レビュー", zh: "审核", th: "ตรวจสอบ" });
     case "done":
-      return t({ ko: "완료", en: "Done", ja: "完了", zh: "完成" });
+      return t({ ko: "완료", en: "Done", ja: "完了", zh: "完成", th: "เสร็จ" });
     case "pending":
-      return t({ ko: "보류", en: "Pending", ja: "保留", zh: "待处理" });
+      return t({ ko: "보류", en: "Pending", ja: "保留", zh: "待处理", th: "รอดำเนินการ" });
     case "cancelled":
-      return t({ ko: "취소", en: "Cancelled", ja: "キャンセル", zh: "已取消" });
+      return t({ ko: "취소", en: "Cancelled", ja: "キャンセル", zh: "已取消", th: "ยกเลิก" });
     default:
       return status;
   }
@@ -103,7 +103,7 @@ export function taskStatusLabel(status: string, t: TFunction) {
 export function taskTypeLabel(type: string, t: TFunction) {
   switch (type) {
     case "general":
-      return t({ ko: "일반", en: "General", ja: "一般", zh: "通用" });
+      return t({ ko: "일반", en: "General", ja: "一般", zh: "通用", th: "ทั่วไป" });
     case "development":
       return t({ ko: "개발", en: "Development", ja: "開発", zh: "开发" });
     case "design":

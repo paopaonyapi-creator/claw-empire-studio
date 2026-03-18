@@ -89,7 +89,7 @@ export default function OAuthConnectCards({
                       >
                         {isConnected || isDetectedOnly
                           ? t({ ko: "계정 추가", en: "Add Account", ja: "アカウント追加", zh: "添加账号" })
-                          : t({ ko: "연결하기", en: "Connect", ja: "接続", zh: "连接" })}
+                          : t({ ko: "연결하기", en: "Connect", ja: "接続", zh: "连接", th: "เชื่อมต่อ" })}
                       </button>
                     )
                   ) : (
@@ -99,7 +99,7 @@ export default function OAuthConnectCards({
                     >
                       {isConnected || isDetectedOnly
                         ? t({ ko: "계정 추가", en: "Add Account", ja: "アカウント追加", zh: "添加账号" })
-                        : t({ ko: "연결하기", en: "Connect", ja: "接続", zh: "连接" })}
+                        : t({ ko: "연결하기", en: "Connect", ja: "接続", zh: "连接", th: "เชื่อมต่อ" })}
                     </button>
                   )}
                 </>

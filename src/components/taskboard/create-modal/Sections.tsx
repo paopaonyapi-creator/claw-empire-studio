@@ -20,7 +20,7 @@ export function PrioritySection({ priority, t, onPriorityChange }: PrioritySecti
   return (
     <div>
       <label className="mb-2 block text-sm font-medium text-slate-300">
-        {t({ ko: "우선순위", en: "Priority", ja: "優先度", zh: "优先级" })}: {priorityIcon(priority)}{" "}
+        {t({ ko: "우선순위", en: "Priority", ja: "優先度", zh: "优先级", th: "ลำดับความสำคัญ" })}: {priorityIcon(priority)}{" "}
         {priorityLabel(priority, t)} ({priority}/5)
       </label>
       <div className="flex gap-2">
@@ -61,7 +61,7 @@ export function AssigneeSection({
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-slate-300">
-        {t({ ko: "담당 에이전트", en: "Assignee", ja: "担当エージェント", zh: "负责人" })}
+        {t({ ko: "담당 에이전트", en: "Assignee", ja: "担当エージェント", zh: "负责人", th: "เอเจนต์ที่รับผิดชอบ" })}
       </label>
       <AgentSelect
         agents={agents}
@@ -235,7 +235,7 @@ export function ProjectSection({
                   }}
                   className="ml-auto shrink-0 rounded-md border border-emerald-500 bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-500"
                 >
-                  {t({ ko: "예", en: "Yes", ja: "はい", zh: "是" })}
+                  {t({ ko: "예", en: "Yes", ja: "はい", zh: "是", th: "ใช่" })}
                 </button>
               </div>
             ) : (

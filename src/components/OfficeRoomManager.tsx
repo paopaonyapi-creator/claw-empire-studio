@@ -38,7 +38,7 @@ const labels = {
   tone: { ko: "톤 (밝기)", en: "Tone (Brightness)", ja: "トーン（明るさ）", zh: "色调（亮度）" },
   reset: { ko: "초기화", en: "Reset", ja: "リセット", zh: "重置" },
   resetAll: { ko: "전체 초기화", en: "Reset All", ja: "全てリセット", zh: "全部重置" },
-  close: { ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" },
+  close: { ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" },
   presets: { ko: "프리셋", en: "Presets", ja: "プリセット", zh: "预设" },
 };
 

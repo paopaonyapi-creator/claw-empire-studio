@@ -211,6 +211,8 @@ export default function SettingsPanel({
                 en: "Code expired. Please try again.",
                 ja: "コードの有効期限が切れました。再試行してください。",
                 zh: "代码已过期，请重试。",
+
+                th: "รหัสหมดอายุ กรุณาลองใหม่",
               }),
             );
             return;
@@ -231,12 +233,14 @@ export default function SettingsPanel({
               setDeviceStatus(result.status);
               setDeviceError(
                 result.status === "expired"
-                  ? t({ ko: "코드가 만료되었습니다", en: "Code expired", ja: "コードの期限切れ", zh: "代码已过期" })
+                  ? t({ ko: "코드가 만료되었습니다", en: "Code expired", ja: "コードの期限切れ", zh: "代码已过期", th: "รหัสหมดอายุ" })
                   : t({
                       ko: "인증이 거부되었습니다",
                       en: "Authentication denied",
                       ja: "認証が拒否されました",
                       zh: "认证被拒绝",
+
+                      th: "การยืนยันตัวตนถูกปฏิเสธ",
                     }),
               );
               return;
@@ -247,7 +251,7 @@ export default function SettingsPanel({
               pollTimerRef.current = null;
               setDeviceStatus("error");
               setDeviceError(
-                result.error || t({ ko: "알 수 없는 오류", en: "Unknown error", ja: "不明なエラー", zh: "未知错误" }),
+                result.error || t({ ko: "알 수 없는 오류", en: "Unknown error", ja: "不明なエラー", zh: "未知错误", th: "ข้อผิดพลาดไม่ทราบสาเหตุ" }),
               );
               return;
             }
@@ -373,6 +377,8 @@ export default function SettingsPanel({
             en: "Delete this OAuth account?",
             ja: "この OAuth アカウントを削除しますか？",
             zh: "要删除此 OAuth 账号吗？",
+
+            th: "ต้องการลบบัญชี OAuth นี้หรือไม่?",
           }),
         )
       ) {
@@ -395,7 +401,7 @@ export default function SettingsPanel({
   return (
     <div className="mx-auto max-w-2xl space-y-4 sm:space-y-6">
       <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: "var(--th-text-heading)" }}>
-        ⚙️ {t({ ko: "설정", en: "Settings", ja: "設定", zh: "设置" })}
+        ⚙️ {t({ ko: "설정", en: "Settings", ja: "設定", zh: "设置", th: "ตั้งค่า" })}
       </h2>
 
       <SettingsTabNav tab={tab} setTab={setTab} t={t} />

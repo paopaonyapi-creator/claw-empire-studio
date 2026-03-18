@@ -46,6 +46,8 @@ export function useAppLabels({
           en: "Office",
           ja: "オフィス",
           zh: "办公室",
+
+          th: "สำนักงาน",
         })}`;
       case "dashboard":
         return `📊 ${pickLang(uiLanguage, {
@@ -53,6 +55,8 @@ export function useAppLabels({
           en: "Dashboard",
           ja: "ダッシュボード",
           zh: "仪表盘",
+
+          th: "แดชบอร์ด",
         })}`;
       case "tasks":
         return `📋 ${pickLang(uiLanguage, {
@@ -60,6 +64,8 @@ export function useAppLabels({
           en: "Tasks",
           ja: "タスク管理",
           zh: "任务管理",
+
+          th: "จัดการงาน",
         })}`;
       case "agents":
         return `${pickLang(uiLanguage, {
@@ -67,6 +73,8 @@ export function useAppLabels({
           en: "Agents",
           ja: "社員管理",
           zh: "员工管理",
+
+          th: "จัดการทีม",
         })}`;
       case "skills":
         return `📚 ${pickLang(uiLanguage, {
@@ -74,6 +82,8 @@ export function useAppLabels({
           en: "Skills",
           ja: "スキル資料室",
           zh: "技能库",
+
+          th: "คลังเอกสาร",
         })}`;
       case "settings":
         return `⚙️ ${pickLang(uiLanguage, {
@@ -81,6 +91,8 @@ export function useAppLabels({
           en: "Settings",
           ja: "設定",
           zh: "设置",
+
+          th: "ตั้งค่า",
         })}`;
       default:
         return "";
@@ -127,18 +139,24 @@ export function useAppLabels({
     en: "Reports",
     ja: "レポート",
     zh: "报告",
+
+    th: "รายงาน",
   })}`;
   const tasksPrimaryLabel = pickLang(uiLanguage, {
     ko: "업무",
     en: "Tasks",
     ja: "タスク",
     zh: "任务",
+
+    th: "งาน",
   });
   const agentStatusLabel = pickLang(uiLanguage, {
     ko: "에이전트",
     en: "Agents",
     ja: "エージェント",
     zh: "代理",
+
+    th: "เอเจนต์",
   });
   const decisionLabel = pickLang(uiLanguage, {
     ko: "의사결정",
@@ -219,6 +237,8 @@ export function useAppLabels({
     en: "Got it",
     ja: "確認",
     zh: "知道了",
+
+    th: "ยืนยัน",
   });
   const autoUpdateNoticeContainerClass =
     theme === "light"

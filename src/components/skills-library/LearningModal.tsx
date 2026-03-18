@@ -92,7 +92,7 @@ export default function LearningModal({
           >
             {learnInProgress
               ? t({ ko: "학습중", en: "Running", ja: "実行中", zh: "进行中" })
-              : t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+              : t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
           </button>
         </div>
 
@@ -216,7 +216,7 @@ export default function LearningModal({
                           ? t({ ko: "학습됨", en: "Learned", ja: "学習済み", zh: "已学习" })
                           : isSelected
                             ? t({ ko: "선택됨", en: "Selected", ja: "選択", zh: "已选" })
-                            : t({ ko: "대기", en: "Idle", ja: "待機", zh: "待命" })}
+                            : t({ ko: "대기", en: "Idle", ja: "待機", zh: "待命", th: "ว่าง" })}
                       </div>
                       {isAlreadyLearned && (
                         <button
@@ -302,7 +302,7 @@ export default function LearningModal({
                   : "border-slate-600 text-slate-300 hover:bg-slate-800"
               }`}
             >
-              {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+              {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
             </button>
             <button
               onClick={onStartLearning}

@@ -83,7 +83,7 @@ export default function OAuthConnectedProvidersSection({
                   <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400">
                     {info.lastRefreshed
                       ? t({ ko: "자동 갱신됨", en: "Auto-refreshed", ja: "自動更新済", zh: "已自动刷新" })
-                      : t({ ko: "연결됨", en: "Connected", ja: "接続中", zh: "已连接" })}
+                      : t({ ko: "연결됨", en: "Connected", ja: "接続中", zh: "已连接", th: "เชื่อมต่อแล้ว" })}
                   </span>
                 ) : info.refreshFailed ? (
                   <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400">
@@ -112,7 +112,7 @@ export default function OAuthConnectedProvidersSection({
                   >
                     {refreshing === provider
                       ? t({ ko: "갱신 중...", en: "Refreshing...", ja: "更新中...", zh: "刷新中..." })
-                      : t({ ko: "갱신", en: "Refresh", ja: "更新", zh: "刷新" })}
+                      : t({ ko: "갱신", en: "Refresh", ja: "更新", zh: "刷新", th: "รีเฟรช" })}
                   </button>
                 )}
 
@@ -133,7 +133,7 @@ export default function OAuthConnectedProvidersSection({
                   >
                     {disconnecting === provider
                       ? t({ ko: "해제 중...", en: "Disconnecting...", ja: "切断中...", zh: "断开中..." })
-                      : t({ ko: "연결 해제", en: "Disconnect", ja: "接続解除", zh: "断开连接" })}
+                      : t({ ko: "연결 해제", en: "Disconnect", ja: "接続解除", zh: "断开连接", th: "ตัดการเชื่อมต่อ" })}
                   </button>
                 )}
               </div>
@@ -278,7 +278,7 @@ export default function OAuthConnectedProvidersSection({
                           }`}
                         >
                           {account.active
-                            ? t({ ko: "활성", en: "Active", ja: "有効", zh: "活动" })
+                            ? t({ ko: "활성", en: "Active", ja: "有効", zh: "活动", th: "ใช้งาน" })
                             : t({ ko: "대기", en: "Standby", ja: "待機", zh: "待命" })}
                         </span>
                         <span
@@ -339,7 +339,7 @@ export default function OAuthConnectedProvidersSection({
 
                         <label className="space-y-1">
                           <span className="block text-[10px] uppercase tracking-wider text-slate-500">
-                            {t({ ko: "우선순위", en: "Priority", ja: "優先度", zh: "优先级" })}
+                            {t({ ko: "우선순위", en: "Priority", ja: "優先度", zh: "优先级", th: "ลำดับความสำคัญ" })}
                           </span>
                           <input
                             type="number"
@@ -375,7 +375,7 @@ export default function OAuthConnectedProvidersSection({
                           disabled={savingAccountId === account.id}
                           className="text-[11px] px-2 py-1 rounded bg-emerald-600/25 hover:bg-emerald-600/40 text-emerald-200 disabled:opacity-50"
                         >
-                          {t({ ko: "저장", en: "Save", ja: "保存", zh: "保存" })}
+                          {t({ ko: "저장", en: "Save", ja: "保存", zh: "保存", th: "บันทึก" })}
                         </button>
 
                         <button
@@ -386,8 +386,8 @@ export default function OAuthConnectedProvidersSection({
                           className="text-[11px] px-2 py-1 rounded bg-amber-600/20 hover:bg-amber-600/35 text-amber-200 disabled:opacity-50"
                         >
                           {account.status === "active"
-                            ? t({ ko: "비활성", en: "Disable", ja: "無効化", zh: "禁用" })
-                            : t({ ko: "활성화", en: "Enable", ja: "有効化", zh: "启用" })}
+                            ? t({ ko: "비활성", en: "Disable", ja: "無効化", zh: "禁用", th: "ไม่ใช้งาน" })
+                            : t({ ko: "활성화", en: "Enable", ja: "有効化", zh: "启用", th: "เปิดใช้งาน" })}
                         </button>
 
                         <button
@@ -395,7 +395,7 @@ export default function OAuthConnectedProvidersSection({
                           disabled={savingAccountId === account.id}
                           className="text-[11px] px-2 py-1 rounded bg-red-600/20 hover:bg-red-600/35 text-red-300 disabled:opacity-50"
                         >
-                          {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除" })}
+                          {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除", th: "ลบ" })}
                         </button>
                       </div>
 

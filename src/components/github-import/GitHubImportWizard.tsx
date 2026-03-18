@@ -98,7 +98,7 @@ export default function GitHubImportWizard({
           onClick={onGoToBranch}
           className={`rounded-full px-3 py-1 text-xs font-medium ${step === "branch" ? "bg-blue-600 text-white" : "bg-slate-700 text-slate-300 hover:bg-slate-600"} disabled:opacity-40`}
         >
-          2. {t({ ko: "브랜치", en: "Branch", ja: "ブランチ", zh: "分支" })}
+          2. {t({ ko: "브랜치", en: "Branch", ja: "ブランチ", zh: "分支", th: "Branch" })}
         </button>
         <span className="text-slate-600">/</span>
         <button
@@ -107,7 +107,7 @@ export default function GitHubImportWizard({
           onClick={onGoToClone}
           className={`rounded-full px-3 py-1 text-xs font-medium ${step === "clone" ? "bg-blue-600 text-white" : "bg-slate-700 text-slate-300 hover:bg-slate-600"} disabled:opacity-40`}
         >
-          3. {t({ ko: "가져오기", en: "Import", ja: "インポート", zh: "导入" })}
+          3. {t({ ko: "가져오기", en: "Import", ja: "インポート", zh: "导入", th: "นำเข้า" })}
         </button>
         <div className="flex-1" />
         <button
@@ -115,7 +115,7 @@ export default function GitHubImportWizard({
           onClick={onCancel}
           className="rounded-lg border border-slate-700 px-3 py-1 text-xs text-slate-400 hover:text-white"
         >
-          {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+          {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
         </button>
       </div>
 
@@ -365,7 +365,7 @@ export default function GitHubImportWizard({
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-400">
                     {cloneStatus === "done"
-                      ? t({ ko: "완료", en: "Complete", ja: "完了", zh: "完成" })
+                      ? t({ ko: "완료", en: "Complete", ja: "完了", zh: "完成", th: "เสร็จ" })
                       : t({ ko: "클론 중...", en: "Cloning...", ja: "クローン中...", zh: "正在克隆..." })}
                   </span>
                   <span className="text-slate-400">{cloneProgress}%</span>
@@ -407,7 +407,7 @@ export default function GitHubImportWizard({
                 disabled={creating}
                 className="rounded-lg border border-slate-700 px-3 py-2 text-xs text-slate-300 disabled:opacity-40"
               >
-                {t({ ko: "이전", en: "Back", ja: "戻る", zh: "返回" })}
+                {t({ ko: "이전", en: "Back", ja: "戻る", zh: "返回", th: "ก่อนหน้า" })}
               </button>
             </div>
           </div>

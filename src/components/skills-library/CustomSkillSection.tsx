@@ -16,7 +16,7 @@ export default function CustomSkillSection({ t, customSkills, localeTag, onDelet
       <div className="flex items-center justify-between mb-3">
         <div className="text-sm font-semibold text-violet-200 flex items-center gap-2">
           <span>✏️</span>
-          {t({ ko: "커스텀 스킬", en: "Custom Skills", ja: "カスタムスキル", zh: "自定义技能" })}
+          {t({ ko: "커스텀 스킬", en: "Custom Skills", ja: "カスタムスキル", zh: "自定义技能", th: "ทักษะกำหนดเอง" })}
           <span className="text-[11px] text-slate-500 font-normal">({customSkills.length})</span>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function CustomSkillSection({ t, customSkills, localeTag, onDelet
               onClick={() => onDeleteSkill(skill.skillName)}
               className="shrink-0 ml-2 text-[10px] px-2 py-0.5 rounded border border-rose-500/30 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-all"
             >
-              {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除" })}
+              {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除", th: "ลบ" })}
             </button>
           </div>
         ))}

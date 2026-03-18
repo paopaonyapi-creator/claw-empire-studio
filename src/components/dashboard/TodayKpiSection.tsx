@@ -101,13 +101,13 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
               {numberFormatter.format(kpi.week.done)}
             </p>
             <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "var(--th-text-muted)" }}>
-              {t({ ko: "이번 주", en: "This Week", ja: "今週", zh: "本周" })}
+              {t({ ko: "이번 주", en: "This Week", ja: "今週", zh: "本周", th: "สัปดาห์นี้" })}
             </p>
           </div>
         </div>
         <div className="mt-2 flex justify-between text-[9px]" style={{ color: "var(--th-text-muted)" }}>
           <span>
-            {t({ ko: "생성", en: "Created", ja: "作成", zh: "创建" })}: {kpi.today.created}{" "}
+            {t({ ko: "생성", en: "Created", ja: "作成", zh: "创建", th: "สร้าง" })}: {kpi.today.created}{" "}
             {t({ ko: "건", en: "", ja: "件", zh: "项" })}
           </span>
           <span>

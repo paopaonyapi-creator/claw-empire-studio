@@ -180,7 +180,7 @@ export default function ApiAssignModal({ t, localeTag, apiState }: ApiAssignModa
             onClick={() => setApiAssignTarget(null)}
             className="text-xs px-3 py-1.5 bg-slate-600 hover:bg-slate-500 text-slate-300 rounded-lg transition-colors"
           >
-            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
           </button>
         </div>
       </div>

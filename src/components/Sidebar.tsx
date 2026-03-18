@@ -28,15 +28,15 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
   const workingCount = agents.filter((a) => a.status === "working").length;
   const totalAgents = agents.length;
 
-  const tr = (ko: string, en: string, ja = en, zh = en) => t({ ko, en, ja, zh });
+  const tr = (ko: string, en: string, ja = en, zh = en, th = en) => t({ ko, en, ja, zh, th });
 
   const navLabels: Record<View, string> = {
-    office: tr("오피스", "Office", "オフィス", "办公室"),
-    agents: tr("직원관리", "Agents", "社員管理", "员工管理"),
-    skills: tr("문서고", "Library", "ライブラリ", "文档库"),
-    dashboard: tr("대시보드", "Dashboard", "ダッシュボード", "仪表盘"),
-    tasks: tr("업무 관리", "Tasks", "タスク管理", "任务管理"),
-    settings: tr("설정", "Settings", "設定", "设置"),
+    office: tr("오피스", "Office", "オフィス", "办公室", "สำนักงาน"),
+    agents: tr("직원관리", "Agents", "社員管理", "员工管理", "จัดการทีม"),
+    skills: tr("문서고", "Library", "ライブラリ", "文档库", "คลังเอกสาร"),
+    dashboard: tr("대시보드", "Dashboard", "ダッシュボード", "仪表盘", "แดชบอร์ด"),
+    tasks: tr("업무 관리", "Tasks", "タスク管理", "任务管理", "จัดการงาน"),
+    settings: tr("설정", "Settings", "設定", "设置", "ตั้งค่า"),
   };
 
   return (

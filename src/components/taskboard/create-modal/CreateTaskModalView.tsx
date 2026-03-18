@@ -95,7 +95,7 @@ export default function CreateTaskModalView({
             <button
               onClick={onRequestClose}
               className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-              title={t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+              title={t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
             >
               ✕
             </button>
@@ -109,7 +109,7 @@ export default function CreateTaskModalView({
             <div className="min-w-0 space-y-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-300">
-                  {t({ ko: "제목", en: "Title", ja: "タイトル", zh: "标题" })} <span className="text-red-400">*</span>
+                  {t({ ko: "제목", en: "Title", ja: "タイトル", zh: "标题", th: "หัวข้อ" })} <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -128,7 +128,7 @@ export default function CreateTaskModalView({
 
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-300">
-                  {t({ ko: "설명", en: "Description", ja: "説明", zh: "说明" })}
+                  {t({ ko: "설명", en: "Description", ja: "説明", zh: "说明", th: "คำอธิบาย" })}
                 </label>
                 <textarea
                   value={description}
@@ -147,7 +147,7 @@ export default function CreateTaskModalView({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-300">
-                    {t({ ko: "부서", en: "Department", ja: "部署", zh: "部门" })}
+                    {t({ ko: "부서", en: "Department", ja: "部署", zh: "部门", th: "แผนก" })}
                   </label>
                   <select
                     value={departmentId}
@@ -237,7 +237,7 @@ export default function CreateTaskModalView({
               onClick={onRequestClose}
               className="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:bg-slate-800"
             >
-              {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+              {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
             </button>
             <button
               type="submit"

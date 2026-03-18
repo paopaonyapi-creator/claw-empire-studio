@@ -104,7 +104,7 @@ export function DashboardDeptAndSquad({
                     {t({ ko: "클리어", en: "cleared", ja: "クリア", zh: "完成" })} {numberFormatter.format(dept.done)}
                   </span>
                   <span>
-                    {t({ ko: "전체", en: "total", ja: "全体", zh: "总计" })} {numberFormatter.format(dept.total)}
+                    {t({ ko: "전체", en: "total", ja: "全体", zh: "总计", th: "ทั้งหมด" })} {numberFormatter.format(dept.total)}
                   </span>
                 </div>
               </article>
@@ -155,8 +155,8 @@ export function DashboardDeptAndSquad({
                 key={agent.id}
                 title={`${localeName(language, agent)} — ${
                   isWorking
-                    ? t({ ko: "작업 중", en: "Working", ja: "作業中", zh: "工作中" })
-                    : t({ ko: "대기 중", en: "Idle", ja: "待機中", zh: "空闲" })
+                    ? t({ ko: "작업 중", en: "Working", ja: "作業中", zh: "工作中", th: "กำลังทำงาน" })
+                    : t({ ko: "대기 중", en: "Idle", ja: "待機中", zh: "空闲", th: "รอดำเนินการ" })
                 } — ${tier.name}`}
                 className={`group relative flex flex-col items-center gap-1.5 ${isWorking ? "animate-bubble-float" : ""}`}
                 style={isWorking ? { animationDelay: `${delay}ms` } : {}}
@@ -243,7 +243,7 @@ export function DashboardMissionLog({
             color: "var(--th-text-secondary)",
           }}
         >
-          {t({ ko: "유휴", en: "Idle", ja: "待機", zh: "空闲" })} {numberFormatter.format(idleAgents)}
+          {t({ ko: "유휴", en: "Idle", ja: "待機", zh: "空闲", th: "ว่าง" })} {numberFormatter.format(idleAgents)}
           {t({ ko: "명", en: "", ja: "人", zh: "人" })}
         </span>
       </div>

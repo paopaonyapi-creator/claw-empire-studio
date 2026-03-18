@@ -126,7 +126,7 @@ export default function SkillsGrid({
                         zh: "让所选 CLI 代表学习此技能",
                       })}
                     >
-                      {t({ ko: "학습", en: "Learn", ja: "学習", zh: "学习" })}
+                      {t({ ko: "학습", en: "Learn", ja: "学習", zh: "学习", th: "เรียนรู้" })}
                     </button>
                     <button
                       onClick={() => onCopy(skill)}
@@ -134,8 +134,8 @@ export default function SkillsGrid({
                       title={`npx skills add ${skill.repo}`}
                     >
                       {copiedSkill === skill.name
-                        ? t({ ko: "복사됨", en: "Copied", ja: "コピー済み", zh: "已复制" })
-                        : t({ ko: "복사", en: "Copy", ja: "コピー", zh: "复制" })}
+                        ? t({ ko: "복사됨", en: "Copied", ja: "コピー済み", zh: "已复制", th: "คัดลอกแล้ว" })
+                        : t({ ko: "복사", en: "Copy", ja: "コピー", zh: "复制", th: "คัดลอก" })}
                     </button>
                   </div>
                 </div>

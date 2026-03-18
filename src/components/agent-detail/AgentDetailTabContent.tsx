@@ -51,7 +51,7 @@ export default function AgentDetailTabContent({
           <div className="bg-slate-700/30 rounded-lg p-3 text-center">
             <div className="text-lg font-bold text-white">{agent.stats_tasks_done}</div>
             <div className="text-[10px] text-slate-500">
-              {t({ ko: "완료 업무", en: "Completed", ja: "完了タスク", zh: "已完成任务" })}
+              {t({ ko: "완료 업무", en: "Completed", ja: "完了タスク", zh: "已完成任务", th: "เสร็จแล้ว" })}
             </div>
           </div>
           <div className="bg-slate-700/30 rounded-lg p-3 text-center">
@@ -73,7 +73,7 @@ export default function AgentDetailTabContent({
             onClick={() => onChat(agent)}
             className="flex-1 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors"
           >
-            💬 {t({ ko: "대화하기", en: "Chat", ja: "チャット", zh: "对话" })}
+            💬 {t({ ko: "대화하기", en: "Chat", ja: "チャット", zh: "对话", th: "แชท" })}
           </button>
           <button
             onClick={() => onAssignTask(agent.id)}
@@ -242,7 +242,7 @@ export default function AgentDetailTabContent({
               <div className="text-xs text-slate-500 mt-0.5">
                 {subAgent.status === "working"
                   ? `🔨 ${t({ ko: "작업중...", en: "Working...", ja: "作業中...", zh: "工作中..." })}`
-                  : `✅ ${t({ ko: "완료", en: "Done", ja: "完了", zh: "完成" })}`}
+                  : `✅ ${t({ ko: "완료", en: "Done", ja: "完了", zh: "完成", th: "เสร็จ" })}`}
               </div>
             </div>
             {subAgent.status === "working" && (

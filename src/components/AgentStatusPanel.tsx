@@ -208,7 +208,7 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                 refresh();
               }}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white"
-              title={t({ ko: "새로고침", en: "Refresh", ja: "リフレッシュ", zh: "刷新" })}
+              title={t({ ko: "새로고침", en: "Refresh", ja: "リフレッシュ", zh: "刷新", th: "รีเฟรช" })}
             >
               &#x21BB;
             </button>
@@ -253,7 +253,7 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                     }}
                     className="rounded border border-slate-700 px-2 py-0.5 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-white"
                   >
-                    {t({ ko: "새로고침", en: "Refresh", ja: "更新", zh: "刷新" })}
+                    {t({ ko: "새로고침", en: "Refresh", ja: "更新", zh: "刷新", th: "รีเฟรช" })}
                   </button>
                 </div>
               </div>
@@ -308,11 +308,11 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                               <span className="text-slate-400">PID {proc.pid}</span>
                               {proc.is_idle ? (
                                 <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-amber-300">
-                                  {t({ ko: "유휴", en: "Idle", ja: "アイドル", zh: "空闲" })}
+                                  {t({ ko: "유휴", en: "Idle", ja: "アイドル", zh: "空闲", th: "ว่าง" })}
                                 </span>
                               ) : (
                                 <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-emerald-300">
-                                  {t({ ko: "활성", en: "Active", ja: "稼働中", zh: "活跃" })}
+                                  {t({ ko: "활성", en: "Active", ja: "稼働中", zh: "活跃", th: "ใช้งาน" })}
                                 </span>
                               )}
                             </div>
@@ -327,10 +327,10 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                             </p>
                             <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[10px] text-slate-500">
                               <span>
-                                {t({ ko: "담당", en: "Agent", ja: "担当", zh: "代理" })}: {agentName}
+                                {t({ ko: "담당", en: "Agent", ja: "担当", zh: "代理", th: "เอเจนต์" })}: {agentName}
                               </span>
                               <span>
-                                {t({ ko: "작업", en: "Task", ja: "タスク", zh: "任务" })}: {proc.task_status || "-"}
+                                {t({ ko: "작업", en: "Task", ja: "タスク", zh: "任务", th: "งาน" })}: {proc.task_status || "-"}
                               </span>
                               <span>Idle: {fmtElapsed(proc.idle_seconds)}</span>
                             </div>
@@ -458,7 +458,7 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
               onClick={onClose}
               className="rounded-lg bg-slate-700 px-4 py-1.5 text-sm font-medium text-slate-300 transition hover:bg-slate-600"
             >
-              {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+              {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
             </button>
           </div>
         </div>

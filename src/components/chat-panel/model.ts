@@ -32,8 +32,8 @@ export const STATUS_COLORS: Record<string, string> = {
 };
 
 export const STATUS_LABELS: Record<string, LangText> = {
-  idle: { ko: "대기중", en: "Idle", ja: "待機中", zh: "待机中" },
-  working: { ko: "작업중", en: "Working", ja: "作業中", zh: "工作中" },
+  idle: { ko: "대기중", en: "Idle", ja: "待機中", zh: "待机中", th: "ว่าง" },
+  working: { ko: "작업중", en: "Working", ja: "作業中", zh: "工作中", th: "กำลังทำงาน" },
   break: { ko: "휴식", en: "Break", ja: "休憩中", zh: "休息中" },
   offline: { ko: "오프라인", en: "Offline", ja: "オフライン", zh: "离线" },
 };

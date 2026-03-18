@@ -566,7 +566,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
                       <div className="mt-1 text-[11px] text-slate-500 flex items-center gap-1.5">
                         {assignedAgentName ? (
                           <>
-                            <span>{t({ ko: "대화 Agent", en: "Agent", ja: "担当Agent", zh: "对话 Agent" })}:</span>
+                            <span>{t({ ko: "대화 Agent", en: "Agent", ja: "担当Agent", zh: "对话 Agent", th: "เอเจนต์" })}:</span>
                             {assignedAgent && (
                               <AgentAvatar agent={assignedAgent} spriteMap={spriteMap} size={14} rounded="xl" />
                             )}
@@ -589,13 +589,13 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
                         onClick={() => openEditModal(row)}
                         className="px-2 py-1 rounded text-[11px] bg-slate-700/70 border border-slate-600 text-slate-200 hover:bg-slate-700"
                       >
-                        {t({ ko: "편집", en: "Edit", ja: "編集", zh: "编辑" })}
+                        {t({ ko: "편집", en: "Edit", ja: "編集", zh: "编辑", th: "แก้ไข" })}
                       </button>
                       <button
                         onClick={() => removeChat(row)}
                         className="px-2 py-1 rounded text-[11px] bg-red-600/20 border border-red-500/30 text-red-300 hover:bg-red-600/30"
                       >
-                        {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除" })}
+                        {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除", th: "ลบ" })}
                       </button>
                     </div>
                   </div>
@@ -644,8 +644,8 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
               {t({ ko: "텔레그램 수신기", en: "Telegram Receiver", ja: "Telegram 受信機", zh: "Telegram 接收器" })}:{" "}
               <span className={telegramReceiverStatus.enabled ? "text-emerald-400" : "text-amber-300"}>
                 {telegramReceiverStatus.enabled
-                  ? t({ ko: "활성", en: "active", ja: "有効", zh: "已启用" })
-                  : t({ ko: "비활성", en: "inactive", ja: "無効", zh: "未启用" })}
+                  ? t({ ko: "활성", en: "active", ja: "有効", zh: "已启用", th: "ใช้งาน" })
+                  : t({ ko: "비활성", en: "inactive", ja: "無効", zh: "未启用", th: "ไม่ใช้งาน" })}
               </span>
             </div>
             <div>
@@ -662,8 +662,8 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
               {t({ ko: "디스코드 수신기", en: "Discord Receiver", ja: "Discord 受信機", zh: "Discord 接收器" })}:{" "}
               <span className={discordReceiverStatus.enabled ? "text-emerald-400" : "text-amber-300"}>
                 {discordReceiverStatus.enabled
-                  ? t({ ko: "활성", en: "active", ja: "有効", zh: "已启用" })
-                  : t({ ko: "비활성", en: "inactive", ja: "無効", zh: "未启用" })}
+                  ? t({ ko: "활성", en: "active", ja: "有効", zh: "已启用", th: "ใช้งาน" })
+                  : t({ ko: "비활성", en: "inactive", ja: "無効", zh: "未启用", th: "ไม่ใช้งาน" })}
               </span>
             </div>
             <div>
@@ -733,7 +733,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
         >
           {sending
             ? t({ ko: "전송 중...", en: "Sending...", ja: "送信中...", zh: "发送中..." })
-            : t({ ko: "메시지 전송", en: "Send", ja: "送信", zh: "发送" })}
+            : t({ ko: "메시지 전송", en: "Send", ja: "送信", zh: "发送", th: "ส่ง" })}
         </button>
 
         {sendStatus && (

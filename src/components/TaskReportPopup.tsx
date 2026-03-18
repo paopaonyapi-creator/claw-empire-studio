@@ -183,7 +183,7 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
                   : "bg-slate-700 text-slate-200 hover:bg-slate-600"
               }`}
             >
-              {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页" })}
+              {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页", th: "ก่อนหน้า" })}
             </button>
             <span className="text-[11px] text-slate-400">
               {t({
@@ -205,7 +205,7 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
                   : "bg-slate-700 text-slate-200 hover:bg-slate-600"
               }`}
             >
-              {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页" })}
+              {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页", th: "ถัดไป" })}
             </button>
           </div>
         )}
@@ -300,7 +300,7 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
             {teamName} · {teamAgent || "-"}
           </p>
           <p className="mt-1 text-xs text-slate-500">
-            {t({ ko: "완료", en: "Completed", ja: "完了", zh: "完成" })}: {fmtTime(team.completed_at)}
+            {t({ ko: "완료", en: "Completed", ja: "完了", zh: "完成", th: "เสร็จ" })}: {fmtTime(team.completed_at)}
           </p>
           <p className="mt-2 whitespace-pre-wrap text-xs leading-relaxed text-slate-300">{team.summary || "-"}</p>
         </div>
@@ -391,7 +391,7 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
                   {taskAgentName} ({currentReport.task.agent_role})
                 </span>
                 <span>
-                  {t({ ko: "완료", en: "Completed", ja: "完了", zh: "完成" })}:{" "}
+                  {t({ ko: "완료", en: "Completed", ja: "完了", zh: "完成", th: "เสร็จ" })}:{" "}
                   {fmtTime(currentReport.task.completed_at)}
                 </span>
                 <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-emerald-400">
@@ -465,7 +465,7 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
               onClick={onClose}
               className="rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-emerald-500"
             >
-              {t({ ko: "확인", en: "OK", ja: "OK", zh: "确认" })}
+              {t({ ko: "확인", en: "OK", ja: "OK", zh: "确认", th: "ยืนยัน" })}
             </button>
           </div>
         </div>

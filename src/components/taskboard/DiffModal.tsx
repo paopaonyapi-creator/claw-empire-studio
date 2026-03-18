@@ -30,7 +30,7 @@ function DiffModal({ taskId, onClose }: DiffModalProps) {
       if (diffResult.status === "fulfilled") {
         const d = diffResult.value;
         if (!d.ok)
-          setError(d.error || t({ ko: "알 수 없는 오류", en: "Unknown error", ja: "不明なエラー", zh: "未知错误" }));
+          setError(d.error || t({ ko: "알 수 없는 오류", en: "Unknown error", ja: "不明なエラー", zh: "未知错误", th: "ข้อผิดพลาดไม่ทราบสาเหตุ" }));
         else setDiffData(d);
       } else {
         setError(diffResult.reason instanceof Error ? diffResult.reason.message : String(diffResult.reason));
@@ -82,7 +82,7 @@ function DiffModal({ taskId, onClose }: DiffModalProps) {
       if (result.ok) setTimeout(onClose, 1500);
     } catch (e: unknown) {
       setActionResult(
-        `${t({ ko: "오류", en: "Error", ja: "エラー", zh: "错误" })}: ${e instanceof Error ? e.message : String(e)}`,
+        `${t({ ko: "오류", en: "Error", ja: "エラー", zh: "错误", th: "ผิดพลาด" })}: ${e instanceof Error ? e.message : String(e)}`,
       );
     } finally {
       setMerging(false);
@@ -117,7 +117,7 @@ function DiffModal({ taskId, onClose }: DiffModalProps) {
       if (result.ok) setTimeout(onClose, 1500);
     } catch (e: unknown) {
       setActionResult(
-        `${t({ ko: "오류", en: "Error", ja: "エラー", zh: "错误" })}: ${e instanceof Error ? e.message : String(e)}`,
+        `${t({ ko: "오류", en: "Error", ja: "エラー", zh: "错误", th: "ผิดพลาด" })}: ${e instanceof Error ? e.message : String(e)}`,
       );
     } finally {
       setDiscarding(false);
@@ -194,7 +194,7 @@ function DiffModal({ taskId, onClose }: DiffModalProps) {
             <button
               onClick={onClose}
               className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-              title={t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+              title={t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
             >
               X
             </button>
@@ -219,7 +219,7 @@ function DiffModal({ taskId, onClose }: DiffModalProps) {
             </div>
           ) : error ? (
             <div className="flex items-center justify-center py-12 text-red-400">
-              {t({ ko: "오류", en: "Error", ja: "エラー", zh: "错误" })}: {error}
+              {t({ ko: "오류", en: "Error", ja: "エラー", zh: "错误", th: "ผิดพลาด" })}: {error}
             </div>
           ) : !diffData?.hasWorktree ? (
             <div className="flex items-center justify-center py-12 text-slate-500">

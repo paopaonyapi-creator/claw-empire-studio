@@ -103,7 +103,7 @@ export default function TaskCard({
         </button>
         <span
           className="flex-shrink-0 text-base"
-          title={`${t({ ko: "우선순위", en: "Priority", ja: "優先度", zh: "优先级" })}: ${priorityLabel(task.priority, t)}`}
+          title={`${t({ ko: "우선순위", en: "Priority", ja: "優先度", zh: "优先级", th: "ลำดับความสำคัญ" })}: ${priorityLabel(task.priority, t)}`}
         >
           {priorityIcon(task.priority)}
         </span>
@@ -273,7 +273,7 @@ export default function TaskCard({
             title={t({ ko: "작업 실행", en: "Run task", ja: "タスク実行", zh: "运行任务" })}
             className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-green-700 px-2 py-1.5 text-xs font-medium text-white transition hover:bg-green-600"
           >
-            ▶ {t({ ko: "실행", en: "Run", ja: "実行", zh: "运行" })}
+            ▶ {t({ ko: "실행", en: "Run", ja: "実行", zh: "运行", th: "รัน" })}
           </button>
         )}
         {canPause && (
@@ -304,7 +304,7 @@ export default function TaskCard({
             title={t({ ko: "작업 중지", en: "Cancel task", ja: "タスク停止", zh: "取消任务" })}
             className="flex items-center justify-center gap-1 rounded-lg bg-red-800 px-2 py-1.5 text-xs font-medium text-white transition hover:bg-red-700"
           >
-            ⏹ {t({ ko: "중지", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+            ⏹ {t({ ko: "중지", en: "Cancel", ja: "キャンセル", zh: "取消", th: "หยุด" })}
           </button>
         )}
         {canResume && (

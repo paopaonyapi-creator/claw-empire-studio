@@ -126,7 +126,7 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
             onClick={onCancel}
             className="rounded-lg border border-slate-700 px-3 py-2 text-xs text-slate-300"
           >
-            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
           </button>
         </div>
       )}
@@ -152,7 +152,7 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
               }}
               className="rounded border border-slate-600 px-2 py-1 text-xs text-slate-300 hover:bg-slate-700"
             >
-              {t({ ko: "복사", en: "Copy", ja: "コピー", zh: "复制" })}
+              {t({ ko: "복사", en: "Copy", ja: "コピー", zh: "复制", th: "คัดลอก" })}
             </button>
           </div>
           {deviceVerifyUrl && (

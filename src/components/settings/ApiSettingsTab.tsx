@@ -72,14 +72,14 @@ export default function ApiSettingsTab({ t, localeTag, apiState }: ApiSettingsTa
               disabled={apiProvidersLoading || apiPresetsLoading}
               className="text-xs text-blue-400 transition-colors hover:text-blue-300 disabled:opacity-50"
             >
-              {t({ ko: "새로고침", en: "Refresh", ja: "更新", zh: "刷新" })}
+              {t({ ko: "새로고침", en: "Refresh", ja: "更新", zh: "刷新", th: "รีเฟรช" })}
             </button>
             {!apiAddMode && (
               <button
                 onClick={openAddMode}
                 className="rounded-lg bg-emerald-600 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-emerald-500"
               >
-                + {t({ ko: "추가", en: "Add", ja: "追加", zh: "添加" })}
+                + {t({ ko: "추가", en: "Add", ja: "追加", zh: "添加", th: "เพิ่ม" })}
               </button>
             )}
           </div>
@@ -251,7 +251,7 @@ export default function ApiSettingsTab({ t, localeTag, apiState }: ApiSettingsTa
 
             <div>
               <label className="mb-1 block text-xs text-slate-400">
-                {t({ ko: "이름", en: "Name", ja: "名前", zh: "名称" })}
+                {t({ ko: "이름", en: "Name", ja: "名前", zh: "名称", th: "ชื่อ" })}
               </label>
               <input
                 type="text"
@@ -354,14 +354,14 @@ export default function ApiSettingsTab({ t, localeTag, apiState }: ApiSettingsTa
                 {apiSaving
                   ? t({ ko: "저장 중...", en: "Saving...", ja: "保存中...", zh: "保存中..." })
                   : apiEditingId
-                    ? t({ ko: "수정", en: "Update", ja: "更新", zh: "更新" })
-                    : t({ ko: "추가", en: "Add", ja: "追加", zh: "添加" })}
+                    ? t({ ko: "수정", en: "Update", ja: "更新", zh: "更新", th: "แก้ไข" })
+                    : t({ ko: "추가", en: "Add", ja: "追加", zh: "添加", th: "เพิ่ม" })}
               </button>
               <button
                 onClick={resetForm}
                 className="rounded-lg bg-slate-700 px-4 py-2 text-xs font-medium text-slate-300 transition-colors hover:bg-slate-600"
               >
-                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+                {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
               </button>
             </div>
           </div>
@@ -428,13 +428,13 @@ export default function ApiSettingsTab({ t, localeTag, apiState }: ApiSettingsTa
                         className="rounded border border-cyan-500/30 bg-cyan-600/20 px-2 py-1 text-[10px] text-cyan-400 transition-colors hover:bg-cyan-600/30 disabled:opacity-50"
                         title={t({ ko: "연결 테스트", en: "Test Connection", ja: "接続テスト", zh: "连接测试" })}
                       >
-                        {apiTesting === provider.id ? "..." : t({ ko: "테스트", en: "Test", ja: "テスト", zh: "测试" })}
+                        {apiTesting === provider.id ? "..." : t({ ko: "테스트", en: "Test", ja: "テスト", zh: "测试", th: "ทดสอบ" })}
                       </button>
                       <button
                         onClick={() => handleApiEditStart(provider)}
                         className="rounded border border-slate-500/30 bg-slate-600/30 px-2 py-1 text-[10px] text-slate-400 transition-colors hover:bg-slate-600/50 hover:text-slate-200"
                       >
-                        {t({ ko: "수정", en: "Edit", ja: "編集", zh: "编辑" })}
+                        {t({ ko: "수정", en: "Edit", ja: "編集", zh: "编辑", th: "แก้ไข" })}
                       </button>
                       <button
                         onClick={() => void handleApiProviderToggle(provider.id, provider.enabled)}
@@ -445,14 +445,14 @@ export default function ApiSettingsTab({ t, localeTag, apiState }: ApiSettingsTa
                         }`}
                       >
                         {provider.enabled
-                          ? t({ ko: "비활성화", en: "Disable", ja: "無効化", zh: "禁用" })
-                          : t({ ko: "활성화", en: "Enable", ja: "有効化", zh: "启用" })}
+                          ? t({ ko: "비활성화", en: "Disable", ja: "無効化", zh: "禁用", th: "ปิดใช้งาน" })
+                          : t({ ko: "활성화", en: "Enable", ja: "有効化", zh: "启用", th: "เปิดใช้งาน" })}
                       </button>
                       <button
                         onClick={() => void handleApiProviderDelete(provider.id)}
                         className="rounded border border-red-500/30 bg-red-600/20 px-2 py-1 text-[10px] text-red-400 transition-colors hover:bg-red-600/30"
                       >
-                        {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除" })}
+                        {t({ ko: "삭제", en: "Delete", ja: "削除", zh: "删除", th: "ลบ" })}
                       </button>
                     </div>
                   </div>

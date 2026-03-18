@@ -98,15 +98,15 @@ export function taskStatusLabel(status: string, t: TFunction) {
     case "inbox":
       return t({ ko: "수신함", en: "Inbox", ja: "受信箱", zh: "收件箱" });
     case "planned":
-      return t({ ko: "계획됨", en: "Planned", ja: "計画済み", zh: "已计划" });
+      return t({ ko: "계획됨", en: "Planned", ja: "計画済み", zh: "已计划", th: "วางแผนแล้ว" });
     case "in_progress":
-      return t({ ko: "진행 중", en: "In Progress", ja: "進行中", zh: "进行中" });
+      return t({ ko: "진행 중", en: "In Progress", ja: "進行中", zh: "进行中", th: "กำลังทำ" });
     case "review":
-      return t({ ko: "검토 중", en: "Review", ja: "レビュー", zh: "审核" });
+      return t({ ko: "검토 중", en: "Review", ja: "レビュー", zh: "审核", th: "กำลังตรวจ" });
     case "done":
-      return t({ ko: "완료", en: "Done", ja: "完了", zh: "完成" });
+      return t({ ko: "완료", en: "Done", ja: "完了", zh: "完成", th: "เสร็จ" });
     case "pending":
-      return t({ ko: "보류", en: "Pending", ja: "保留", zh: "待处理" });
+      return t({ ko: "보류", en: "Pending", ja: "保留", zh: "待处理", th: "รอดำเนินการ" });
     case "cancelled":
       return t({ ko: "취소됨", en: "Cancelled", ja: "キャンセル", zh: "已取消" });
     default:

@@ -73,7 +73,7 @@ export default function ProjectSidebar({
             }}
             className="rounded-md bg-slate-700 px-2.5 py-1 text-xs text-slate-200 hover:bg-slate-600"
           >
-            {t({ ko: "조회", en: "Search", ja: "検索", zh: "查询" })}
+            {t({ ko: "조회", en: "Search", ja: "検索", zh: "查询", th: "ค้นหา" })}
           </button>
           <button
             type="button"
@@ -139,7 +139,7 @@ export default function ProjectSidebar({
           onClick={() => void loadProjects(page - 1, search)}
           className="rounded border border-slate-700 px-2 py-1 text-xs text-slate-300 disabled:opacity-40"
         >
-          {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页" })}
+          {t({ ko: "이전", en: "Prev", ja: "前へ", zh: "上一页", th: "ก่อนหน้า" })}
         </button>
         <span className="text-xs text-slate-500">
           {page} / {totalPages}
@@ -150,7 +150,7 @@ export default function ProjectSidebar({
           onClick={() => void loadProjects(page + 1, search)}
           className="rounded border border-slate-700 px-2 py-1 text-xs text-slate-300 disabled:opacity-40"
         >
-          {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页" })}
+          {t({ ko: "다음", en: "Next", ja: "次へ", zh: "下一页", th: "ถัดไป" })}
         </button>
       </div>
     </aside>

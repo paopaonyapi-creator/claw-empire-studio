@@ -113,6 +113,8 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
               en: "Auto Update (Global)",
               ja: "Auto Update（全体）",
               zh: "自动更新（全局）",
+
+              th: "อัปเดตอัตโนมัติ (ทั่วไป)",
             })}
             checked={form.autoUpdateEnabled}
             onToggle={() => setForm({ ...form, autoUpdateEnabled: !form.autoUpdateEnabled })}
@@ -125,7 +127,7 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
           />
 
           <ToggleSettingCard
-            label={t({ ko: "OAuth 자동 스왑", en: "OAuth Auto Swap", ja: "OAuth 自動スワップ", zh: "OAuth 自动切换" })}
+            label={t({ ko: "OAuth 자동 스왑", en: "OAuth Auto Swap", ja: "OAuth 自動スワップ", zh: "OAuth 自动切换", th: "สลับ OAuth อัตโนมัติ" })}
             checked={form.oauthAutoSwap !== false}
             onToggle={() => setForm({ ...form, oauthAutoSwap: !(form.oauthAutoSwap !== false) })}
             title={t({
@@ -144,6 +146,8 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
               en: "Default CLI Provider",
               ja: "デフォルト CLI プロバイダ",
               zh: "默认 CLI 提供方",
+
+              th: "ผู้ให้บริการ CLI เริ่มต้น",
             })}
           </label>
           <select

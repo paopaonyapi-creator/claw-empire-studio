@@ -79,9 +79,9 @@ const LOCALE_TEXT = {
     zh: "6人协作桌",
   },
   statsEmployees: { ko: "직원", en: "Staff", ja: "スタッフ", zh: "员工" },
-  statsWorking: { ko: "작업중", en: "Working", ja: "作業中", zh: "处理中" },
-  statsProgress: { ko: "진행", en: "In Progress", ja: "進行", zh: "进行中" },
-  statsDone: { ko: "완료", en: "Done", ja: "完了", zh: "已完成" },
+  statsWorking: { ko: "작업중", en: "Working", ja: "作業中", zh: "处理中", th: "กำลังทำงาน" },
+  statsProgress: { ko: "진행", en: "In Progress", ja: "進行", zh: "进行中", th: "กำลังทำ" },
+  statsDone: { ko: "완료", en: "Done", ja: "完了", zh: "已完成", th: "เสร็จ" },
   hint: {
     ko: "WASD/방향키/가상패드: CEO 이동  |  Enter: 상호작용",
     en: "WASD/Arrow/Virtual Pad: CEO Move  |  Enter: Interact",
@@ -188,6 +188,8 @@ const LOCALE_TEXT = {
     en: "connected",
     ja: "接続中",
     zh: "已连接",
+
+    th: "เชื่อมต่อแล้ว",
   },
   cliRefreshTitle: {
     ko: "사용량 새로고침",

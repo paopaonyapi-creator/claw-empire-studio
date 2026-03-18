@@ -16,11 +16,11 @@ export const STATUS_BADGES: Record<string, { label: LangText; color: string }> =
     color: "bg-amber-500/20 text-amber-400 border-amber-500/40",
   },
   review: {
-    label: { ko: "검토", en: "Review", ja: "レビュー", zh: "审核" },
+    label: { ko: "검토", en: "Review", ja: "レビュー", zh: "审核", th: "ตรวจสอบ" },
     color: "bg-purple-500/20 text-purple-400 border-purple-500/40",
   },
   done: {
-    label: { ko: "완료", en: "Done", ja: "完了", zh: "完成" },
+    label: { ko: "완료", en: "Done", ja: "完了", zh: "完成", th: "เสร็จ" },
     color: "bg-green-500/20 text-green-400 border-green-500/40",
   },
   inbox: {
@@ -28,11 +28,11 @@ export const STATUS_BADGES: Record<string, { label: LangText; color: string }> =
     color: "bg-slate-500/20 text-slate-400 border-slate-500/40",
   },
   planned: {
-    label: { ko: "예정", en: "Planned", ja: "予定", zh: "计划" },
+    label: { ko: "예정", en: "Planned", ja: "予定", zh: "计划", th: "วางแผนแล้ว" },
     color: "bg-blue-500/20 text-blue-400 border-blue-500/40",
   },
   cancelled: {
-    label: { ko: "취소", en: "Cancelled", ja: "キャンセル", zh: "已取消" },
+    label: { ko: "취소", en: "Cancelled", ja: "キャンセル", zh: "已取消", th: "ยกเลิก" },
     color: "bg-red-500/20 text-red-400 border-red-500/40",
   },
 };

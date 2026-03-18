@@ -53,7 +53,7 @@ export default function CustomSkillModal({
           <div>
             <h3 className="text-base font-semibold text-white flex items-center gap-2">
               <span>✏️</span>
-              {t({ ko: "커스텀 스킬 추가", en: "Add Custom Skill", ja: "カスタムスキル追加", zh: "添加自定义技能" })}
+              {t({ ko: "커스텀 스킬 추가", en: "Add Custom Skill", ja: "カスタムスキル追加", zh: "添加自定义技能", th: "เพิ่มทักษะกำหนดเอง" })}
             </h3>
             <div className="mt-1 text-xs text-slate-400">
               {t({
@@ -69,7 +69,7 @@ export default function CustomSkillModal({
             disabled={customSkillSubmitting}
             className="rounded-lg border border-slate-600 px-2.5 py-1 text-xs text-slate-300 hover:bg-slate-800 transition-all"
           >
-            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭" })}
+            {t({ ko: "닫기", en: "Close", ja: "閉じる", zh: "关闭", th: "ปิด" })}
           </button>
         </div>
 
@@ -150,7 +150,7 @@ export default function CustomSkillModal({
                   ? preferKoreanName
                     ? row.agent.name_ko || row.agent.name
                     : row.agent.name || row.agent.name_ko
-                  : t({ ko: "없음", en: "None", ja: "なし", zh: "无" });
+                  : t({ ko: "없음", en: "None", ja: "なし", zh: "无", th: "ไม่มี" });
                 return (
                   <button
                     key={`custom-${row.provider}`}
@@ -196,7 +196,7 @@ export default function CustomSkillModal({
               disabled={customSkillSubmitting}
               className="px-3 py-1.5 rounded-lg text-xs border border-slate-600 text-slate-300 hover:bg-slate-800 transition-all"
             >
-              {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+              {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
             </button>
             <button
               onClick={onSubmit}

@@ -267,7 +267,7 @@ export default function AgentDetail({
         case "novel":
           return t({ ko: "소설", en: "Novel", ja: "小説", zh: "小说" });
         case "report":
-          return t({ ko: "리포트", en: "Report", ja: "レポート", zh: "报告" });
+          return t({ ko: "리포트", en: "Report", ja: "レポート", zh: "报告", th: "รายงาน" });
         case "video_preprod":
           return t({ ko: "영상 프리프로덕션", en: "Video Pre-production", ja: "動画プリプロ", zh: "视频前期" });
         case "web_research_report":
@@ -535,13 +535,13 @@ export default function AgentDetail({
                           }}
                           className="text-[10px] px-1.5 py-0.5 bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors disabled:opacity-50"
                         >
-                          {savingCli ? "..." : t({ ko: "저장", en: "Save", ja: "保存", zh: "保存" })}
+                          {savingCli ? "..." : t({ ko: "저장", en: "Save", ja: "保存", zh: "保存", th: "บันทึก" })}
                         </button>
                         <button
                           onClick={handleCancelCliEdit}
                           className="text-[10px] px-1.5 py-0.5 bg-slate-600 hover:bg-slate-500 text-slate-300 rounded transition-colors"
                         >
-                          {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+                          {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
                         </button>
                       </div>
                     </div>
@@ -665,13 +665,13 @@ export default function AgentDetail({
                         }}
                         className="text-[10px] px-1.5 py-0.5 bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors disabled:opacity-50"
                       >
-                        {savingCli ? "..." : t({ ko: "저장", en: "Save", ja: "保存", zh: "保存" })}
+                        {savingCli ? "..." : t({ ko: "저장", en: "Save", ja: "保存", zh: "保存", th: "บันทึก" })}
                       </button>
                       <button
                         onClick={handleCancelCliEdit}
                         className="text-[10px] px-1.5 py-0.5 bg-slate-600 hover:bg-slate-500 text-slate-300 rounded transition-colors"
                       >
-                        {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消" })}
+                        {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
                       </button>
                     </div>
                   )
@@ -720,7 +720,7 @@ export default function AgentDetail({
             { key: "info", label: t({ ko: "정보", en: "Info", ja: "情報", zh: "信息" }) },
             {
               key: "tasks",
-              label: `${t({ ko: "업무", en: "Tasks", ja: "タスク", zh: "任务" })} (${agentTasks.length})`,
+              label: `${t({ ko: "업무", en: "Tasks", ja: "タスク", zh: "任务", th: "งาน" })} (${agentTasks.length})`,
             },
             {
               key: "alba",
