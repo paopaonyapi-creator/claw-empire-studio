@@ -35,7 +35,7 @@ function projectNameFromSummary(report: TaskReportSummary): string {
 }
 
 export default function ReportHistory({ agents, departments, uiLanguage, onClose }: ReportHistoryProps) {
-  const t = (text: { ko: string; en: string; ja?: string; zh?: string }) => pickLang(uiLanguage, text);
+  const t = (text: { ko: string; en: string; ja?: string; zh?: string; th?: string }) => pickLang(uiLanguage, text);
   const [reports, setReports] = useState<TaskReportSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [detail, setDetail] = useState<TaskReportDetail | null>(null);

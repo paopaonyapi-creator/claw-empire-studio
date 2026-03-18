@@ -48,7 +48,7 @@ function statusClass(status: string): string {
 }
 
 export default function TaskReportPopup({ report, agents, departments, uiLanguage, onClose }: TaskReportPopupProps) {
-  const t = (text: { ko: string; en: string; ja?: string; zh?: string }) => pickLang(uiLanguage, text);
+  const t = (text: { ko: string; en: string; ja?: string; zh?: string; th?: string }) => pickLang(uiLanguage, text);
 
   const [currentReport, setCurrentReport] = useState<TaskReportDetail>(report);
   const [refreshingArchive, setRefreshingArchive] = useState(false);

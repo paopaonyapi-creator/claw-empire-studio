@@ -19,7 +19,7 @@ export default function DecisionInboxModal({
   onReplyOption,
   onOpenChat,
 }: DecisionInboxModalProps) {
-  const t = (text: { ko: string; en: string; ja?: string; zh?: string }) => pickLang(uiLanguage, text);
+  const t = (text: { ko: string; en: string; ja?: string; zh?: string; th?: string }) => pickLang(uiLanguage, text);
   const isKorean = uiLanguage.startsWith("ko");
   const spriteMap = useMemo(() => buildSpriteMap(agents), [agents]);
   const agentById = useMemo(() => {
