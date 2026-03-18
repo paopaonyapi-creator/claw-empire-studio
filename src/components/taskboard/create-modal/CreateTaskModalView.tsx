@@ -76,7 +76,7 @@ export default function CreateTaskModalView({
       >
         <div className="flex items-center justify-between border-b border-slate-700 px-6 py-5">
           <h2 className="text-lg font-bold text-white">
-            {t({ ko: "새 업무 만들기", en: "Create New Task", ja: "新しいタスクを作成", zh: "创建新任务" })}
+            {t({ ko: "새 업무 만들기", en: "Create New Task", ja: "新しいタスクを作成", zh: "创建新任务" , th: "Create New Task" })}
           </h2>
           <div className="flex items-center gap-2">
             <button
@@ -88,9 +88,10 @@ export default function CreateTaskModalView({
                 en: "Open temporary drafts",
                 ja: "一時保存を開く",
                 zh: "打开临时草稿",
+                th: "Open temporary drafts",
               })}
             >
-              {`[${t({ ko: "임시", en: "Temp", ja: "一時", zh: "临时" })}(${draftsCount})]`}
+              {`[${t({ ko: "임시", en: "Temp", ja: "一時", zh: "临时" , th: "Temp" })}(${draftsCount})]`}
             </button>
             <button
               onClick={onRequestClose}
@@ -120,6 +121,7 @@ export default function CreateTaskModalView({
                     en: "Enter a task title",
                     ja: "タスクのタイトルを入力してください",
                     zh: "请输入任务标题",
+                    th: "Enter a task title",
                   })}
                   required
                   className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
@@ -138,6 +140,7 @@ export default function CreateTaskModalView({
                     en: "Enter a detailed description",
                     ja: "タスクの詳細説明を入力してください",
                     zh: "请输入任务详细说明",
+                    th: "Enter a detailed description",
                   })}
                   rows={3}
                   className="w-full resize-none rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
@@ -155,7 +158,7 @@ export default function CreateTaskModalView({
                     className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="">
-                      {t({ ko: "-- 전체 --", en: "-- All --", ja: "-- 全体 --", zh: "-- 全部 --" })}
+                      {t({ ko: "-- 전체 --", en: "-- All --", ja: "-- 全体 --", zh: "-- 全部 --" , th: "-- All --" })}
                     </option>
                     {departments.map((department) => (
                       <option key={department.id} value={department.id}>
@@ -167,7 +170,7 @@ export default function CreateTaskModalView({
 
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-300">
-                    {t({ ko: "업무 유형", en: "Task Type", ja: "タスク種別", zh: "任务类型" })}
+                    {t({ ko: "업무 유형", en: "Task Type", ja: "タスク種別", zh: "任务类型" , th: "Task Type" })}
                   </label>
                   <select
                     value={taskType}
@@ -245,8 +248,8 @@ export default function CreateTaskModalView({
               className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {submitBusy
-                ? t({ ko: "생성 중...", en: "Creating...", ja: "作成中...", zh: "创建中..." })
-                : t({ ko: "업무 만들기", en: "Create Task", ja: "タスク作成", zh: "创建任务" })}
+                ? t({ ko: "생성 중...", en: "Creating...", ja: "作成中...", zh: "创建中..." , th: "Creating..." })
+                : t({ ko: "업무 만들기", en: "Create Task", ja: "タスク作成", zh: "创建任务" , th: "สร้างงาน" })}
             </button>
           </div>
         </form>

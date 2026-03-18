@@ -122,6 +122,7 @@ export default function GitHubImportPanel({ onComplete, onCancel }: GitHubImport
               en: "PAT is invalid or expired. Please check and try again.",
               ja: "PAT が無効か期限切れです。確認して再試行してください。",
               zh: "PAT 无效或已过期，请检查后重试。",
+              th: "PAT is invalid or expired. Please check and try again.",
             }),
           );
         } else {
@@ -145,6 +146,7 @@ export default function GitHubImportPanel({ onComplete, onCancel }: GitHubImport
           en: "Format: owner/repo or GitHub URL",
           ja: "形式: owner/repo または GitHub URL",
           zh: "格式：owner/repo 或 GitHub URL",
+          th: "Format: owner/repo or GitHub URL",
         }),
       );
       return;
@@ -276,7 +278,7 @@ export default function GitHubImportPanel({ onComplete, onCancel }: GitHubImport
     return (
       <div className="flex items-center justify-center p-8">
         <p className="text-sm text-slate-400">
-          {t({ ko: "확인 중...", en: "Checking...", ja: "確認中...", zh: "检查中..." })}
+          {t({ ko: "확인 중...", en: "Checking...", ja: "確認中...", zh: "检查中..." , th: "Checking..." })}
         </p>
       </div>
     );

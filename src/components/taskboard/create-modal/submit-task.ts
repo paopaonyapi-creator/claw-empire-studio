@@ -127,6 +127,7 @@ export async function submitTaskWithProjectHandling(
         en: "The selected project was not found. Please select again.",
         ja: "選択したプロジェクトが見つかりません。再度選択してください。",
         zh: "找不到所选项目，请重新选择。",
+        th: "The selected project was not found. Please select again.",
       }),
     });
     return;
@@ -140,6 +141,7 @@ export async function submitTaskWithProjectHandling(
         en: "Could not resolve the typed project. Pick from the list or clear it to continue.",
         ja: "入力したプロジェクトを特定できません。リストから選択するか、空欄で続行してください。",
         zh: "无法确定输入的项目。请从列表选择，或清空后继续。",
+        th: "Could not resolve the typed project. Pick from the list or clear it to continue.",
       }),
     });
     setProjectDropdownOpen(true);
@@ -157,6 +159,7 @@ export async function submitTaskWithProjectHandling(
           en: "Please enter a new project name.",
           ja: "新規プロジェクト名を入力してください。",
           zh: "请输入新项目名称。",
+          th: "Please enter a new project name.",
         }),
       });
       return;
@@ -169,6 +172,7 @@ export async function submitTaskWithProjectHandling(
           en: "Please enter a new project path.",
           ja: "新規プロジェクトのパスを入力してください。",
           zh: "请输入新项目路径。",
+          th: "Please enter a new project path.",
         }),
       });
       return;
@@ -181,6 +185,7 @@ export async function submitTaskWithProjectHandling(
           en: "Description is required for new project creation and will be saved as the project core goal.",
           ja: "新規プロジェクト作成時は説明が必須で、プロジェクトのコア目標として保存されます。",
           zh: "创建新项目时说明为必填，并会保存为项目核心目标。",
+          th: "Description is required for new project creation and will be saved as the project core goal.",
         }),
       });
       return;
@@ -207,6 +212,7 @@ export async function submitTaskWithProjectHandling(
               en: "The path is not a directory. Please enter a directory path.",
               ja: "入力したパスはフォルダではありません。ディレクトリパスを指定してください。",
               zh: "该路径不是文件夹，请输入目录路径。",
+              th: "The path is not a directory. Please enter a directory path.",
             }),
           });
           return;
@@ -234,6 +240,7 @@ export async function submitTaskWithProjectHandling(
               en: "Failed to verify project path.",
               ja: "プロジェクトパスの確認に失敗しました。",
               zh: "项目路径校验失败。",
+              th: "Failed to verify project path.",
             }),
           });
           return;
@@ -327,6 +334,7 @@ export async function submitTaskWithProjectHandling(
           en: "Failed to create a new project. Please check name/path.",
           ja: "新規プロジェクトの作成に失敗しました。名前/パスを確認してください。",
           zh: "新项目创建失败，请检查名称/路径。",
+          th: "Failed to create a new project. Please check name/path.",
         }),
       });
       return;
@@ -364,6 +372,7 @@ export async function submitTaskWithProjectHandling(
         en: "Failed to create task. Please try again shortly.",
         ja: "タスク作成中にエラーが発生しました。しばらくしてから再試行してください。",
         zh: "创建任务时发生错误，请稍后重试。",
+        th: "Failed to create task. Please try again shortly.",
       }),
     });
   } finally {

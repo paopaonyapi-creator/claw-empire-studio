@@ -56,6 +56,7 @@ export default function CreateTaskModalOverlays({
                   en: "Restore Draft",
                   ja: "下書き復元",
                   zh: "恢复草稿",
+                  th: "Restore Draft",
                 })}
               </h3>
             </div>
@@ -66,6 +67,7 @@ export default function CreateTaskModalOverlays({
                   en: "There is previously entered data. Would you like to load it?",
                   ja: "以前入力していたデータがあります。読み込みますか？",
                   zh: "检测到之前输入的数据，是否加载？",
+                  th: "There is previously entered data. Would you like to load it?",
                 })}
               </p>
               <p className="text-xs text-slate-400">
@@ -74,6 +76,7 @@ export default function CreateTaskModalOverlays({
                   en: "Recent drafts (up to 3)",
                   ja: "最近の下書き（最大3件）",
                   zh: "最近草稿（最多3个）",
+                  th: "Recent drafts (up to 3)",
                 })}
               </p>
               <div className="space-y-2">
@@ -97,6 +100,7 @@ export default function CreateTaskModalOverlays({
                             en: "(Untitled)",
                             ja: "(無題)",
                             zh: "（无标题）",
+                            th: "(Untitled)",
                           })}
                       </p>
                       <p className="mt-0.5 text-xs text-slate-400">
@@ -113,14 +117,14 @@ export default function CreateTaskModalOverlays({
                 onClick={onCloseRestorePrompt}
                 className="rounded-md border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-800"
               >
-                {t({ ko: "새로 작성", en: "Start Fresh", ja: "新規作成", zh: "重新填写" })}
+                {t({ ko: "새로 작성", en: "Start Fresh", ja: "新規作成", zh: "重新填写" , th: "Start Fresh" })}
               </button>
               <button
                 type="button"
                 onClick={onLoadSelectedRestoreDraft}
                 className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-500"
               >
-                {t({ ko: "불러오기", en: "Load", ja: "読み込み", zh: "加载" })}
+                {t({ ko: "불러오기", en: "Load", ja: "読み込み", zh: "加载" , th: "Load" })}
               </button>
             </div>
           </div>
@@ -143,6 +147,7 @@ export default function CreateTaskModalOverlays({
                   en: "Create Without Project",
                   ja: "プロジェクト未連携で作成",
                   zh: "不关联项目创建",
+                  th: "Create Without Project",
                 })}
               </h3>
             </div>
@@ -153,6 +158,7 @@ export default function CreateTaskModalOverlays({
                   en: "Create this task without a project link?",
                   ja: "プロジェクト未連携でタスクを作成しますか？",
                   zh: "要在不关联项目的情况下创建任务吗？",
+                  th: "Create this task without a project link?",
                 })}
               </p>
               <p className="text-xs text-slate-400">
@@ -161,6 +167,7 @@ export default function CreateTaskModalOverlays({
                   en: "It will not appear in project history.",
                   ja: "この場合、プロジェクト履歴には集計されません。",
                   zh: "该任务不会出现在项目历史中。",
+                  th: "It will not appear in project history.",
                 })}
               </p>
             </div>
@@ -177,7 +184,7 @@ export default function CreateTaskModalOverlays({
                 onClick={onConfirmSubmitWithoutProject}
                 className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-500"
               >
-                {t({ ko: "계속", en: "Continue", ja: "続行", zh: "继续" })}
+                {t({ ko: "계속", en: "Continue", ja: "続行", zh: "继续" , th: "ดำเนินต่อ" })}
               </button>
             </div>
           </div>
@@ -200,6 +207,7 @@ export default function CreateTaskModalOverlays({
                   en: "Confirm Project Path",
                   ja: "プロジェクトパス確認",
                   zh: "确认项目路径",
+                  th: "Confirm Project Path",
                 })}
               </h3>
             </div>
@@ -210,6 +218,7 @@ export default function CreateTaskModalOverlays({
                   en: "This path does not exist. Create it now?",
                   ja: "このパスは存在しません。作成しますか？",
                   zh: "该路径不存在。现在创建吗？",
+                  th: "This path does not exist. Create it now?",
                 })}
               </p>
               <p className="break-all rounded-md border border-slate-700 bg-slate-800/70 px-2.5 py-2 text-xs text-slate-200">
@@ -232,6 +241,7 @@ export default function CreateTaskModalOverlays({
                     en: "This path is not creatable with current permissions. Choose another path.",
                     ja: "現在の権限ではこのパスを作成できません。別のパスを指定してください。",
                     zh: "当前权限无法创建此路径，请选择其他路径。",
+                    th: "This path is not creatable with current permissions. Choose another path.",
                   })}
                 </p>
               )}
@@ -273,6 +283,7 @@ export default function CreateTaskModalOverlays({
                   en: "In-App Folder Browser",
                   ja: "アプリ内フォルダ閲覧",
                   zh: "应用内文件夹浏览",
+                  th: "In-App Folder Browser",
                 })}
               </h3>
               <button
@@ -286,7 +297,7 @@ export default function CreateTaskModalOverlays({
             <div className="space-y-3 px-4 py-4">
               <div className="rounded-lg border border-slate-700 bg-slate-800/70 px-3 py-2">
                 <p className="text-[11px] text-slate-400">
-                  {t({ ko: "현재 위치", en: "Current Location", ja: "現在位置", zh: "当前位置" })}
+                  {t({ ko: "현재 위치", en: "Current Location", ja: "現在位置", zh: "当前位置" , th: "Current Location" })}
                 </p>
                 <p className="break-all text-xs text-slate-200">{manualPathCurrent || "-"}</p>
               </div>
@@ -297,7 +308,7 @@ export default function CreateTaskModalOverlays({
                   onClick={onManualPathGoUp}
                   className="rounded-md border border-slate-600 px-2.5 py-1 text-xs font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {t({ ko: "상위 폴더", en: "Up", ja: "上位フォルダ", zh: "上级目录" })}
+                  {t({ ko: "상위 폴더", en: "Up", ja: "上位フォルダ", zh: "上级目录" , th: "Up" })}
                 </button>
                 <button
                   type="button"
@@ -316,6 +327,7 @@ export default function CreateTaskModalOverlays({
                       en: "Loading directories...",
                       ja: "フォルダ一覧を読み込み中...",
                       zh: "正在加载目录...",
+                      th: "Loading directories...",
                     })}
                   </p>
                 ) : manualPathError ? (
@@ -327,6 +339,7 @@ export default function CreateTaskModalOverlays({
                       en: "No selectable subdirectories.",
                       ja: "選択可能なサブディレクトリがありません。",
                       zh: "没有可选的子目录。",
+                      th: "No selectable subdirectories.",
                     })}
                   </p>
                 ) : (
@@ -350,6 +363,7 @@ export default function CreateTaskModalOverlays({
                     en: "Only the first 300 directories are shown.",
                     ja: "項目数が多いため先頭300件のみ表示しています。",
                     zh: "目录过多，仅显示前300个。",
+                    th: "Only the first 300 directories are shown.",
                   })}
                 </p>
               )}
@@ -373,6 +387,7 @@ export default function CreateTaskModalOverlays({
                   en: "Select Current Folder",
                   ja: "現在フォルダを選択",
                   zh: "选择当前文件夹",
+                  th: "Select Current Folder",
                 })}
               </button>
             </div>
@@ -391,7 +406,7 @@ export default function CreateTaskModalOverlays({
           >
             <div className="flex items-center justify-between border-b border-slate-700 px-4 py-3">
               <h3 className="text-sm font-semibold text-white">
-                {t({ ko: "임시 저장 목록", en: "Temporary Drafts", ja: "一時保存一覧", zh: "临时草稿列表" })}
+                {t({ ko: "임시 저장 목록", en: "Temporary Drafts", ja: "一時保存一覧", zh: "临时草稿列表" , th: "Temporary Drafts" })}
               </h3>
               <button
                 type="button"
@@ -411,6 +426,7 @@ export default function CreateTaskModalOverlays({
                     en: "No temporary drafts saved.",
                     ja: "保存された一時項目はありません。",
                     zh: "没有已保存的临时草稿。",
+                    th: "No temporary drafts saved.",
                   })}
                 </div>
               ) : (
@@ -425,6 +441,7 @@ export default function CreateTaskModalOverlays({
                               en: "(Untitled)",
                               ja: "(無題)",
                               zh: "（无标题）",
+                              th: "(Untitled)",
                             })}
                         </p>
                         <p className="mt-0.5 text-xs text-slate-400">
@@ -440,7 +457,7 @@ export default function CreateTaskModalOverlays({
                           onClick={() => onLoadDraft(draft)}
                           className="rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition hover:bg-blue-500"
                         >
-                          {t({ ko: "불러오기", en: "Load", ja: "読み込み", zh: "加载" })}
+                          {t({ ko: "불러오기", en: "Load", ja: "読み込み", zh: "加载" , th: "Load" })}
                         </button>
                         <button
                           type="button"
@@ -463,7 +480,7 @@ export default function CreateTaskModalOverlays({
                 disabled={drafts.length === 0}
                 className="rounded-md border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {t({ ko: "전체 삭제", en: "Delete All", ja: "すべて削除", zh: "全部删除" })}
+                {t({ ko: "전체 삭제", en: "Delete All", ja: "すべて削除", zh: "全部删除" , th: "Delete All" })}
               </button>
             </div>
           </div>

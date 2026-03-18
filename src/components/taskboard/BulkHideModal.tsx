@@ -65,6 +65,7 @@ export default function BulkHideModal({ tasks, hiddenTaskIds, onClose, onApply }
               en: "Select statuses to hide",
               ja: "非表示にする状態を選択",
               zh: "选择要隐藏的状态",
+              th: "Select statuses to hide",
             })}
           </h2>
           <button
@@ -82,6 +83,7 @@ export default function BulkHideModal({ tasks, hiddenTaskIds, onClose, onApply }
             en: "Hide all tasks in the selected done/pending/cancelled statuses at once.",
             ja: "選択した完了/保留/キャンセル状態のタスクを一括で非表示にします。",
             zh: "一次性隐藏所选完成/待处理/已取消状态的任务。",
+            th: "Hide all tasks in the selected done/pending/cancelled statuses at once.",
           })}
         </p>
 
@@ -124,7 +126,7 @@ export default function BulkHideModal({ tasks, hiddenTaskIds, onClose, onApply }
             disabled={hideTargetCount <= 0}
             className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           >
-            {t({ ko: "숨김 적용", en: "Apply hide", ja: "非表示適用", zh: "应用隐藏" })} ({hideTargetCount})
+            {t({ ko: "숨김 적용", en: "Apply hide", ja: "非表示適用", zh: "应用隐藏" , th: "Apply hide" })} ({hideTargetCount})
           </button>
         </div>
       </div>

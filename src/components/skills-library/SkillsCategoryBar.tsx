@@ -38,8 +38,8 @@ export default function SkillsCategoryBar({
 
       <div className="text-xs text-slate-500 px-1">
         {filteredLength}
-        {t({ ko: "개 스킬 표시중", en: " skills shown", ja: "件のスキルを表示中", zh: " 个技能已显示" })}
-        {search && ` · "${search}" ${t({ ko: "검색 결과", en: "search results", ja: "検索結果", zh: "搜索结果" })}`}
+        {t({ ko: "개 스킬 표시중", en: " skills shown", ja: "件のスキルを表示中", zh: " 个技能已显示" , th: " skills shown" })}
+        {search && ` · "${search}" ${t({ ko: "검색 결과", en: "search results", ja: "検索結果", zh: "搜索结果" , th: "search results" })}`}
       </div>
     </>
   );

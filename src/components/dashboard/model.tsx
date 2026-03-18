@@ -30,10 +30,10 @@ export function useNow(localeTag: string, t: TFunction) {
   const hour = now.getHours();
   const briefing =
     hour < 12
-      ? t({ ko: "오전 브리핑", en: "Morning Briefing", ja: "午前ブリーフィング", zh: "上午简报" })
+      ? t({ ko: "오전 브리핑", en: "Morning Briefing", ja: "午前ブリーフィング", zh: "上午简报" , th: "Morning Briefing" })
       : hour < 18
-        ? t({ ko: "오후 운영 점검", en: "Afternoon Ops Check", ja: "午後運用点検", zh: "下午运行检查" })
-        : t({ ko: "저녁 마감 점검", en: "Evening Wrap-up", ja: "夜間締め点検", zh: "晚间收尾检查" });
+        ? t({ ko: "오후 운영 점검", en: "Afternoon Ops Check", ja: "午後運用点検", zh: "下午运行检查" , th: "Afternoon Ops Check" })
+        : t({ ko: "저녁 마감 점검", en: "Evening Wrap-up", ja: "夜間締め点検", zh: "晚间收尾检查" , th: "Evening Wrap-up" });
 
   return { date, time, briefing };
 }
@@ -96,7 +96,7 @@ export const STATUS_LEFT_BORDER: Record<string, string> = {
 export function taskStatusLabel(status: string, t: TFunction) {
   switch (status) {
     case "inbox":
-      return t({ ko: "수신함", en: "Inbox", ja: "受信箱", zh: "收件箱" });
+      return t({ ko: "수신함", en: "Inbox", ja: "受信箱", zh: "收件箱" , th: "Inbox" });
     case "planned":
       return t({ ko: "계획됨", en: "Planned", ja: "計画済み", zh: "已计划", th: "วางแผนแล้ว" });
     case "in_progress":
@@ -108,7 +108,7 @@ export function taskStatusLabel(status: string, t: TFunction) {
     case "pending":
       return t({ ko: "보류", en: "Pending", ja: "保留", zh: "待处理", th: "รอดำเนินการ" });
     case "cancelled":
-      return t({ ko: "취소됨", en: "Cancelled", ja: "キャンセル", zh: "已取消" });
+      return t({ ko: "취소됨", en: "Cancelled", ja: "キャンセル", zh: "已取消" , th: "ยกเลิกแล้ว" });
     default:
       return status;
   }

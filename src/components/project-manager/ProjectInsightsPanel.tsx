@@ -31,7 +31,7 @@ export default function ProjectInsightsPanel({
       <div className="min-w-0 rounded-xl border border-slate-700 bg-slate-800/40 p-4">
         <div className="flex items-center justify-between">
           <h4 className="text-sm font-semibold text-white">
-            {t({ ko: "프로젝트 정보", en: "Project Info", ja: "プロジェクト情報", zh: "项目信息" })}
+            {t({ ko: "프로젝트 정보", en: "Project Info", ja: "プロジェクト情報", zh: "项目信息" , th: "Project Info" })}
           </h4>
           {selectedProject?.github_repo && (
             <a
@@ -50,7 +50,7 @@ export default function ProjectInsightsPanel({
         </div>
         {loadingDetail ? (
           <p className="mt-2 text-xs text-slate-400">
-            {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." })}
+            {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." , th: "กำลังโหลด..." })}
           </p>
         ) : isCreating ? (
           <p className="mt-2 text-xs text-slate-500">
@@ -59,11 +59,12 @@ export default function ProjectInsightsPanel({
               en: "Creating a new project",
               ja: "新規プロジェクトを入力中です",
               zh: "正在输入新项目",
+              th: "Creating a new project",
             })}
           </p>
         ) : !selectedProject ? (
           <p className="mt-2 text-xs text-slate-500">
-            {t({ ko: "프로젝트를 선택하세요", en: "Select a project", ja: "プロジェクトを選択", zh: "请选择项目" })}
+            {t({ ko: "프로젝트를 선택하세요", en: "Select a project", ja: "プロジェクトを選択", zh: "请选择项目" , th: "Select a project" })}
           </p>
         ) : (
           <div className="mt-2 space-y-2 text-xs">
@@ -82,13 +83,13 @@ export default function ProjectInsightsPanel({
 
       <div className="min-w-0 rounded-xl border border-slate-700 bg-slate-800/40 p-4">
         <h4 className="text-sm font-semibold text-white">
-          {t({ ko: "작업 이력", en: "Task History", ja: "作業履歴", zh: "任务历史" })}
+          {t({ ko: "작업 이력", en: "Task History", ja: "作業履歴", zh: "任务历史" , th: "Task History" })}
         </h4>
         {!selectedProject ? (
           <p className="mt-2 text-xs text-slate-500">-</p>
         ) : groupedTaskCards.length === 0 ? (
           <p className="mt-2 text-xs text-slate-500">
-            {t({ ko: "연결된 작업이 없습니다", en: "No mapped tasks", ja: "紐づくタスクなし", zh: "没有映射任务" })}
+            {t({ ko: "연결된 작업이 없습니다", en: "No mapped tasks", ja: "紐づくタスクなし", zh: "没有映射任务" , th: "No mapped tasks" })}
           </p>
         ) : (
           <div className="mt-2 max-h-56 overflow-x-hidden overflow-y-auto space-y-2 pr-1">
@@ -104,11 +105,11 @@ export default function ProjectInsightsPanel({
                   {group.root.status} · {group.root.task_type} · {fmtTime(group.root.created_at)}
                 </p>
                 <p className="mt-1 break-all text-[11px] text-slate-500">
-                  {t({ ko: "담당", en: "Owner", ja: "担当", zh: "负责人" })}:{" "}
+                  {t({ ko: "담당", en: "Owner", ja: "担当", zh: "负责人" , th: "เจ้าของ" })}:{" "}
                   {group.root.assigned_agent_name_ko || group.root.assigned_agent_name || "-"}
                 </p>
                 <p className="mt-1 text-[11px] text-blue-300">
-                  {t({ ko: "하위 작업", en: "Sub tasks", ja: "サブタスク", zh: "子任务" })}: {group.children.length}
+                  {t({ ko: "하위 작업", en: "Sub tasks", ja: "サブタスク", zh: "子任务" , th: "Sub tasks" })}: {group.children.length}
                 </p>
                 {group.children.length > 0 && (
                   <div className="mt-1 space-y-1">
@@ -128,6 +129,7 @@ export default function ProjectInsightsPanel({
                     en: "Click card for details",
                     ja: "クリックで詳細表示",
                     zh: "点击卡片查看详情",
+                    th: "Click card for details",
                   })}
                 </p>
               </button>
@@ -138,7 +140,7 @@ export default function ProjectInsightsPanel({
 
       <div className="min-w-0 rounded-xl border border-slate-700 bg-slate-800/40 p-4">
         <h4 className="text-sm font-semibold text-white">
-          {t({ ko: "보고서 이력(프로젝트 매핑)", en: "Mapped Reports", ja: "紐づくレポート", zh: "映射报告" })}
+          {t({ ko: "보고서 이력(프로젝트 매핑)", en: "Mapped Reports", ja: "紐づくレポート", zh: "映射报告" , th: "Mapped Reports" })}
         </h4>
         {!selectedProject ? (
           <p className="mt-2 text-xs text-slate-500">-</p>
@@ -149,6 +151,7 @@ export default function ProjectInsightsPanel({
               en: "No mapped reports",
               ja: "紐づくレポートなし",
               zh: "没有映射报告",
+              th: "No mapped reports",
             })}
           </p>
         ) : (
@@ -167,7 +170,7 @@ export default function ProjectInsightsPanel({
                   onClick={() => void handleOpenTaskDetail(row.id)}
                   className="shrink-0 rounded-md bg-emerald-700 px-2 py-1 text-[11px] text-white hover:bg-emerald-600"
                 >
-                  {t({ ko: "열람", en: "Open", ja: "表示", zh: "查看" })}
+                  {t({ ko: "열람", en: "Open", ja: "表示", zh: "查看" , th: "เปิด" })}
                 </button>
               </div>
             ))}
@@ -177,7 +180,7 @@ export default function ProjectInsightsPanel({
 
       <div className="min-w-0 rounded-xl border border-slate-700 bg-slate-800/40 p-4">
         <h4 className="text-sm font-semibold text-white">
-          {t({ ko: "대표 선택사항", en: "Representative Decisions", ja: "代表選択事項", zh: "代表选择事项" })}
+          {t({ ko: "대표 선택사항", en: "Representative Decisions", ja: "代表選択事項", zh: "代表选择事项" , th: "Representative Decisions" })}
         </h4>
         {!selectedProject ? (
           <p className="mt-2 text-xs text-slate-500">-</p>
@@ -188,6 +191,7 @@ export default function ProjectInsightsPanel({
               en: "No representative decision records",
               ja: "代表意思決定の記録はありません",
               zh: "暂无代表决策记录",
+              th: "No representative decision records",
             })}
           </p>
         ) : (
@@ -221,13 +225,13 @@ export default function ProjectInsightsPanel({
                   <p className="mt-1 whitespace-pre-wrap break-all text-[11px] text-slate-300">{event.summary}</p>
                   {selectedLabels.length > 0 && (
                     <p className="mt-1 whitespace-pre-wrap break-all text-[11px] text-blue-300">
-                      {t({ ko: "선택 내용", en: "Selected Items", ja: "選択内容", zh: "已选内容" })}:{" "}
+                      {t({ ko: "선택 내용", en: "Selected Items", ja: "選択内容", zh: "已选内容" , th: "Selected Items" })}:{" "}
                       {selectedLabels.join(" / ")}
                     </p>
                   )}
                   {event.note && event.note.trim().length > 0 && (
                     <p className="mt-1 whitespace-pre-wrap break-all text-[11px] text-emerald-300">
-                      {t({ ko: "추가 요청사항", en: "Additional Request", ja: "追加要請事項", zh: "追加请求事项" })}:{" "}
+                      {t({ ko: "추가 요청사항", en: "Additional Request", ja: "追加要請事項", zh: "追加请求事项" , th: "Additional Request" })}:{" "}
                       {event.note}
                     </p>
                   )}

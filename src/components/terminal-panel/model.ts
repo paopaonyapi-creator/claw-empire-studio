@@ -12,7 +12,7 @@ export interface TerminalPanelProps {
 
 export const STATUS_BADGES: Record<string, { label: LangText; color: string }> = {
   in_progress: {
-    label: { ko: "진행중", en: "Running", ja: "実行中", zh: "运行中" },
+    label: { ko: "진행중", en: "Running", ja: "実行中", zh: "运行中" , th: "กำลังทำงาน" },
     color: "bg-amber-500/20 text-amber-400 border-amber-500/40",
   },
   review: {
@@ -24,7 +24,7 @@ export const STATUS_BADGES: Record<string, { label: LangText; color: string }> =
     color: "bg-green-500/20 text-green-400 border-green-500/40",
   },
   inbox: {
-    label: { ko: "수신함", en: "Inbox", ja: "受信箱", zh: "收件箱" },
+    label: { ko: "수신함", en: "Inbox", ja: "受信箱", zh: "收件箱" , th: "Inbox" },
     color: "bg-slate-500/20 text-slate-400 border-slate-500/40",
   },
   planned: {

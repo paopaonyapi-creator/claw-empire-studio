@@ -23,10 +23,10 @@ export default function ApiAssignModal({ t, localeTag, apiState }: ApiAssignModa
       ? (value as WorkflowPackKey)
       : "development";
   const ROLE_LABELS: Record<string, Record<string, string>> = {
-    team_leader: { ko: "팀장", en: "Team Leader", ja: "チームリーダー", zh: "组长" },
-    senior: { ko: "시니어", en: "Senior", ja: "シニア", zh: "高级" },
-    junior: { ko: "주니어", en: "Junior", ja: "ジュニア", zh: "初级" },
-    intern: { ko: "인턴", en: "Intern", ja: "インターン", zh: "实习生" },
+    team_leader: { ko: "팀장", en: "Team Leader", ja: "チームリーダー", zh: "组长" , th: "Team Leader" },
+    senior: { ko: "시니어", en: "Senior", ja: "シニア", zh: "高级" , th: "Senior" },
+    junior: { ko: "주니어", en: "Junior", ja: "ジュニア", zh: "初级" , th: "Junior" },
+    intern: { ko: "인턴", en: "Intern", ja: "インターン", zh: "实习生" , th: "Intern" },
   };
 
   const roleBadge = (role: string) => {
@@ -122,6 +122,7 @@ export default function ApiAssignModal({ t, localeTag, apiState }: ApiAssignModa
               en: "Assign Model to Agent",
               ja: "エージェントにモデル割当",
               zh: "分配模型给代理",
+              th: "Assign Model to Agent",
             })}
           </h4>
           <p className="text-[11px] text-slate-400 mt-0.5 font-mono truncate">{apiAssignTarget.model}</p>
@@ -135,6 +136,7 @@ export default function ApiAssignModal({ t, localeTag, apiState }: ApiAssignModa
                 en: "Loading agents...",
                 ja: "エージェント読み込み中...",
                 zh: "正在加载代理...",
+                th: "Loading agents...",
               })}
             </p>
           ) : (
@@ -163,7 +165,7 @@ export default function ApiAssignModal({ t, localeTag, apiState }: ApiAssignModa
                       <div className="flex items-center gap-1.5 px-2 py-1.5 border-b border-slate-700/40">
                         <span className="text-sm">📁</span>
                         <span className="text-[11px] font-semibold text-slate-500 tracking-wide">
-                          {t({ ko: "미배정", en: "Unassigned", ja: "未配属", zh: "未分配" })}
+                          {t({ ko: "미배정", en: "Unassigned", ja: "未配属", zh: "未分配" , th: "Unassigned" })}
                         </span>
                       </div>
                       {unassigned.map(renderAgentRow)}

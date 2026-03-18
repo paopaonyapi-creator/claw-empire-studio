@@ -90,12 +90,14 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
           en: "Connect your GitHub account to import repositories.",
           ja: "GitHub アカウントを接続するとリポジトリをインポートできます。",
           zh: "连接 GitHub 账号即可导入仓库。",
+          th: "Connect your GitHub account to import repositories.",
         })
       : t({
           ko: "현재 GitHub 토큰에 repo 권한이 없습니다. 재연결하면 private 리포를 포함한 전체 저장소에 접근할 수 있습니다.",
           en: "Current GitHub token lacks repo scope. Reconnect to access all repositories including private ones.",
           ja: "現在の GitHub トークンに repo 権限がありません。再接続するとプライベートリポを含む全リポにアクセスできます。",
           zh: "当前 GitHub 令牌缺少 repo 权限。重新连接即可访问包括私有仓库在内的所有仓库。",
+          th: "Current GitHub token lacks repo scope. Reconnect to access all repositories including private ones.",
         });
 
   return (
@@ -111,14 +113,15 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50"
           >
             {disconnecting
-              ? t({ ko: "연결 해제 중...", en: "Disconnecting...", ja: "切断中...", zh: "断开中..." })
+              ? t({ ko: "연결 해제 중...", en: "Disconnecting...", ja: "切断中...", zh: "断开中..." , th: "Disconnecting..." })
               : reason === "not_connected"
-                ? t({ ko: "GitHub 연결", en: "Connect GitHub", ja: "GitHub 接続", zh: "连接 GitHub" })
+                ? t({ ko: "GitHub 연결", en: "Connect GitHub", ja: "GitHub 接続", zh: "连接 GitHub" , th: "Connect GitHub" })
                 : t({
                     ko: "GitHub 재연결 (repo 권한)",
                     en: "Reconnect GitHub (repo scope)",
                     ja: "GitHub 再接続 (repo 権限)",
                     zh: "重新连接 GitHub（repo 权限）",
+                    th: "Reconnect GitHub (repo scope)",
                   })}
           </button>
           <button
@@ -139,6 +142,7 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
               en: "Enter this code on the GitHub verification page:",
               ja: "下記のコードを GitHub 認証ページに入力してください:",
               zh: "请在 GitHub 验证页面输入以下代码：",
+              th: "Enter this code on the GitHub verification page:",
             })}
           </p>
           <div className="flex items-center gap-3">
@@ -167,11 +171,12 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
                 en: "Open GitHub verification page",
                 ja: "GitHub 認証ページを開く",
                 zh: "打开 GitHub 验证页面",
+                th: "Open GitHub verification page",
               })}
             </a>
           )}
           <p className="animate-pulse text-xs text-slate-400">
-            {t({ ko: "인증 대기 중...", en: "Waiting for authorization...", ja: "認証待ち...", zh: "等待授权..." })}
+            {t({ ko: "인증 대기 중...", en: "Waiting for authorization...", ja: "認証待ち...", zh: "等待授权..." , th: "Waiting for authorization..." })}
           </p>
         </div>
       )}
@@ -183,6 +188,7 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
             en: "GitHub connected! Loading repositories...",
             ja: "GitHub 接続完了！リポジトリを読み込みます...",
             zh: "GitHub 已连接！正在加载仓库...",
+            th: "GitHub connected! Loading repositories...",
           })}
         </div>
       )}
@@ -200,7 +206,7 @@ export default function GitHubDeviceConnect({ reason, onConnected, onCancel }: G
             }}
             className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-300"
           >
-            {t({ ko: "다시 시도", en: "Try again", ja: "再試行", zh: "重试" })}
+            {t({ ko: "다시 시도", en: "Try again", ja: "再試行", zh: "重试" , th: "ลองใหม่" })}
           </button>
         </div>
       )}

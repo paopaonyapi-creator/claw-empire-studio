@@ -10,6 +10,7 @@ export function usePathHelperMessages(t: TFunction) {
         en: "This server does not support path helper APIs. Enter the path manually.",
         ja: "現在のサーバーではパス補助 API をサポートしていません。手入力してください。",
         zh: "当前服务器不支持路径辅助 API，请手动输入路径。",
+        th: "This server does not support path helper APIs. Enter the path manually.",
       }),
     [t],
   );
@@ -21,6 +22,7 @@ export function usePathHelperMessages(t: TFunction) {
         en: "OS folder picker is unavailable in this environment. Use in-app browser or manual input.",
         ja: "この環境では OS フォルダ選択が利用できません。アプリ内閲覧または手入力を使ってください。",
         zh: "当前环境无法使用系统文件夹选择器，请使用应用内浏览或手动输入。",
+        th: "OS folder picker is unavailable in this environment. Use in-app browser or manual input.",
       }),
     [t],
   );
@@ -33,6 +35,7 @@ export function usePathHelperMessages(t: TFunction) {
           en: "Path is outside allowed project roots.",
           ja: "許可されたプロジェクトパス範囲外です。",
           zh: "路径超出允许的项目根目录范围。",
+          th: "Path is outside allowed project roots.",
         });
       }
       return t({
@@ -69,6 +72,7 @@ export function usePathHelperMessages(t: TFunction) {
           en: "This path is not a directory. Please enter a directory path.",
           ja: "このパスはフォルダではありません。ディレクトリパスを入力してください。",
           zh: "该路径不是文件夹，请输入目录路径。",
+          th: "This path is not a directory. Please enter a directory path.",
         });
       }
       if (error.code === "project_path_not_found") {
@@ -77,6 +81,7 @@ export function usePathHelperMessages(t: TFunction) {
           en: "Path not found.",
           ja: "パスが見つかりません。",
           zh: "找不到该路径。",
+          th: "Path not found.",
         });
       }
       return t(fallback);

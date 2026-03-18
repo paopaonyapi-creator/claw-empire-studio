@@ -61,8 +61,8 @@ export default function ChatEditorModal({
         <div className="flex items-center justify-between">
           <h4 className="text-sm font-semibold text-slate-100">
             {editor.mode === "create"
-              ? t({ ko: "새 채팅 추가", en: "Add Chat", ja: "チャット追加", zh: "新增聊天" })
-              : t({ ko: "채팅 편집", en: "Edit Chat", ja: "チャット編集", zh: "编辑聊天" })}
+              ? t({ ko: "새 채팅 추가", en: "Add Chat", ja: "チャット追加", zh: "新增聊天" , th: "Add Chat" })
+              : t({ ko: "채팅 편집", en: "Edit Chat", ja: "チャット編集", zh: "编辑聊天" , th: "Edit Chat" })}
           </h4>
           <button
             onClick={closeEditorModal}
@@ -75,7 +75,7 @@ export default function ChatEditorModal({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs text-slate-400 mb-1">
-              {t({ ko: "메신저", en: "Messenger", ja: "メッセンジャー", zh: "消息渠道" })}
+              {t({ ko: "메신저", en: "Messenger", ja: "メッセンジャー", zh: "消息渠道" , th: "เมสเซนเจอร์" })}
             </label>
             <select
               value={editor.channel}
@@ -100,7 +100,7 @@ export default function ChatEditorModal({
 
           <div>
             <label className="block text-xs text-slate-400 mb-1">
-              {t({ ko: "활성 여부", en: "Enabled", ja: "有効", zh: "启用" })}
+              {t({ ko: "활성 여부", en: "Enabled", ja: "有効", zh: "启用" , th: "เปิดใช้งาน" })}
             </label>
             <label className="inline-flex items-center gap-2 text-xs text-slate-300 h-[38px]">
               <input
@@ -118,7 +118,7 @@ export default function ChatEditorModal({
 
         <div>
           <label className="block text-xs text-slate-400 mb-1">
-            {t({ ko: "토큰", en: "Token", ja: "トークン", zh: "令牌" })}
+            {t({ ko: "토큰", en: "Token", ja: "トークン", zh: "令牌" , th: "โทเค็น" })}
           </label>
           <input
             type="password"
@@ -137,7 +137,7 @@ export default function ChatEditorModal({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs text-slate-400 mb-1">
-              {t({ ko: "채팅 이름", en: "Chat Name", ja: "チャット名", zh: "聊天名称" })}
+              {t({ ko: "채팅 이름", en: "Chat Name", ja: "チャット名", zh: "聊天名称" , th: "Chat Name" })}
             </label>
             <input
               value={editor.name}
@@ -147,6 +147,7 @@ export default function ChatEditorModal({
                 en: "e.g. Design Alerts",
                 ja: "例: デザイン通知",
                 zh: "例如：设计组通知",
+                th: "e.g. Design Alerts",
               })}
               className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
             />
@@ -154,7 +155,7 @@ export default function ChatEditorModal({
 
           <div>
             <label className="block text-xs text-slate-400 mb-1">
-              {t({ ko: "채널/대상 ID", en: "Channel/Target ID", ja: "チャンネル/対象 ID", zh: "频道/目标 ID" })}
+              {t({ ko: "채널/대상 ID", en: "Channel/Target ID", ja: "チャンネル/対象 ID", zh: "频道/目标 ID" , th: "Channel/Target ID" })}
             </label>
             {editor.channel === "discord" && discordChannels.length > 0 && (
               <select
@@ -178,6 +179,7 @@ export default function ChatEditorModal({
                     en: "Choose detected Discord channel (optional)",
                     ja: "検出されたDiscordチャネルを選択（任意）",
                     zh: "选择检测到的 Discord 频道（可选）",
+                    th: "Choose detected Discord channel (optional)",
                   })}
                 </option>
                 {discordChannels.map((entry) => (
@@ -215,6 +217,7 @@ export default function ChatEditorModal({
                       en: "Loading Discord channels...",
                       ja: "Discordチャネルを読み込み中...",
                       zh: "正在加载 Discord 频道...",
+                      th: "Loading Discord channels...",
                     })}
                   </div>
                 )}
@@ -232,6 +235,7 @@ export default function ChatEditorModal({
                           en: "No Discord channels found. Check bot permissions and server membership.",
                           ja: "取得できるDiscordチャネルがありません。Bot権限とサーバー参加状態を確認してください。",
                           zh: "未找到可用 Discord 频道。请检查 Bot 权限和服务器加入状态。",
+                          th: "No Discord channels found. Check bot permissions and server membership.",
                         })}
                   </div>
                 )}
@@ -243,7 +247,7 @@ export default function ChatEditorModal({
 
         <div>
           <label className="block text-xs text-slate-400 mb-1">
-            {t({ ko: "대화 Agent", en: "Conversation Agent", ja: "担当Agent", zh: "对话 Agent" })}
+            {t({ ko: "대화 Agent", en: "Conversation Agent", ja: "担当Agent", zh: "对话 Agent" , th: "Conversation Agent" })}
           </label>
           <AgentSelect
             agents={agents}
@@ -254,6 +258,7 @@ export default function ChatEditorModal({
               en: "Select Agent",
               ja: "担当エージェント選択",
               zh: "选择对话 Agent",
+              th: "Select Agent",
             })}
             className={agentsLoading ? "pointer-events-none opacity-60" : ""}
           />
@@ -261,7 +266,7 @@ export default function ChatEditorModal({
 
         <div>
           <label className="block text-xs text-slate-400 mb-1">
-            {t({ ko: "워크플로우 팩", en: "Workflow Pack", ja: "ワークフローパック", zh: "工作流包" })}
+            {t({ ko: "워크플로우 팩", en: "Workflow Pack", ja: "ワークフローパック", zh: "工作流包" , th: "Workflow Pack" })}
           </label>
           <select
             value={editor.workflowPackKey}
@@ -287,6 +292,7 @@ export default function ChatEditorModal({
                 en: "Loading packs...",
                 ja: "パックを読み込み中...",
                 zh: "正在加载工作流包...",
+                th: "Loading packs...",
               })}
             </div>
           )}
@@ -305,6 +311,7 @@ export default function ChatEditorModal({
               en: "Enable direct Telegram receive",
               ja: "Telegram 直接受信を有効化",
               zh: "启用 Telegram 直接接收",
+              th: "Enable direct Telegram receive",
             })}
           </label>
         )}

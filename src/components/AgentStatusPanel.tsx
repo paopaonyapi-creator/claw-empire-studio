@@ -161,7 +161,7 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
           <div className="flex items-center gap-3">
             <span className="text-2xl">&#x1F6E0;</span>
             <h2 className="text-lg font-bold text-white">
-              {t({ ko: "활성 에이전트", en: "Active Agents", ja: "アクティブエージェント", zh: "活跃代理" })}
+              {t({ ko: "활성 에이전트", en: "Active Agents", ja: "アクティブエージェント", zh: "活跃代理" , th: "เอเจนต์ที่ใช้งาน" })}
             </h2>
             <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-400">
               {activeAgents.length}
@@ -180,9 +180,9 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                   ? "border-violet-500/40 bg-violet-500/20 text-violet-300"
                   : "border-slate-700 text-slate-400 hover:border-slate-500 hover:bg-slate-800 hover:text-white"
               }`}
-              title={t({ ko: "Script 조회", en: "Script Inspector", ja: "Script確認", zh: "Script查看" })}
+              title={t({ ko: "Script 조회", en: "Script Inspector", ja: "Script確認", zh: "Script查看" , th: "Script Inspector" })}
             >
-              <span>{t({ ko: "Script조회", en: "Script", ja: "Script", zh: "Script" })}</span>
+              <span>{t({ ko: "Script조회", en: "Script", ja: "Script", zh: "Script" , th: "สคริปต์" })}</span>
               <span aria-hidden>&#x2699;</span>
             </button>
             <button
@@ -197,9 +197,9 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                   ? "border-blue-500/40 bg-blue-500/20 text-blue-300"
                   : "border-slate-700 text-slate-400 hover:border-slate-500 hover:bg-slate-800 hover:text-white"
               }`}
-              title={t({ ko: "유휴 CLI 조회", en: "Idle CLI Inspector", ja: "アイドルCLI確認", zh: "闲置CLI查看" })}
+              title={t({ ko: "유휴 CLI 조회", en: "Idle CLI Inspector", ja: "アイドルCLI確認", zh: "闲置CLI查看" , th: "Idle CLI Inspector" })}
             >
-              <span>{t({ ko: "유휴CLI조회", en: "Idle CLI", ja: "アイドルCLI", zh: "闲置CLI" })}</span>
+              <span>{t({ ko: "유휴CLI조회", en: "Idle CLI", ja: "アイドルCLI", zh: "闲置CLI" , th: "Idle CLI" })}</span>
               <span aria-hidden>&#x1F5A5;</span>
             </button>
             <button
@@ -233,12 +233,14 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                         en: "Running Script Processes",
                         ja: "実行中Script",
                         zh: "运行中的Script",
+                        th: "Running Script Processes",
                       })
                     : t({
                         ko: "실행 중인 유휴CLI",
                         en: "Running Idle CLI Processes",
                         ja: "実行中アイドルCLI",
                         zh: "运行中的闲置CLI",
+                        th: "Running Idle CLI Processes",
                       })}
                 </span>
                 <div className="flex items-center gap-2">
@@ -265,12 +267,14 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                         en: "Loading script list...",
                         ja: "Script一覧を読み込み中...",
                         zh: "正在加载Script列表...",
+                        th: "Loading script list...",
                       })
                     : t({
                         ko: "유휴 CLI 목록 불러오는 중...",
                         en: "Loading idle CLI list...",
                         ja: "アイドルCLI一覧を読み込み中...",
                         zh: "正在加载闲置CLI列表...",
+                        th: "Loading idle CLI list...",
                       })}
                 </div>
               ) : visibleCliProcesses.length === 0 ? (
@@ -281,12 +285,14 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                         en: "No running script process",
                         ja: "実行中Scriptなし",
                         zh: "没有运行中的Script进程",
+                        th: "No running script process",
                       })
                     : t({
                         ko: "실행 중인 유휴 CLI가 없습니다",
                         en: "No running idle CLI",
                         ja: "実行中アイドルCLIなし",
                         zh: "没有运行中的闲置CLI",
+                        th: "No running idle CLI",
                       })}
                 </div>
               ) : (
@@ -346,8 +352,8 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                             }`}
                           >
                             {isKilling
-                              ? t({ ko: "중지 중...", en: "Killing...", ja: "停止中...", zh: "停止中..." })
-                              : t({ ko: "Kill", en: "Kill", ja: "Kill", zh: "Kill" })}
+                              ? t({ ko: "중지 중...", en: "Killing...", ja: "停止中...", zh: "停止中..." , th: "Killing..." })
+                              : t({ ko: "Kill", en: "Kill", ja: "Kill", zh: "Kill" , th: "Kill" })}
                           </button>
                         </div>
                       </div>
@@ -361,7 +367,7 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-sm text-slate-500">
-                {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." })}
+                {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." , th: "กำลังโหลด..." })}
               </div>
             </div>
           ) : activeAgents.length === 0 ? (
@@ -373,6 +379,7 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                   en: "No agents currently working",
                   ja: "現在作業中のエージェントなし",
                   zh: "当前没有工作中的代理",
+                  th: "No agents currently working",
                 })}
               </p>
             </div>
@@ -405,16 +412,16 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                           {ag.has_active_process ? (
                             <span className="flex items-center gap-1">
                               <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-green-500" />
-                              {t({ ko: "프로세스 활성", en: "Process active", ja: "プロセス実行中", zh: "进程活跃" })}
+                              {t({ ko: "프로세스 활성", en: "Process active", ja: "プロセス実行中", zh: "进程活跃" , th: "Process active" })}
                             </span>
                           ) : (
                             <span className="flex items-center gap-1">
                               <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
-                              {t({ ko: "프로세스 없음", en: "No process", ja: "プロセスなし", zh: "无进程" })}
+                              {t({ ko: "프로세스 없음", en: "No process", ja: "プロセスなし", zh: "无进程" , th: "No process" })}
                             </span>
                           )}
                           <span>
-                            {t({ ko: "마지막 응답", en: "Last activity", ja: "最終応答", zh: "最后响应" })}:{" "}
+                            {t({ ko: "마지막 응답", en: "Last activity", ja: "最終応答", zh: "最后响应" , th: "Last activity" })}:{" "}
                             {fmtTime(ag.last_activity_at)}
                           </span>
                           <span className={isIdle ? "text-amber-400" : ""}>Idle: {idleText}</span>
@@ -431,8 +438,8 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                           }`}
                         >
                           {isKilling
-                            ? t({ ko: "중지 중...", en: "Stopping...", ja: "停止中...", zh: "停止中..." })
-                            : t({ ko: "강제 중지", en: "Kill", ja: "強制停止", zh: "强制停止" })}
+                            ? t({ ko: "중지 중...", en: "Stopping...", ja: "停止中...", zh: "停止中..." , th: "Stopping..." })
+                            : t({ ko: "강제 중지", en: "Kill", ja: "強制停止", zh: "强制停止" , th: "Kill" })}
                         </button>
                       )}
                     </div>
@@ -452,6 +459,7 @@ export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentS
                 en: "Auto-refresh every 5s",
                 ja: "5秒ごとに自動更新",
                 zh: "每5秒自动刷新",
+                th: "Auto-refresh every 5s",
               })}
             </span>
             <button

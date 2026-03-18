@@ -114,7 +114,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
           <div className="flex items-center gap-3">
             <span className="text-2xl">&#x1F4CA;</span>
             <h2 className="text-lg font-bold text-white">
-              {t({ ko: "작업 보고서 이력", en: "Report History", ja: "レポート履歴", zh: "报告历史" })}
+              {t({ ko: "작업 보고서 이력", en: "Report History", ja: "レポート履歴", zh: "报告历史" , th: "Report History" })}
             </h2>
           </div>
           <button
@@ -130,7 +130,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-sm text-slate-500">
-                {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." })}
+                {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." , th: "กำลังโหลด..." })}
               </div>
             </div>
           ) : reports.length === 0 ? (
@@ -142,6 +142,7 @@ export default function ReportHistory({ agents, departments, uiLanguage, onClose
                   en: "No completed reports",
                   ja: "完了レポートなし",
                   zh: "没有已完成的报告",
+                  th: "No completed reports",
                 })}
               </p>
             </div>

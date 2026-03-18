@@ -104,6 +104,7 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
               en: "When enabled, the planning lead auto-analyzes decision steps and proceeds automatically.",
               ja: "有効にすると、企画リードが意思決定段階を自動分析して次段階へ進めます。",
               zh: "启用后，规划负责人会自动分析决策步骤并推进到下一阶段。",
+              th: "เมื่อเปิด หัวหน้าฝ่ายวางแผนจะวิเคราะห์ขั้นตอนการตัดสินใจอัตโนมัติ",
             })}
           />
 
@@ -123,6 +124,7 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
               en: "Enable or disable auto-update loop for the whole server.",
               ja: "サーバー全体の自動更新ループを有効/無効にします。",
               zh: "启用或禁用整个服务器的自动更新循环。",
+              th: "เปิดหรือปิดการอัปเดตอัตโนมัติทั้งเซิร์ฟเวอร์",
             })}
           />
 
@@ -135,6 +137,7 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
               en: "Auto-switch to next OAuth account on failures/limits",
               ja: "失敗/上限時に次の OAuth アカウントへ自動切替",
               zh: "失败/额度限制时自动切换到下一个 OAuth 账号",
+              th: "สลับไปบัญชี OAuth ถัดไปอัตโนมัติเมื่อล้มเหลว/ถึงขีดจำกัด",
             })}
           />
         </div>

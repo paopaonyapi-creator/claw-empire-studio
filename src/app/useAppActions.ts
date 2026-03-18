@@ -329,6 +329,7 @@ export function useAppActions({
             en: "Could not find the requested agent.",
             ja: "対象エージェント情報が見つかりません。",
             zh: "未找到对应代理信息。",
+            th: "Could not find the requested agent.",
           }),
         );
         return;
@@ -379,6 +380,7 @@ export function useAppActions({
                   en: "Additional request is empty.",
                   ja: "追加要請が空です。",
                   zh: "追加请求内容为空。",
+                  th: "Additional request is empty.",
                 }),
               );
               return;
@@ -405,6 +407,7 @@ export function useAppActions({
                     en: "\n\nCheck task logs for details.",
                     ja: "\n\n詳細はタスクログを確認してください。",
                     zh: "\n\n请查看任务日志了解详情。",
+                    th: "\n\nCheck task logs for details.",
                   });
             window.alert(
               pickLang(locale, {
@@ -429,6 +432,7 @@ export function useAppActions({
             en: "Failed to send decision reply. Please try again.",
             ja: "意思決定返信の送信に失敗しました。もう一度お試しください。",
             zh: "发送决策回复失败，请稍后重试。",
+            th: "Failed to send decision reply. Please try again.",
           }),
         );
       } finally {

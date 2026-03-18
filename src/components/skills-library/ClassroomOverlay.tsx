@@ -91,6 +91,7 @@ export default function ClassroomOverlay({ t, show, skillName, providers, agents
               en: "CLI representatives are studying hard 📖",
               ja: "CLI代表が一生懸命学習しています 📖",
               zh: "CLI代表们正在努力学习 📖",
+              th: "CLI representatives are studying hard 📖",
             })}
           </div>
         </div>

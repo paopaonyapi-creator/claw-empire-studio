@@ -30,6 +30,7 @@ export default function MissingPathPromptDialog({
               en: "Confirm Project Path",
               ja: "プロジェクトパス確認",
               zh: "确认项目路径",
+              th: "Confirm Project Path",
             })}
           </h3>
         </div>
@@ -40,6 +41,7 @@ export default function MissingPathPromptDialog({
               en: "This path does not exist. Create it now?",
               ja: "このパスは存在しません。作成しますか？",
               zh: "该路径不存在。现在创建吗？",
+              th: "This path does not exist. Create it now?",
             })}
           </p>
           <p className="break-all rounded-md border border-slate-700 bg-slate-800/70 px-2.5 py-2 text-xs text-slate-200">
@@ -62,6 +64,7 @@ export default function MissingPathPromptDialog({
                 en: "This path is not creatable with current permissions. Choose another path.",
                 ja: "現在の権限ではこのパスを作成できません。別のパスを指定してください。",
                 zh: "当前权限无法创建此路径，请选择其他路径。",
+                th: "This path is not creatable with current permissions. Choose another path.",
               })}
             </p>
           )}

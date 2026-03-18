@@ -44,19 +44,19 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
 
   const pipelineSteps = [
     {
-      label: t({ ko: "트렌드", en: "Trends", ja: "トレンド", zh: "趋势" }),
+      label: t({ ko: "트렌드", en: "Trends", ja: "トレンド", zh: "趋势" , th: "Trends" }),
       count: kpi.pipeline.trend_reports,
       emoji: "🔍",
       color: "#8b5cf6",
     },
     {
-      label: t({ ko: "스크립트", en: "Scripts", ja: "脚本", zh: "脚本" }),
+      label: t({ ko: "스크립트", en: "Scripts", ja: "脚本", zh: "脚本" , th: "Scripts" }),
       count: kpi.pipeline.scripts,
       emoji: "✍️",
       color: "#3b82f6",
     },
     {
-      label: t({ ko: "썸네일", en: "Thumbnails", ja: "サムネイル", zh: "缩略图" }),
+      label: t({ ko: "썸네일", en: "Thumbnails", ja: "サムネイル", zh: "缩略图" , th: "Thumbnails" }),
       count: kpi.pipeline.thumbnails,
       emoji: "🎨",
       color: "#10b981",
@@ -84,7 +84,7 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
             className="text-xs font-black uppercase tracking-wider"
             style={{ color: "var(--th-text-primary)" }}
           >
-            {t({ ko: "오늘 성과", en: "TODAY'S PERFORMANCE", ja: "今日の成果", zh: "今日绩效" })}
+            {t({ ko: "오늘 성과", en: "TODAY'S PERFORMANCE", ja: "今日の成果", zh: "今日绩效" , th: "TODAY'S PERFORMANCE" })}
           </h3>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -93,7 +93,7 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
               {numberFormatter.format(kpi.today.done)}
             </p>
             <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "var(--th-text-muted)" }}>
-              {t({ ko: "오늘 완료", en: "Done Today", ja: "今日完了", zh: "今日完成" })}
+              {t({ ko: "오늘 완료", en: "Done Today", ja: "今日完了", zh: "今日完成" , th: "Done Today" })}
             </p>
           </div>
           <div className="rounded-xl border border-blue-400/20 bg-blue-500/[0.06] p-3 text-center">
@@ -108,10 +108,10 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
         <div className="mt-2 flex justify-between text-[9px]" style={{ color: "var(--th-text-muted)" }}>
           <span>
             {t({ ko: "생성", en: "Created", ja: "作成", zh: "创建", th: "สร้าง" })}: {kpi.today.created}{" "}
-            {t({ ko: "건", en: "", ja: "件", zh: "项" })}
+            {t({ ko: "건", en: "", ja: "件", zh: "项" , th: "" })}
           </span>
           <span>
-            {t({ ko: "이번 주 생성", en: "Week created", ja: "今週作成", zh: "本周创建" })}: {kpi.week.created}
+            {t({ ko: "이번 주 생성", en: "Week created", ja: "今週作成", zh: "本周创建" , th: "Week created" })}: {kpi.week.created}
           </span>
         </div>
       </div>
@@ -133,10 +133,10 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
             className="text-xs font-black uppercase tracking-wider"
             style={{ color: "var(--th-text-primary)" }}
           >
-            {t({ ko: "파이프라인", en: "CONTENT PIPELINE", ja: "パイプライン", zh: "内容管线" })}
+            {t({ ko: "파이프라인", en: "CONTENT PIPELINE", ja: "パイプライン", zh: "内容管线" , th: "CONTENT PIPELINE" })}
           </h3>
           <span className="ml-auto text-[9px] font-bold text-violet-300/60">
-            {totalPipeline} {t({ ko: "건", en: "items", ja: "件", zh: "项" })}
+            {totalPipeline} {t({ ko: "건", en: "items", ja: "件", zh: "项" , th: "items" })}
           </span>
         </div>
         <div className="space-y-2.5">

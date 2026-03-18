@@ -137,14 +137,15 @@ export function TaskBoard({
           {t({ ko: "업무 보드", en: "Task Board", ja: "タスクボード", zh: "任务看板", th: "บอร์ดงาน" })}
         </h1>
         <span className="rounded-full bg-slate-800 px-2.5 py-0.5 text-xs text-slate-400">
-          {t({ ko: "총", en: "Total", ja: "合計", zh: "总计" })} {filteredTasks.length}
-          {t({ ko: "개", en: "", ja: "件", zh: "项" })}
+          {t({ ko: "총", en: "Total", ja: "合計", zh: "总计" , th: "ทั้งหมด" })} {filteredTasks.length}
+          {t({ ko: "개", en: "", ja: "件", zh: "项" , th: "" })}
           {activeFilterCount > 0 &&
             ` (${t({ ko: "필터", en: "filters", ja: "フィルター", zh: "筛选器", th: "ตัวกรอง" })} ${activeFilterCount}${t({
               ko: "개 적용",
               en: " applied",
               ja: "件適用",
               zh: "个已应用",
+              th: " applied",
             })})`}
         </span>
         <div className="ml-auto flex items-center gap-2">
@@ -158,7 +159,7 @@ export function TaskBoard({
               }}
               className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-400 transition hover:bg-slate-800 hover:text-white"
             >
-              {t({ ko: "필터 초기화", en: "Reset Filters", ja: "フィルターをリセット", zh: "重置筛选" })}
+              {t({ ko: "필터 초기화", en: "Reset Filters", ja: "フィルターをリセット", zh: "重置筛选" , th: "Reset Filters" })}
             </button>
           )}
           <button
@@ -175,12 +176,14 @@ export function TaskBoard({
                     en: "Switch to active view (exclude hidden)",
                     ja: "進行中表示へ切替（非表示を除外）",
                     zh: "切换到进行中视图（排除隐藏）",
+                    th: "Switch to active view (exclude hidden)",
                   })
                 : t({
                     ko: "모두보기로 전환 (숨김 포함)",
                     en: "Switch to all view (include hidden)",
                     ja: "全体表示へ切替（非表示を含む）",
                     zh: "切换到全部视图（包含隐藏）",
+                    th: "Switch to all view (include hidden)",
                   })
             }
           >
@@ -203,15 +206,16 @@ export function TaskBoard({
               en: "Hide done/pending/cancelled tasks",
               ja: "完了/保留/キャンセル状態を非表示",
               zh: "隐藏完成/待处理/已取消任务",
+              th: "Hide done/pending/cancelled tasks",
             })}
           >
-            🙈 {t({ ko: "숨김", en: "Hide", ja: "非表示", zh: "隐藏" })}
+            🙈 {t({ ko: "숨김", en: "Hide", ja: "非表示", zh: "隐藏" , th: "ซ่อน" })}
           </button>
           <button
             onClick={() => setShowProjectManager(true)}
             className="taskboard-project-manage-btn rounded-lg border px-3 py-1.5 text-xs font-semibold transition"
           >
-            🗂 {t({ ko: "프로젝트 관리", en: "Project Manager", ja: "プロジェクト管理", zh: "项目管理" })}
+            🗂 {t({ ko: "프로젝트 관리", en: "Project Manager", ja: "プロジェクト管理", zh: "项目管理" , th: "ผู้จัดการโปรเจกต์" })}
           </button>
           <button
             onClick={() => setShowCreate(true)}
@@ -258,7 +262,7 @@ export function TaskBoard({
               <div className="flex flex-col gap-2.5 p-2.5 sm:flex-1 sm:overflow-y-auto">
                 {columnTasks.length === 0 ? (
                   <div className="flex min-h-24 items-center justify-center py-8 text-xs text-slate-600 sm:flex-1">
-                    {t({ ko: "업무 없음", en: "No tasks", ja: "タスクなし", zh: "暂无任务" })}
+                    {t({ ko: "업무 없음", en: "No tasks", ja: "タスクなし", zh: "暂无任务" , th: "ไม่มีงาน" })}
                   </div>
                 ) : (
                   columnTasks.map((task) => (

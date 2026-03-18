@@ -126,6 +126,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
             en: "Please enter a Discord token.",
             ja: "Discordトークンを入力してください。",
             zh: "请输入 Discord 令牌。",
+            th: "Please enter a Discord token.",
           });
         }
         if (code === "discord_auth_failed") {
@@ -134,6 +135,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
             en: "Discord authentication failed. Check your bot token and permissions.",
             ja: "Discord認証に失敗しました。Botトークンと権限を確認してください。",
             zh: "Discord 认证失败，请检查 Bot 令牌和权限。",
+            th: "Discord authentication failed. Check your bot token and permissions.",
           });
         }
         if (code === "discord_rate_limited") {
@@ -142,6 +144,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
             en: "Discord API is rate-limited. Please try again shortly.",
             ja: "Discord API のレート制限に達しました。しばらくしてから再試行してください。",
             zh: "Discord API 已触发限流，请稍后重试。",
+            th: "Discord API is rate-limited. Please try again shortly.",
           });
         }
         if (code === "discord_channel_lookup_failed") {
@@ -150,6 +153,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
             en: "Failed to load Discord channels. Check network connectivity and permissions.",
             ja: "Discordチャネルの取得に失敗しました。ネットワークと権限を確認してください。",
             zh: "Discord 频道加载失败，请检查网络和权限状态。",
+            th: "Failed to load Discord channels. Check network connectivity and permissions.",
           });
         }
       }
@@ -158,6 +162,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
         en: "An error occurred while loading Discord channels.",
         ja: "Discordチャネルの取得中にエラーが発生しました。",
         zh: "加载 Discord 频道时发生错误。",
+        th: "An error occurred while loading Discord channels.",
       });
     },
     [t],
@@ -180,6 +185,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
             en: "Channel settings saved",
             ja: "チャネル設定を保存しました",
             zh: "频道设置已保存",
+            th: "Channel settings saved",
           }),
       });
       setTimeout(() => setSaved(null), 2500);
@@ -205,6 +211,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
         en: "Chat deleted",
         ja: "チャットを削除しました",
         zh: "聊天已删除",
+        th: "Chat deleted",
       }),
     );
     setSendStatus(null);
@@ -254,6 +261,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
           en: "Please enter a token.",
           ja: "トークンを入力してください。",
           zh: "请输入令牌。",
+          th: "Please enter a token.",
         }),
       );
       return;
@@ -265,6 +273,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
           en: "Please enter a chat name.",
           ja: "チャット名を入力してください。",
           zh: "请输入聊天名称。",
+          th: "Please enter a chat name.",
         }),
       );
       return;
@@ -276,6 +285,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
           en: "Please enter a channel/target ID.",
           ja: "チャンネル/対象 ID を入力してください。",
           zh: "请输入频道/目标 ID。",
+          th: "Please enter a channel/target ID.",
         }),
       );
       return;
@@ -331,6 +341,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
         en: "Chat saved",
         ja: "チャット設定を保存しました",
         zh: "聊天设置已保存",
+        th: "Chat saved",
       }),
     );
     if (!savedOk) {
@@ -340,6 +351,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
           en: "Failed to save chat. Please try again.",
           ja: "チャット保存に失敗しました。再試行してください。",
           zh: "聊天保存失败，请重试。",
+          th: "Failed to save chat. Please try again.",
         }),
       );
       return;
@@ -371,6 +383,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
           en: "Message sent",
           ja: "メッセージを送信しました",
           zh: "消息已发送",
+          th: "ส่งข้อความแล้ว",
         }),
       });
       setSendText("");
@@ -487,7 +500,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
     <section className="space-y-4 rounded-xl border border-slate-700/50 bg-slate-800/60 p-4 sm:p-5">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
-          {t({ ko: "채널 메시지 설정", en: "Channel Messaging", ja: "チャネルメッセージ設定", zh: "频道消息设置" })}
+          {t({ ko: "채널 메시지 설정", en: "Channel Messaging", ja: "チャネルメッセージ設定", zh: "频道消息设置" , th: "Channel Messaging" })}
         </h3>
         {saved && <span className={`text-xs ${saved.ok ? "text-emerald-400" : "text-red-400"}`}>{saved.msg}</span>}
       </div>
@@ -498,19 +511,20 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
           en: "You can configure messenger channels directly in this tab. Use 'Add Chat' to register messenger/token/target ID/conversation agent.",
           ja: "このタブでメッセンジャーチャネルを直接設定できます。'チャット追加'からメッセンジャー/トークン/対象ID/担当Agentを登録してください。",
           zh: "可在此标签页直接配置消息渠道。通过“新增聊天”注册消息渠道/令牌/目标ID/对话 Agent。",
+          th: "You can configure messenger channels directly in this tab. Use 'Add Chat' to register messenger/token/target ID/conversation agent.",
         })}
       </p>
 
       <div className="rounded-lg border border-slate-700/60 bg-slate-900/40 p-3 space-y-3">
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold text-slate-200">
-            {t({ ko: "채팅 세션", en: "Chat Sessions", ja: "チャットセッション", zh: "聊天会话" })}
+            {t({ ko: "채팅 세션", en: "Chat Sessions", ja: "チャットセッション", zh: "聊天会话" , th: "Chat Sessions" })}
           </div>
           <button
             onClick={openCreateModal}
             className="text-xs px-3 py-1 rounded-md bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/40"
           >
-            + {t({ ko: "새 채팅 추가", en: "Add Chat", ja: "チャット追加", zh: "新增聊天" })}
+            + {t({ ko: "새 채팅 추가", en: "Add Chat", ja: "チャット追加", zh: "新增聊天" , th: "Add Chat" })}
           </button>
         </div>
 
@@ -521,6 +535,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
               en: "No chats yet. Use 'Add Chat' to register messenger/token/channel.",
               ja: "チャットがありません。'チャット追加'でメッセンジャー/トークン/チャネルを登録してください。",
               zh: "暂无聊天。请通过“新增聊天”注册消息渠道/令牌/频道。",
+              th: "No chats yet. Use 'Add Chat' to register messenger/token/channel.",
             })}
           </div>
         ) : (
@@ -550,15 +565,15 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
                           className={`text-[10px] px-1.5 py-0.5 rounded ${meta.transportReady ? "bg-emerald-600/20 text-emerald-300" : "bg-amber-600/20 text-amber-300"}`}
                         >
                           {meta.transportReady
-                            ? t({ ko: "직접연동", en: "Native", ja: "直接連携", zh: "直连" })
-                            : t({ ko: "호환설정", en: "Compat", ja: "互換設定", zh: "兼容配置" })}
+                            ? t({ ko: "직접연동", en: "Native", ja: "直接連携", zh: "直连" , th: "Native" })
+                            : t({ ko: "호환설정", en: "Compat", ja: "互換設定", zh: "兼容配置" , th: "Compat" })}
                         </span>
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-600/20 text-indigo-300">
                           {workflowPackLabel}
                         </span>
                         {!tokenReady && (
                           <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-600/20 text-red-300">
-                            {t({ ko: "토큰 없음", en: "No token", ja: "トークンなし", zh: "无令牌" })}
+                            {t({ ko: "토큰 없음", en: "No token", ja: "トークンなし", zh: "无令牌" , th: "No token" })}
                           </span>
                         )}
                       </div>
@@ -579,6 +594,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
                               en: "No agent assigned",
                               ja: "Agent未指定",
                               zh: "未指定 Agent",
+                              th: "No agent assigned",
                             })}
                           </span>
                         )}
@@ -611,6 +627,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
             en: "Messages starting with $ become company directives; normal messages go 1:1 to the selected agent.",
             ja: "$ で始まると全社通知、通常メッセージは選択 Agent との 1:1 会話になります。",
             zh: "以 $ 开头为公司指令，普通消息会进入所选 Agent 的 1:1 对话。",
+            th: "Messages starting with $ become company directives; normal messages go 1:1 to the selected agent.",
           })}
         </div>
       </div>
@@ -618,7 +635,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
       <div className="rounded-lg border border-slate-700/60 bg-slate-900/40 p-3 space-y-3">
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold text-slate-200">
-            {t({ ko: "세션 테스트 전송", en: "Test Send", ja: "送信テスト", zh: "发送测试" })}
+            {t({ ko: "세션 테스트 전송", en: "Test Send", ja: "送信テスト", zh: "发送测试" , th: "Test Send" })}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -626,14 +643,14 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
               disabled={receiverLoading}
               className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-60"
             >
-              {t({ ko: "수신상태", en: "Receiver", ja: "受信状態", zh: "接收状态" })}
+              {t({ ko: "수신상태", en: "Receiver", ja: "受信状態", zh: "接收状态" , th: "Receiver" })}
             </button>
             <button
               onClick={() => void loadRuntimeSessions()}
               disabled={runtimeLoading}
               className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-60"
             >
-              {t({ ko: "실행중 세션", en: "Runtime", ja: "実行セッション", zh: "运行会话" })}
+              {t({ ko: "실행중 세션", en: "Runtime", ja: "実行セッション", zh: "运行会话" , th: "Runtime" })}
             </button>
           </div>
         </div>
@@ -641,7 +658,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
         {telegramReceiverStatus && (
           <div className="rounded-md border border-slate-700/60 bg-slate-800/60 px-3 py-2 text-xs text-slate-300 space-y-1">
             <div>
-              {t({ ko: "텔레그램 수신기", en: "Telegram Receiver", ja: "Telegram 受信機", zh: "Telegram 接收器" })}:{" "}
+              {t({ ko: "텔레그램 수신기", en: "Telegram Receiver", ja: "Telegram 受信機", zh: "Telegram 接收器" , th: "Telegram Receiver" })}:{" "}
               <span className={telegramReceiverStatus.enabled ? "text-emerald-400" : "text-amber-300"}>
                 {telegramReceiverStatus.enabled
                   ? t({ ko: "활성", en: "active", ja: "有効", zh: "已启用", th: "ใช้งาน" })
@@ -649,7 +666,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
               </span>
             </div>
             <div>
-              {t({ ko: "허용 chat 수", en: "Allowed chats", ja: "許可チャット数", zh: "允许聊天数" })}:{" "}
+              {t({ ko: "허용 chat 수", en: "Allowed chats", ja: "許可チャット数", zh: "允许聊天数" , th: "Allowed chats" })}:{" "}
               {telegramReceiverStatus.allowedChatCount}
             </div>
             {telegramReceiverStatus.lastError && <div className="text-red-400">{telegramReceiverStatus.lastError}</div>}
@@ -659,7 +676,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
         {discordReceiverStatus && (
           <div className="rounded-md border border-slate-700/60 bg-slate-800/60 px-3 py-2 text-xs text-slate-300 space-y-1">
             <div>
-              {t({ ko: "디스코드 수신기", en: "Discord Receiver", ja: "Discord 受信機", zh: "Discord 接收器" })}:{" "}
+              {t({ ko: "디스코드 수신기", en: "Discord Receiver", ja: "Discord 受信機", zh: "Discord 接收器" , th: "Discord Receiver" })}:{" "}
               <span className={discordReceiverStatus.enabled ? "text-emerald-400" : "text-amber-300"}>
                 {discordReceiverStatus.enabled
                   ? t({ ko: "활성", en: "active", ja: "有効", zh: "已启用", th: "ใช้งาน" })
@@ -667,7 +684,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
               </span>
             </div>
             <div>
-              {t({ ko: "폴링 채널 수", en: "Polled channels", ja: "ポーリングチャネル数", zh: "轮询频道数" })}:{" "}
+              {t({ ko: "폴링 채널 수", en: "Polled channels", ja: "ポーリングチャネル数", zh: "轮询频道数" , th: "Polled channels" })}:{" "}
               {discordReceiverStatus.routeCount}
             </div>
             {discordReceiverStatus.lastError && <div className="text-red-400">{discordReceiverStatus.lastError}</div>}
@@ -676,7 +693,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
 
         <div>
           <label className="block text-xs text-slate-400 mb-1">
-            {t({ ko: "전송 대상 세션", en: "Target Session", ja: "送信先セッション", zh: "目标会话" })}
+            {t({ ko: "전송 대상 세션", en: "Target Session", ja: "送信先セッション", zh: "目标会话" , th: "Target Session" })}
           </label>
           {chatRows.length === 0 ? (
             <div className="text-xs text-slate-500 py-1">
@@ -685,6 +702,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
                 en: "No saved session. Add a chat first.",
                 ja: "保存済みセッションがありません。先にチャットを追加してください。",
                 zh: "没有已保存会话，请先添加聊天。",
+                th: "No saved session. Add a chat first.",
               })}
             </div>
           ) : (
@@ -711,6 +729,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
             en: "Type a test message...",
             ja: "テストメッセージを入力...",
             zh: "输入测试消息...",
+            th: "Type a test message...",
           })}
           className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500 resize-y"
         />
@@ -722,6 +741,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
               en: "This channel can be configured and mapped, but direct transport runtime is not ready yet.",
               ja: "このチャネルは設定/マッピングは可能ですが、直接送信ランタイムは未対応です。",
               zh: "该渠道可配置和映射，但直连发送运行时暂未就绪。",
+              th: "This channel can be configured and mapped, but direct transport runtime is not ready yet.",
             })}
           </div>
         )}
@@ -732,7 +752,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
           className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {sending
-            ? t({ ko: "전송 중...", en: "Sending...", ja: "送信中...", zh: "发送中..." })
+            ? t({ ko: "전송 중...", en: "Sending...", ja: "送信中...", zh: "发送中..." , th: "Sending..." })
             : t({ ko: "메시지 전송", en: "Send", ja: "送信", zh: "发送", th: "ส่ง" })}
         </button>
 
@@ -751,7 +771,7 @@ export default function GatewaySettingsTab({ t, form, setForm, persistSettings }
         {runtimeSessions.length > 0 && (
           <div className="pt-1">
             <div className="text-xs text-slate-400 mb-1">
-              {t({ ko: "런타임 세션", en: "Runtime Sessions", ja: "実行中セッション", zh: "运行时会话" })}
+              {t({ ko: "런타임 세션", en: "Runtime Sessions", ja: "実行中セッション", zh: "运行时会话" , th: "Runtime Sessions" })}
             </div>
             <div className="max-h-44 overflow-auto rounded-md border border-slate-700/60">
               {runtimeSessions.map((session) => (

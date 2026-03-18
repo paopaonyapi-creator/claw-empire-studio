@@ -38,6 +38,7 @@ export default function GitHubOAuthAppConfig({ t }: { t: TFunction }) {
             en: "GitHub OAuth App (Private repo access)",
             ja: "GitHub OAuth App（プライベートリポアクセス）",
             zh: "GitHub OAuth App（私有仓库访问）",
+            th: "GitHub OAuth App (Private repo access)",
           })}
         </h4>
         {ghClientIdSaved && (
@@ -52,6 +53,7 @@ export default function GitHubOAuthAppConfig({ t }: { t: TFunction }) {
           en: "Default GitHub uses Copilot OAuth which limits private repo access. Register your own OAuth App for full access.",
           ja: "デフォルトの GitHub 接続は Copilot OAuth を使用し、プライベートリポへのアクセスが制限されます。自前の OAuth App を登録すると全リポにアクセスできます。",
           zh: "默认 GitHub 使用 Copilot OAuth，限制私有仓库访问。注册自己的 OAuth App 可获取完整访问权限。",
+          th: "Default GitHub uses Copilot OAuth which limits private repo access. Register your own OAuth App for full access.",
         })}
       </p>
       <details className="text-[11px] text-slate-500">
@@ -61,6 +63,7 @@ export default function GitHubOAuthAppConfig({ t }: { t: TFunction }) {
             en: "How to create OAuth App",
             ja: "OAuth App 作成ガイド",
             zh: "如何创建 OAuth App",
+            th: "How to create OAuth App",
           })}
         </summary>
         <ol className="mt-2 ml-4 list-decimal space-y-1 text-slate-400">
@@ -71,6 +74,7 @@ export default function GitHubOAuthAppConfig({ t }: { t: TFunction }) {
               en: "Application name: any name (e.g. My Climpire)",
               ja: "Application name: 任意の名前（例: My Climpire）",
               zh: "Application name: 任意名称（如 My Climpire）",
+              th: "Application name: any name (e.g. My Climpire)",
             })}
           </li>
           <li>Homepage URL: http://localhost:8800</li>
@@ -81,6 +85,7 @@ export default function GitHubOAuthAppConfig({ t }: { t: TFunction }) {
               en: "☑ Check 'Enable Device Flow'",
               ja: "☑ Enable Device Flow にチェック",
               zh: "☑ 勾选 Enable Device Flow",
+              th: "☑ Check 'Enable Device Flow'",
             })}
           </li>
           <li>
@@ -89,6 +94,7 @@ export default function GitHubOAuthAppConfig({ t }: { t: TFunction }) {
               en: "Register → Paste Client ID below",
               ja: "Register → Client ID を下に貼り付け",
               zh: "Register → 将 Client ID 粘贴到下方",
+              th: "Register → Paste Client ID below",
             })}
           </li>
         </ol>
@@ -120,6 +126,7 @@ export default function GitHubOAuthAppConfig({ t }: { t: TFunction }) {
             en: "After saving, reconnect your GitHub account using the 'Connect' or 'Add Account' button above.",
             ja: "保存後、上の「接続」または「アカウント追加」ボタンで GitHub アカウントを再接続してください。",
             zh: "保存后，使用上方的'连接'或'添加账号'按钮重新连接 GitHub 账号。",
+            th: "After saving, reconnect your GitHub account using the 'Connect' or 'Add Account' button above.",
           })}
         </p>
       )}

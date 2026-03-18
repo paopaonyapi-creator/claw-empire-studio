@@ -295,7 +295,7 @@ export default function DepartmentFormModal({
           {locale.startsWith("ja") && (
             <div>
               <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                {t({ ko: "일본어 이름", en: "Japanese Name", ja: "日本語名", zh: "日语名" })}
+                {t({ ko: "일본어 이름", en: "Japanese Name", ja: "日本語名", zh: "日语名" , th: "Japanese Name" })}
               </label>
               <input
                 type="text"
@@ -310,7 +310,7 @@ export default function DepartmentFormModal({
           {locale.startsWith("zh") && (
             <div>
               <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                {t({ ko: "중국어 이름", en: "Chinese Name", ja: "中国語名", zh: "中文名" })}
+                {t({ ko: "중국어 이름", en: "Chinese Name", ja: "中国語名", zh: "中文名" , th: "Chinese Name" })}
               </label>
               <input
                 type="text"

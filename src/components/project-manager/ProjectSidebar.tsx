@@ -62,6 +62,7 @@ export default function ProjectSidebar({
             en: "Search projects",
             ja: "プロジェクト検索",
             zh: "搜索项目",
+            th: "Search projects",
           })}
           className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white outline-none focus:border-blue-500"
         />
@@ -80,14 +81,14 @@ export default function ProjectSidebar({
             onClick={startCreate}
             className="rounded-md bg-blue-700 px-2.5 py-1 text-xs text-white hover:bg-blue-600"
           >
-            {t({ ko: "신규", en: "New", ja: "新規", zh: "新建" })}
+            {t({ ko: "신규", en: "New", ja: "新規", zh: "新建" , th: "ใหม่" })}
           </button>
           <button
             type="button"
             onClick={onOpenGitHubImport}
             className="rounded-md bg-slate-700 px-2.5 py-1 text-xs text-slate-200 hover:bg-slate-600"
           >
-            {t({ ko: "GitHub 가져오기", en: "GitHub Import", ja: "GitHub インポート", zh: "GitHub 导入" })}
+            {t({ ko: "GitHub 가져오기", en: "GitHub Import", ja: "GitHub インポート", zh: "GitHub 导入" , th: "GitHub Import" })}
           </button>
         </div>
       </div>
@@ -95,11 +96,11 @@ export default function ProjectSidebar({
       <div className="flex-1 overflow-y-auto">
         {loadingList ? (
           <div className="px-4 py-6 text-xs text-slate-400">
-            {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." })}
+            {t({ ko: "불러오는 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." , th: "กำลังโหลด..." })}
           </div>
         ) : projects.length === 0 ? (
           <div className="px-4 py-6 text-xs text-slate-500">
-            {t({ ko: "등록된 프로젝트가 없습니다", en: "No projects", ja: "プロジェクトなし", zh: "暂无项目" })}
+            {t({ ko: "등록된 프로젝트가 없습니다", en: "No projects", ja: "プロジェクトなし", zh: "暂无项目" , th: "No projects" })}
           </div>
         ) : (
           <div className="divide-y divide-slate-800">
