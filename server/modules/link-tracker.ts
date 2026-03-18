@@ -167,7 +167,7 @@ export function handleLinkCommand(args: string): string {
 export function registerLinkTrackerRoutes(app: Express): void {
   // Redirect endpoint (public, no auth)
   app.get("/go/:code", (req: Request, res: Response) => {
-    const link = recordClick(req.params.code, req);
+    const link = recordClick(String(req.params.code), req);
     if (!link) {
       return res.status(404).send("Link not found");
     }
