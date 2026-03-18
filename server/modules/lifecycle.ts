@@ -31,6 +31,7 @@ import { registerGoalRoutes } from "./goal-tracker.ts";
 import { registerLinkShortenerRoutes } from "./link-shortener.ts";
 import { registerHealthRoutes, startHealthScheduler } from "./api-health.ts";
 import { registerMultiPlatformRoutes } from "./multi-platform.ts";
+import { registerPipelineRoutes } from "./content-pipeline.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -100,6 +101,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerLinkShortenerRoutes(app);
   registerHealthRoutes(app);
   registerMultiPlatformRoutes(app);
+  registerPipelineRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();

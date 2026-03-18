@@ -27,6 +27,7 @@ import { DataExportWidget } from "./dashboard/DataExportWidget";
 import { FacebookWidget } from "./dashboard/FacebookWidget";
 import { GoalWidget } from "./dashboard/GoalWidget";
 import { LinkShortenerWidget } from "./dashboard/LinkShortenerWidget";
+import StudioExtrasWidget from "./dashboard/StudioExtrasWidget";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -231,6 +232,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       <FacebookWidget />
 
       <LinkShortenerWidget />
+
+      <StudioExtrasWidget />
 
       <ContentLibrary />
 

@@ -20,7 +20,7 @@ export function ApiHealthWidget() {
 
   const fetch_ = useCallback(async () => {
     try {
-      const r = await fetch("/api/health");
+      const r = await fetch("/api/health/apis");
       if (r.ok) setData(await r.json());
     } catch {}
   }, []);

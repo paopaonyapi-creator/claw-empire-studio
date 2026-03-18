@@ -27,6 +27,7 @@ import { handleGoalCommand } from "./goal-tracker.ts";
 import { handleShortCommand } from "./link-shortener.ts";
 import { handleHealthCommand } from "./api-health.ts";
 import { handleMultiPostCommand, handleSheetsCommand, handleAbTestCommand, handleAutoScheduleCommand, handleCompetitorCommand } from "./multi-platform.ts";
+import { handlePipelineCommand as handleContentPipelineCommand, handleIncomeReportCommand, handleTeamCommand } from "./content-pipeline.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -53,7 +54,7 @@ async function handleStatusCommand(): Promise<string> {
   try {
     // Pull real data from our working endpoints
     const [healthRes, goalsRes, linksRes] = await Promise.allSettled([
-      fetch(`http://127.0.0.1:${PORT}/api/health`).then((r) => r.json()),
+      fetch(`http://127.0.0.1:${PORT}/api/health/apis`).then((r) => r.json()),
       fetch(`http://127.0.0.1:${PORT}/api/goals`).then((r) => r.json()),
       fetch(`http://127.0.0.1:${PORT}/api/links`).then((r) => r.json()),
     ]);
@@ -418,6 +419,27 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Competitor Monitor
       if (cmd === "/competitor") {
         reply = handleCompetitorCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Auto Content Pipeline
+      if (cmd === "/pipeline") {
+        reply = await handleContentPipelineCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Income Report
+      if (cmd === "/income") {
+        reply = await handleIncomeReportCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Team Management
+      if (cmd === "/team") {
+        reply = handleTeamCommand(arg);
         await sendTg(reply);
         return;
       }

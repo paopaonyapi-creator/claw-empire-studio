@@ -326,7 +326,7 @@ export function startHealthScheduler(): void {
 // ---------------------------------------------------------------------------
 
 export function registerHealthRoutes(app: Express): void {
-  app.get("/api/health", async (_req: Request, res: Response) => {
+  app.get("/api/health/apis", async (_req: Request, res: Response) => {
     const results = await runAllChecks();
     const apis = Object.values(results);
     const upCount = apis.filter((a) => a.status === "up").length;
