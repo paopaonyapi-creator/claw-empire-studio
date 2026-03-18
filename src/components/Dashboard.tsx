@@ -24,6 +24,8 @@ import { ContentGeneratorWidget } from "./dashboard/ContentGeneratorWidget";
 import { AlertsWidget } from "./dashboard/AlertsWidget";
 import { DataExportWidget } from "./dashboard/DataExportWidget";
 import { FacebookWidget } from "./dashboard/FacebookWidget";
+import { GoalWidget } from "./dashboard/GoalWidget";
+import { LinkShortenerWidget } from "./dashboard/LinkShortenerWidget";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -215,6 +217,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
 
       <AlertsWidget />
 
+      <GoalWidget />
+
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
 
       <PerformanceCharts />
@@ -222,6 +226,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       <ContentGeneratorWidget />
 
       <FacebookWidget />
+
+      <LinkShortenerWidget />
 
       <ContentLibrary />
 

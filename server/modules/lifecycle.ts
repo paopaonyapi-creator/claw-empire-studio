@@ -26,7 +26,9 @@ import { registerMorningBriefRoutes, startMorningBriefScheduler } from "./mornin
 import { registerContentGeneratorRoutes } from "./content-generator.ts";
 import { registerAlertRoutes, startAlertScheduler } from "./performance-alerts.ts";
 import { registerDataExportRoutes } from "./data-export.ts";
-import { registerFacebookRoutes } from "./facebook-publisher.ts";
+import { registerFacebookRoutes, startFbScheduler } from "./facebook-publisher.ts";
+import { registerGoalRoutes } from "./goal-tracker.ts";
+import { registerLinkShortenerRoutes } from "./link-shortener.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -92,11 +94,14 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerAlertRoutes(app);
   registerDataExportRoutes(app);
   registerFacebookRoutes(app);
+  registerGoalRoutes(app);
+  registerLinkShortenerRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();
   startMorningBriefScheduler();
   startAlertScheduler();
+  startFbScheduler();
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/

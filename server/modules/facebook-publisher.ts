@@ -26,6 +26,7 @@ interface FbPostRecord {
   status: "posted" | "failed" | "scheduled";
   timestamp: string;
   error?: string;
+  scheduledTime?: string;
 }
 
 const HISTORY_FILE = path.resolve("data/fb-posts.json");
@@ -130,6 +131,7 @@ export async function handleFbCommand(arg: string): Promise<string> {
       `  /fb status — เช็คสถานะ connection\n` +
       `  /fb pages — ดู pages ที่เชื่อมต่อ\n` +
       `  /fb post <ข้อความ> — โพสต์ลง Facebook\n` +
+      `  /fb schedule <HH:MM> <ข้อความ> — ตั้งเวลาโพสต์\n` +
       `  /fb posts — ดู 5 โพสต์ล่าสุด\n` +
       `  /fb history — ประวัติการโพสต์\n\n` +
       `ตัวอย่าง:\n  /fb post 🔥 หมวกกันน็อคลดราคา! กดลิงก์ในโปรไฟล์`;
@@ -213,6 +215,26 @@ export async function handleFbCommand(arg: string): Promise<string> {
     }
   }
 
+  // /fb schedule <HH:MM> <message>
+  if (trimmed.startsWith("schedule ")) {
+    const match = trimmed.match(/^schedule\s+(\d{1,2}[:.:]\d{2})\s+(.+)/);
+    if (!match) return "❌ ใช้: /fb schedule 18:00 ข้อความ";
+    const [, timeStr, message] = match;
+    const scheduledTime = timeStr.replace(".", ":");
+
+    const record: FbPostRecord = {
+      id: `fb-sched-${Date.now()}`, fbPostId: "",
+      message, platform: "facebook", status: "scheduled",
+      timestamp: new Date().toISOString(),
+      scheduledTime,
+    };
+    const history = loadHistory();
+    history.unshift(record);
+    saveHistory(history);
+
+    return `⏰ Scheduled!\n\n📝 ${message.substring(0, 60)}\n🕐 จะโพสต์เวลา ${scheduledTime}\n\n💡 /fb history ดูรายการ`;
+  }
+
   return `❓ ไม่รู้จักคำสั่ง "${trimmed}"\n\nใช้ /fb help ดูคำสั่งทั้งหมด`;
 }
 
@@ -263,4 +285,48 @@ export function registerFacebookRoutes(app: Express): void {
   app.get("/api/fb/history", (_req: Request, res: Response) => {
     res.json({ history: loadHistory().slice(0, 20) });
   });
+}
+
+// ---------------------------------------------------------------------------
+// FB Scheduler — posts scheduled items at their time
+// ---------------------------------------------------------------------------
+
+const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
+const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
+
+async function sendTg(text: string): Promise<void> {
+  if (!TG_BOT_TOKEN || !TG_CHAT_ID) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: TG_CHAT_ID, text }),
+    });
+  } catch {}
+}
+
+export function startFbScheduler(): void {
+  setInterval(async () => {
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    const history = loadHistory();
+    let changed = false;
+
+    for (const h of history) {
+      if (h.status === "scheduled" && h.scheduledTime === currentTime) {
+        const result = await postToPage(h.message);
+        h.status = result.ok ? "posted" : "failed";
+        h.fbPostId = result.postId || "";
+        h.error = result.error;
+        changed = true;
+
+        if (result.ok) {
+          sendTg(`✅ Scheduled post published!\n\n📝 ${h.message.substring(0, 60)}`);
+          console.log(`[fb-scheduler] ✅ Posted: ${h.message.substring(0, 40)}`);
+        }
+      }
+    }
+
+    if (changed) saveHistory(history);
+  }, 30000); // Check every 30 seconds
+  console.log("[fb-scheduler] ⏰ Active — checking scheduled posts");
 }
