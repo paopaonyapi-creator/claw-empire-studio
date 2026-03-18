@@ -9,7 +9,9 @@ vi.mock("../AgentAvatar", () => ({
   buildSpriteMap: () => ({}),
 }));
 
-function t(messages: Record<string, string>): string {
+import type { LangText } from "../../i18n";
+function t(messages: LangText | string): string {
+  if (typeof messages === "string") return messages;
   return messages.en ?? messages.ko ?? messages.ja ?? messages.zh ?? Object.values(messages)[0] ?? "";
 }
 
@@ -119,3 +121,4 @@ describe("ApiAssignModal", () => {
     expect(screen.getByText("Storyboard")).toBeInTheDocument();
   });
 });
+

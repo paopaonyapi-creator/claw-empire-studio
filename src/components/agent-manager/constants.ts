@@ -13,7 +13,7 @@ export const CLI_PROVIDERS: CliProvider[] = [
   "api",
 ];
 
-export const ROLE_LABEL: Record<string, { ko: string; en: string }> = {
+export const ROLE_LABEL: Record<string, { ko: string; en: string; th?: string }> = {
   team_leader: { ko: "팀장", en: "Leader" , th: "Leader" },
   senior: { ko: "시니어", en: "Senior" , th: "Senior" },
   junior: { ko: "주니어", en: "Junior" , th: "Junior" },

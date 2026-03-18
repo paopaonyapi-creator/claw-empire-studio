@@ -11,6 +11,7 @@ export interface I18nTextMap {
   en: string;
   ja: string;
   zh: string;
+  th?: string;
 }
 
 export type ProjectI18nTranslate = (messages: I18nTextMap) => string;

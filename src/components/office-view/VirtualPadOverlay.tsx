@@ -1,8 +1,8 @@
-import type { UiLanguage } from "../../i18n";
+import type { LangText } from "../../i18n";
 import { LOCALE_TEXT } from "./themes-locale";
 import type { MobileMoveDirection } from "./model";
 
-type TFunction = (messages: Record<UiLanguage, string>) => string;
+type TFunction = (messages: LangText) => string;
 
 interface VirtualPadOverlayProps {
   showVirtualPad: boolean;

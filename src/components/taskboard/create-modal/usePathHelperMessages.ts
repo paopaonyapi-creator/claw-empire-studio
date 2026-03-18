@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { isApiRequestError } from "../../../api";
-import type { Locale, TFunction } from "../constants";
+import type { TFunction } from "../constants";
+import type { LangText } from "../../../i18n";
 
 export function usePathHelperMessages(t: TFunction) {
   const unsupportedPathApiMessage = useMemo(
@@ -43,13 +44,14 @@ export function usePathHelperMessages(t: TFunction) {
         en: `Path is outside allowed project roots. Allowed roots: ${allowedRoots.join(", ")}`,
         ja: `許可されたプロジェクトパス範囲外です。許可パス: ${allowedRoots.join(", ")}`,
         zh: `路径超出允许的项目根目录范围。允许路径：${allowedRoots.join(", ")}`,
+        th: `เส้นทางอยู่นอกขอบเขตที่อนุญาต ขอบเขตที่อนุญาต: ${allowedRoots.join(", ")}`,
       });
     },
     [t],
   );
 
   const resolvePathHelperErrorMessage = useCallback(
-    (error: unknown, fallback: Record<Locale, string>) => {
+    (error: unknown, fallback: LangText) => {
       if (!isApiRequestError(error)) return t(fallback);
 
       if (error.status === 404) {

@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { Project, TaskType, WorkflowPackKey } from "../../../types";
 import { checkProjectPath, createProject, getProjects, isApiRequestError } from "../../../api";
 import type { FormFeedback, Locale, MissingPathPrompt, TFunction } from "../constants";
+import type { LangText } from "../../../i18n";
 
 type CreateTaskHandler = (input: {
   title: string;
@@ -15,7 +16,7 @@ type CreateTaskHandler = (input: {
   workflow_pack_key?: WorkflowPackKey;
 }) => void | Promise<void>;
 
-type ResolvePathHelperErrorMessage = (error: unknown, fallback: Record<Locale, string>) => string;
+type ResolvePathHelperErrorMessage = (error: unknown, fallback: LangText) => string;
 
 type SubmitTaskOptions = {
   allowCreateMissingPath?: boolean;
@@ -307,6 +308,7 @@ export async function submitTaskWithProjectHandling(
             zh: existingProjectName
               ? `该路径已被‘${existingProjectName}’使用，请选择已有项目。`
               : "该路径已被现有项目使用，请选择已有项目。",
+            th: "เส้นทางนี้ถูกใช้โดยโปรเจกต์อื่นแล้ว กรุณาเลือกโปรเจกต์ที่มีอยู่",
           }),
         });
         return;

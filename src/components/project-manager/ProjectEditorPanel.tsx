@@ -41,7 +41,7 @@ interface ProjectEditorPanelProps {
   setManualPathPickerOpen: Dispatch<SetStateAction<boolean>>;
   loadManualPathEntries: (targetPath?: string) => Promise<void>;
   unsupportedPathApiMessage: string;
-  resolvePathHelperErrorMessage: (err: unknown, fallback: { ko: string; en: string; ja: string; zh: string }) => string;
+  resolvePathHelperErrorMessage: (err: unknown, fallback: { ko: string; en: string; ja: string; zh: string; th?: string }) => string;
   formFeedback: FormFeedback | null;
   setFormFeedback: Dispatch<SetStateAction<FormFeedback | null>>;
   assignmentMode: AssignmentMode;
