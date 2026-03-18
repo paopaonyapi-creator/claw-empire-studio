@@ -173,3 +173,81 @@
     font-size: 22px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   PWA Standalone Mode + Mobile Enhancements
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Safe area for notched phones (iPhone X+) */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* PWA standalone: add top padding for status bar */
+@media all and (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top, 20px);
+  }
+}
+
+/* Touch-friendly buttons on mobile */
+@media (max-width: 768px) {
+  button, [role="button"], a.btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Hide sidebar on mobile */
+  .sidebar-panel {
+    position: fixed !important;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sidebar-panel.open {
+    transform: translateX(0);
+  }
+
+  /* Full-width cards on mobile */
+  .dashboard-card, .widget-card {
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+  }
+
+  /* Stack inline elements */
+  .inline-flex, .flex-row {
+    flex-direction: column !important;
+  }
+
+  /* Smaller font on mobile widgets */
+  .widget-title {
+    font-size: 14px !important;
+  }
+
+  /* Scrollable tables */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text selection on mobile (UI elements only) */
+@media (hover: none) {
+  button, [role="button"] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+

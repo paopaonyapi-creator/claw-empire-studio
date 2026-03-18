@@ -28,6 +28,7 @@ import { handleShortCommand } from "./link-shortener.ts";
 import { handleHealthCommand } from "./api-health.ts";
 import { handleMultiPostCommand, handleSheetsCommand, handleAbTestCommand, handleAutoScheduleCommand, handleCompetitorCommand } from "./multi-platform.ts";
 import { handlePipelineCommand as handleContentPipelineCommand, handleIncomeReportCommand, handleTeamCommand } from "./content-pipeline.ts";
+import { handleHelpCommand, handleOrderCommand } from "./studio-utils.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -440,6 +441,20 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Team Management
       if (cmd === "/team") {
         reply = handleTeamCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Help command
+      if (cmd === "/help" || cmd === "/start") {
+        reply = handleHelpCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // Order alerts
+      if (cmd === "/order") {
+        reply = handleOrderCommand(arg);
         await sendTg(reply);
         return;
       }

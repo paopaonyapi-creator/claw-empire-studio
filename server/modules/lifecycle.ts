@@ -32,6 +32,7 @@ import { registerLinkShortenerRoutes } from "./link-shortener.ts";
 import { registerHealthRoutes, startHealthScheduler } from "./api-health.ts";
 import { registerMultiPlatformRoutes } from "./multi-platform.ts";
 import { registerPipelineRoutes } from "./content-pipeline.ts";
+import { registerUtilityRoutes, setupTelegramBotMenu, startDailyReportCron } from "./studio-utils.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -102,6 +103,8 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerHealthRoutes(app);
   registerMultiPlatformRoutes(app);
   registerPipelineRoutes(app);
+  registerUtilityRoutes(app);
+  setupTelegramBotMenu().catch(() => {});
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();
@@ -109,6 +112,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   startAlertScheduler();
   startFbScheduler();
   startHealthScheduler();
+  startDailyReportCron();
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/

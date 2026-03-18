@@ -140,6 +140,8 @@ export function isPublicApiPath(pathname: string): boolean {
   if (pathname === "/api/telegram/webhook") return true; // Telegram sends unauthenticated POSTs
   if (pathname.startsWith("/go/")) return true; // Short URL redirects are public
   if (pathname.startsWith("/s/")) return true; // Link shortener redirects are public
+  if (pathname === "/api/orders/webhook") return true; // Order webhooks from Shopee/Lazada
+  if (pathname.startsWith("/api/analytics/")) return true; // Analytics tracking
   return false;
 }
 
