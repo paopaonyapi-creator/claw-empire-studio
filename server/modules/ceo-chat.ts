@@ -225,6 +225,20 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
     reply = await handleTemplateListCommand();
   } else if (trimmed === "/report" || trimmed === "/รายงาน") {
     reply = await handleReportCommand();
+  } else if (trimmed === "/leaderboard" || trimmed === "/rank") {
+    try {
+      const res = await fetch(`http://127.0.0.1:${PORT}/api/agents`);
+      const data = (await res.json()) as { agents?: Array<{ name: string; tasks_done?: number; tasks_total?: number }> };
+      const agents = (data.agents || [])
+        .map(a => ({ name: a.name, done: a.tasks_done || 0, total: a.tasks_total || 0 }))
+        .sort((a, b) => b.done - a.done)
+        .slice(0, 10);
+      const medals = ["🥇", "🥈", "🥉"];
+      const list = agents
+        .map((a, i) => `${medals[i] || `#${i + 1}`} ${a.name} — ${a.done} tasks`)
+        .join("\n");
+      reply = `🏆 <b>Agent Leaderboard</b>\n\n${list || "ยังไม่มี tasks"}`;
+    } catch { reply = "❌ Error fetching leaderboard"; }
   } else if (trimmed === "/help" || trimmed === "/ช่วย") {
     reply =
       `🤖 <b>CEO Commands</b>\n\n` +

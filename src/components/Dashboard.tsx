@@ -13,6 +13,9 @@ import { DashboardTodayKpi } from "./dashboard/TodayKpiSection";
 import { PerformanceCharts } from "./dashboard/PerformanceCharts";
 import { TemplateSelector } from "./dashboard/TemplateSelector";
 import { ContentLibrary } from "./dashboard/ContentLibrary";
+import { LinkStatsWidget } from "./dashboard/LinkStatsWidget";
+import { AgentLeaderboard } from "./dashboard/AgentLeaderboard";
+import { NotificationCenter } from "./dashboard/NotificationCenter";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -197,6 +200,7 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
 
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
         <TemplateSelector />
+        <NotificationCenter />
       </div>
 
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
@@ -204,6 +208,11 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       <PerformanceCharts />
 
       <ContentLibrary />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <LinkStatsWidget />
+        <AgentLeaderboard />
+      </div>
 
       <DashboardRankingBoard
         topAgents={topAgents}
