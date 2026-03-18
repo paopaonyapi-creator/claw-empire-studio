@@ -23,6 +23,7 @@ import { MorningBrief } from "./dashboard/MorningBrief";
 import { ContentGeneratorWidget } from "./dashboard/ContentGeneratorWidget";
 import { AlertsWidget } from "./dashboard/AlertsWidget";
 import { DataExportWidget } from "./dashboard/DataExportWidget";
+import { FacebookWidget } from "./dashboard/FacebookWidget";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -219,6 +220,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       <PerformanceCharts />
 
       <ContentGeneratorWidget />
+
+      <FacebookWidget />
 
       <ContentLibrary />
 

@@ -22,6 +22,7 @@ import { handleBriefCommand } from "./morning-brief.ts";
 import { handleGenerateCommand } from "./content-generator.ts";
 import { handleAlertsCommand } from "./performance-alerts.ts";
 import { handleExportCommand } from "./data-export.ts";
+import { handleFbCommand } from "./facebook-publisher.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -348,6 +349,13 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Export command
       if (cmd === "/export") {
         reply = handleExportCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Facebook command
+      if (cmd === "/fb") {
+        reply = await handleFbCommand(arg);
         await sendTg(reply);
         return;
       }

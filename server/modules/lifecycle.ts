@@ -26,6 +26,7 @@ import { registerMorningBriefRoutes, startMorningBriefScheduler } from "./mornin
 import { registerContentGeneratorRoutes } from "./content-generator.ts";
 import { registerAlertRoutes, startAlertScheduler } from "./performance-alerts.ts";
 import { registerDataExportRoutes } from "./data-export.ts";
+import { registerFacebookRoutes } from "./facebook-publisher.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -90,6 +91,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerContentGeneratorRoutes(app);
   registerAlertRoutes(app);
   registerDataExportRoutes(app);
+  registerFacebookRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();
