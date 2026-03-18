@@ -25,6 +25,7 @@ import { handleExportCommand } from "./data-export.ts";
 import { handleFbCommand } from "./facebook-publisher.ts";
 import { handleGoalCommand } from "./goal-tracker.ts";
 import { handleShortCommand } from "./link-shortener.ts";
+import { handleHealthCommand } from "./api-health.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -372,6 +373,13 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Link shortener command
       if (cmd === "/short") {
         reply = handleShortCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Health check command
+      if (cmd === "/health") {
+        reply = await handleHealthCommand();
         await sendTg(reply);
         return;
       }

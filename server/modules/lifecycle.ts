@@ -29,6 +29,7 @@ import { registerDataExportRoutes } from "./data-export.ts";
 import { registerFacebookRoutes, startFbScheduler } from "./facebook-publisher.ts";
 import { registerGoalRoutes } from "./goal-tracker.ts";
 import { registerLinkShortenerRoutes } from "./link-shortener.ts";
+import { registerHealthRoutes, startHealthScheduler } from "./api-health.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -96,12 +97,14 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerFacebookRoutes(app);
   registerGoalRoutes(app);
   registerLinkShortenerRoutes(app);
+  registerHealthRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();
   startMorningBriefScheduler();
   startAlertScheduler();
   startFbScheduler();
+  startHealthScheduler();
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/

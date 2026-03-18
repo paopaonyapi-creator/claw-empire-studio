@@ -20,6 +20,7 @@ import { RevenueWidget } from "./dashboard/RevenueWidget";
 import { ContentCalendar } from "./dashboard/ContentCalendar";
 import { SmartInsights } from "./dashboard/SmartInsights";
 import { MorningBrief } from "./dashboard/MorningBrief";
+import { ApiHealthWidget } from "./dashboard/ApiHealthWidget";
 import { ContentGeneratorWidget } from "./dashboard/ContentGeneratorWidget";
 import { AlertsWidget } from "./dashboard/AlertsWidget";
 import { DataExportWidget } from "./dashboard/DataExportWidget";
@@ -214,6 +215,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       </div>
 
       <MorningBrief />
+
+      <ApiHealthWidget />
 
       <AlertsWidget />
 
