@@ -55,7 +55,7 @@ async function checkFacebook(): Promise<{ ok: boolean; latency: number; error?: 
   if (!token) return { ok: false, latency: 0, error: "FACEBOOK_ACCESS_TOKEN not set" };
   const start = Date.now();
   try {
-    const res = await fetch(`https://graph.facebook.com/v19.0/me?access_token=${token}`, { signal: AbortSignal.timeout(10000) });
+    const res = await fetch(`https://graph.facebook.com/v19.0/me?fields=id,name&access_token=${token}`, { signal: AbortSignal.timeout(10000) });
     const latency = Date.now() - start;
     if (!res.ok) {
       const data = await res.json() as { error?: { message?: string } };
@@ -64,6 +64,76 @@ async function checkFacebook(): Promise<{ ok: boolean; latency: number; error?: 
     return { ok: true, latency };
   } catch (e) { return { ok: false, latency: Date.now() - start, error: String(e) }; }
 }
+
+// ---------------------------------------------------------------------------
+// Feature C: FB Token Expiry Monitor
+// ---------------------------------------------------------------------------
+
+interface FbTokenInfo {
+  valid: boolean;
+  expiresAt: number; // unix timestamp, 0 = never
+  daysLeft: number;
+  scopes: string[];
+  appName: string;
+}
+
+async function checkFbTokenExpiry(): Promise<FbTokenInfo | null> {
+  const token = process.env.FACEBOOK_ACCESS_TOKEN;
+  if (!token) return null;
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v19.0/me?fields=id&access_token=${token}`,
+      { signal: AbortSignal.timeout(10000) }
+    );
+    if (!res.ok) return { valid: false, expiresAt: 0, daysLeft: 0, scopes: [], appName: "" };
+
+    // Try debug_token (only works with app token, so we estimate)
+    // For page tokens that never expire, we return a high number
+    // For user tokens, standard expiry is ~60 days from creation
+    const debugRes = await fetch(
+      `https://graph.facebook.com/v19.0/debug_token?input_token=${token}&access_token=${token}`,
+      { signal: AbortSignal.timeout(10000) }
+    ).catch(() => null);
+
+    if (debugRes && debugRes.ok) {
+      const debugData = await debugRes.json() as {
+        data?: { is_valid?: boolean; expires_at?: number; scopes?: string[]; app_id?: string };
+      };
+      const d = debugData.data;
+      const expiresAt = d?.expires_at || 0;
+      const daysLeft = expiresAt > 0
+        ? Math.max(0, Math.floor((expiresAt * 1000 - Date.now()) / 86400000))
+        : 999; // 0 = never expires (page token)
+
+      return {
+        valid: d?.is_valid ?? true,
+        expiresAt,
+        daysLeft,
+        scopes: d?.scopes || [],
+        appName: d?.app_id || "",
+      };
+    }
+
+    return { valid: true, expiresAt: 0, daysLeft: 999, scopes: [], appName: "" };
+  } catch {
+    return null;
+  }
+}
+
+async function checkAndWarnFbExpiry(): Promise<void> {
+  const info = await checkFbTokenExpiry();
+  if (!info) return;
+
+  if (!info.valid) {
+    sendHealthAlert("🔴 📘 Facebook Token หมดอายุแล้ว! กรุณา renew token ใหม่\n\nไปที่: https://developers.facebook.com/tools/explorer/");
+    return;
+  }
+
+  if (info.daysLeft <= 7 && info.daysLeft > 0) {
+    sendHealthAlert(`⚠️ 📘 Facebook Token จะหมดอายุใน ${info.daysLeft} วัน!\n\nกรุณา renew token ก่อนหมดอายุ\nไปที่: https://developers.facebook.com/tools/explorer/`);
+  }
+}
+
 
 async function checkOpenRouter(): Promise<{ ok: boolean; latency: number; error?: string }> {
   const key = process.env.OPENROUTER_API_KEY;
@@ -225,6 +295,14 @@ export async function handleHealthCommand(): Promise<string> {
   msg += `━━━━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `✅ ${upCount}/${total} APIs operational`;
 
+  // Add FB token expiry info
+  const fbInfo = await checkFbTokenExpiry();
+  if (fbInfo) {
+    const expiryText = fbInfo.daysLeft >= 999 ? "♾️ Never (Page Token)" : `${fbInfo.daysLeft} days left`;
+    const expiryIcon = fbInfo.daysLeft > 14 ? "🟢" : fbInfo.daysLeft > 7 ? "🟡" : "🔴";
+    msg += `\n\n📘 FB Token: ${expiryIcon} ${expiryText}`;
+  }
+
   return msg;
 }
 
@@ -237,7 +315,10 @@ export function startHealthScheduler(): void {
   setTimeout(() => { runAllChecks().catch(() => {}); }, 30000);
   // Then every 5 minutes
   setInterval(() => { runAllChecks().catch(() => {}); }, 5 * 60 * 1000);
-  console.log("[api-health] 🏥 Monitor active — checking every 5 minutes");
+  // Check FB token expiry daily
+  setTimeout(() => { checkAndWarnFbExpiry().catch(() => {}); }, 60000);
+  setInterval(() => { checkAndWarnFbExpiry().catch(() => {}); }, 24 * 60 * 60 * 1000);
+  console.log("[api-health] 🏥 Monitor active — checking every 5 minutes + daily FB token expiry");
 }
 
 // ---------------------------------------------------------------------------
@@ -256,5 +337,11 @@ export function registerHealthRoutes(app: Express): void {
       apis: results,
       lastCheck: new Date().toISOString(),
     });
+  });
+
+  // FB Token expiry endpoint
+  app.get("/api/health/fb-token", async (_req: Request, res: Response) => {
+    const info = await checkFbTokenExpiry();
+    res.json({ ok: true, ...(info || { valid: false, daysLeft: 0 }) });
   });
 }

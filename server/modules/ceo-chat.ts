@@ -26,6 +26,7 @@ import { handleFbCommand } from "./facebook-publisher.ts";
 import { handleGoalCommand } from "./goal-tracker.ts";
 import { handleShortCommand } from "./link-shortener.ts";
 import { handleHealthCommand } from "./api-health.ts";
+import { handleMultiPostCommand, handleSheetsCommand, handleAbTestCommand, handleAutoScheduleCommand, handleCompetitorCommand } from "./multi-platform.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -50,26 +51,28 @@ async function sendTg(text: string): Promise<void> {
 
 async function handleStatusCommand(): Promise<string> {
   try {
-    const res = await fetch(`http://127.0.0.1:${PORT}/api/stats`);
-    if (!res.ok) return "❌ ไม่สามารถดึง stats ได้";
-    const data = (await res.json()) as {
-      stats?: {
-        tasks?: { total?: number; done?: number; in_progress?: number; review?: number; completion_rate?: number };
-        agents?: { total?: number; working?: number; idle?: number };
-      };
-    };
-    const t = data.stats?.tasks;
-    const a = data.stats?.agents;
+    // Pull real data from our working endpoints
+    const [healthRes, goalsRes, linksRes] = await Promise.allSettled([
+      fetch(`http://127.0.0.1:${PORT}/api/health`).then((r) => r.json()),
+      fetch(`http://127.0.0.1:${PORT}/api/goals`).then((r) => r.json()),
+      fetch(`http://127.0.0.1:${PORT}/api/links`).then((r) => r.json()),
+    ]);
+
+    const health = healthRes.status === "fulfilled" ? (healthRes.value as { upCount?: number; total?: number }) : null;
+    const goals = goalsRes.status === "fulfilled" ? (goalsRes.value as { goals?: unknown[] }) : null;
+    const links = linksRes.status === "fulfilled" ? (linksRes.value as { links?: unknown[] }) : null;
+
+    const uptime = process.uptime();
+    const hours = Math.floor(uptime / 3600);
+    const mins = Math.floor((uptime % 3600) / 60);
 
     return (
       `📊 <b>Studio Status</b>\n\n` +
-      `📋 Tasks: ${t?.total || 0}\n` +
-      `   ✅ Done: ${t?.done || 0} (${t?.completion_rate || 0}%)\n` +
-      `   🔄 In progress: ${t?.in_progress || 0}\n` +
-      `   🔍 Review: ${t?.review || 0}\n\n` +
-      `🤖 Agents: ${a?.total || 0}\n` +
-      `   💼 Working: ${a?.working || 0}\n` +
-      `   😴 Idle: ${a?.idle || 0}`
+      `🚀 Server uptime: ${hours}h ${mins}m\n` +
+      `🏥 APIs: ${health?.upCount || "?"}/${health?.total || "?"} operational\n` +
+      `🎯 Goals: ${(goals?.goals as unknown[])?.length || 0} active\n` +
+      `🔗 Short links: ${(links?.links as unknown[])?.length || 0}\n\n` +
+      `⏰ ${new Date().toLocaleString("th-TH", { timeZone: "Asia/Bangkok" })}`
     );
   } catch {
     return "❌ Error fetching status";
@@ -380,6 +383,41 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Health check command
       if (cmd === "/health") {
         reply = await handleHealthCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // Multi-platform post
+      if (cmd === "/multipost") {
+        reply = await handleMultiPostCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Sheets sync
+      if (cmd === "/sheets") {
+        reply = await handleSheetsCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // A/B Testing
+      if (cmd === "/ab") {
+        reply = handleAbTestCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // AI Auto-Schedule
+      if (cmd === "/autoschedule") {
+        reply = await handleAutoScheduleCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // Competitor Monitor
+      if (cmd === "/competitor") {
+        reply = handleCompetitorCommand(arg);
         await sendTg(reply);
         return;
       }

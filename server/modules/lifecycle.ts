@@ -30,6 +30,7 @@ import { registerFacebookRoutes, startFbScheduler } from "./facebook-publisher.t
 import { registerGoalRoutes } from "./goal-tracker.ts";
 import { registerLinkShortenerRoutes } from "./link-shortener.ts";
 import { registerHealthRoutes, startHealthScheduler } from "./api-health.ts";
+import { registerMultiPlatformRoutes } from "./multi-platform.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -98,6 +99,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerGoalRoutes(app);
   registerLinkShortenerRoutes(app);
   registerHealthRoutes(app);
+  registerMultiPlatformRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();
