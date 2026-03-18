@@ -15,6 +15,9 @@ import { handleLinkCommand } from "./link-tracker.ts";
 import { handleReportCommand } from "./daily-report.ts";
 import { handleProductCommand } from "./product-manager.ts";
 import { handleSyncCommand } from "./supabase-backup.ts";
+import { handleRevenueCommand } from "./revenue-tracker.ts";
+import { handleScheduleCommand } from "./content-calendar.ts";
+import { handleInsightsCommand } from "./insights-engine.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -292,6 +295,27 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Product commands
       if (cmd === "/product") {
         reply = handleProductCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Revenue commands
+      if (cmd === "/revenue") {
+        reply = handleRevenueCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Schedule commands
+      if (cmd === "/schedule") {
+        reply = handleScheduleCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Insights commands
+      if (cmd === "/insights") {
+        reply = handleInsightsCommand();
         await sendTg(reply);
         return;
       }

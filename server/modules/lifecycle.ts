@@ -19,6 +19,9 @@ import { registerLinkTrackerRoutes } from "./link-tracker.ts";
 import { startDailyReportScheduler } from "./daily-report.ts";
 import { registerProductManagerRoutes } from "./product-manager.ts";
 import { registerSupabaseBackupRoutes, startSupabaseBackupScheduler } from "./supabase-backup.ts";
+import { registerRevenueTrackerRoutes } from "./revenue-tracker.ts";
+import { registerContentCalendarRoutes } from "./content-calendar.ts";
+import { registerInsightsRoutes } from "./insights-engine.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -76,6 +79,9 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerLinkTrackerRoutes(app);
   registerProductManagerRoutes(app);
   registerSupabaseBackupRoutes(app);
+  registerRevenueTrackerRoutes(app);
+  registerContentCalendarRoutes(app);
+  registerInsightsRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();

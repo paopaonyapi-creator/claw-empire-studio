@@ -16,6 +16,9 @@ import { ContentLibrary } from "./dashboard/ContentLibrary";
 import { LinkStatsWidget } from "./dashboard/LinkStatsWidget";
 import { AgentLeaderboard } from "./dashboard/AgentLeaderboard";
 import { NotificationCenter } from "./dashboard/NotificationCenter";
+import { RevenueWidget } from "./dashboard/RevenueWidget";
+import { ContentCalendar } from "./dashboard/ContentCalendar";
+import { SmartInsights } from "./dashboard/SmartInsights";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -209,10 +212,16 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
 
       <ContentLibrary />
 
+      <ContentCalendar />
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <LinkStatsWidget />
         <AgentLeaderboard />
       </div>
+
+      <RevenueWidget />
+
+      <SmartInsights />
 
       <DashboardRankingBoard
         topAgents={topAgents}
