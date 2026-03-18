@@ -40,7 +40,7 @@ function displayCliProvider(provider: CliProcessInfo["provider"]): string {
 }
 
 export default function AgentStatusPanel({ agents, uiLanguage, onClose }: AgentStatusPanelProps) {
-  const t = (text: { ko: string; en: string; ja?: string; zh?: string }) => pickLang(uiLanguage, text);
+  const t = (text: { ko: string; en: string; ja?: string; zh?: string; th?: string }) => pickLang(uiLanguage, text);
   const [activeAgents, setActiveAgents] = useState<ActiveAgentInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [killing, setKilling] = useState<Set<string>>(new Set());
