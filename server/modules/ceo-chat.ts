@@ -18,6 +18,7 @@ import { handleSyncCommand } from "./supabase-backup.ts";
 import { handleRevenueCommand } from "./revenue-tracker.ts";
 import { handleScheduleCommand } from "./content-calendar.ts";
 import { handleInsightsCommand } from "./insights-engine.ts";
+import { handleBriefCommand } from "./morning-brief.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -316,6 +317,13 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Insights commands
       if (cmd === "/insights") {
         reply = handleInsightsCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // Brief command
+      if (cmd === "/brief") {
+        reply = handleBriefCommand();
         await sendTg(reply);
         return;
       }

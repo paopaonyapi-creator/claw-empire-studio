@@ -1,0 +1,175 @@
+/* ═══════════════════════════════════════════════════════════════
+   Part 06: Dark Mode Overrides for Dashboard Widgets + Mobile
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Dark mode: Revenue Widget ─── */
+[data-theme="dark"] .revenue-widget,
+:root .revenue-widget {
+  background: linear-gradient(135deg, rgba(120, 53, 15, 0.35) 0%, rgba(30, 20, 8, 0.6) 100%) !important;
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.08) !important;
+}
+[data-theme="dark"] .revenue-widget h2,
+:root .revenue-widget h2 {
+  color: #fbbf24 !important;
+}
+[data-theme="dark"] .revenue-big-card,
+:root .revenue-big-card {
+  background: rgba(30, 20, 8, 0.5) !important;
+}
+[data-theme="dark"] .revenue-big-value,
+:root .revenue-big-value {
+  color: #fbbf24 !important;
+}
+[data-theme="dark"] .revenue-big-label,
+:root .revenue-big-label {
+  color: #d97706 !important;
+}
+[data-theme="dark"] .revenue-tab,
+:root .revenue-tab {
+  background: rgba(30, 20, 8, 0.6) !important;
+  border-color: #92400e !important;
+  color: #fbbf24 !important;
+}
+[data-theme="dark"] .revenue-tab-active,
+:root .revenue-tab-active {
+  background: #f59e0b !important;
+  color: #000 !important;
+}
+
+/* ─── Dark mode: Content Calendar ─── */
+[data-theme="dark"] .calendar-widget,
+:root .calendar-widget {
+  background: rgba(16, 16, 42, 0.65) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+}
+[data-theme="dark"] .calendar-widget h2,
+:root .calendar-widget h2 {
+  color: #e2e8f0 !important;
+}
+[data-theme="dark"] .calendar-day-col,
+:root .calendar-day-col {
+  background: rgba(22, 22, 52, 0.5) !important;
+}
+[data-theme="dark"] .calendar-day-header,
+:root .calendar-day-header {
+  background: rgba(30, 30, 65, 0.8) !important;
+  color: #94a3b8 !important;
+}
+[data-theme="dark"] .calendar-day-today,
+:root .calendar-day-today {
+  box-shadow: 0 0 0 2px #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.12) !important;
+}
+[data-theme="dark"] .calendar-day-header-today,
+:root .calendar-day-header-today {
+  background: #3b82f6 !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .calendar-entry-card,
+:root .calendar-entry-card {
+  background: rgba(30, 30, 65, 0.6) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ─── Dark mode: Smart Insights ─── */
+[data-theme="dark"] .insights-widget,
+:root .insights-widget {
+  background: linear-gradient(135deg, rgba(49, 46, 129, 0.3) 0%, rgba(30, 27, 75, 0.4) 100%) !important;
+}
+[data-theme="dark"] .insights-widget h2,
+:root .insights-widget h2 {
+  color: #a5b4fc !important;
+}
+[data-theme="dark"] .insight-card-achievement,
+:root .insight-card-achievement {
+  background: rgba(22, 101, 52, 0.25) !important;
+  border-left-color: #4ade80 !important;
+}
+[data-theme="dark"] .insight-card-trend,
+:root .insight-card-trend {
+  background: rgba(30, 64, 175, 0.2) !important;
+  border-left-color: #60a5fa !important;
+}
+[data-theme="dark"] .insight-card-tip,
+:root .insight-card-tip {
+  background: rgba(133, 77, 14, 0.2) !important;
+  border-left-color: #fbbf24 !important;
+}
+[data-theme="dark"] .insight-card-warning,
+:root .insight-card-warning {
+  background: rgba(153, 27, 27, 0.2) !important;
+  border-left-color: #f87171 !important;
+}
+
+/* ─── Dark mode: Content Library ─── */
+[data-theme="dark"] .content-library-widget,
+:root .content-library-widget {
+  background: rgba(16, 16, 42, 0.65) !important;
+}
+
+/* ─── Light mode overrides (explicit) ─── */
+[data-theme="light"] .revenue-widget {
+  background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%) !important;
+}
+[data-theme="light"] .revenue-widget h2 { color: #92400e !important; }
+[data-theme="light"] .revenue-big-card { background: #fff !important; }
+[data-theme="light"] .revenue-big-value { color: #d97706 !important; }
+
+[data-theme="light"] .calendar-widget {
+  background: #fff !important;
+}
+[data-theme="light"] .calendar-widget h2 { color: #1e293b !important; }
+[data-theme="light"] .calendar-day-col { background: #f8fafc !important; }
+[data-theme="light"] .calendar-day-header { background: #f1f5f9 !important; color: #64748b !important; }
+
+[data-theme="light"] .insights-widget {
+  background: linear-gradient(135deg, #eef2ff 0%, #f0f9ff 100%) !important;
+}
+[data-theme="light"] .insights-widget h2 { color: #312e81 !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   Mobile Responsive Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Medium screens: stack 2-col grids */
+@media (max-width: 900px) {
+  .dashboard-2col-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .calendar-grid-7 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .revenue-big-numbers {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+}
+
+/* Small screens: fully single column */
+@media (max-width: 640px) {
+  .calendar-grid-7 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .revenue-big-numbers {
+    grid-template-columns: 1fr !important;
+  }
+  .hud-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .dashboard-section {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  .kpi-pipeline-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .calendar-grid-7 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .dashboard-title-text {
+    font-size: 22px !important;
+  }
+}

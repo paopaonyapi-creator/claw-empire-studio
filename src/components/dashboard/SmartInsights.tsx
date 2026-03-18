@@ -46,7 +46,7 @@ export function SmartInsights() {
   const displayed = expanded ? insights : insights.slice(0, 4);
 
   return (
-    <div style={styles.container}>
+    <div className="insights-widget" style={styles.container}>
       <div style={styles.header}>
         <h2 style={styles.title}>🧠 Smart Insights</h2>
         <span style={styles.count}>{insights.length} insights</span>
@@ -64,6 +64,7 @@ export function SmartInsights() {
               return (
                 <div
                   key={insight.id}
+                  className={`insight-card-${insight.type}`}
                   style={{
                     ...styles.card,
                     background: style.bg,

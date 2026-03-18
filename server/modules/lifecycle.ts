@@ -22,6 +22,7 @@ import { registerSupabaseBackupRoutes, startSupabaseBackupScheduler } from "./su
 import { registerRevenueTrackerRoutes } from "./revenue-tracker.ts";
 import { registerContentCalendarRoutes } from "./content-calendar.ts";
 import { registerInsightsRoutes } from "./insights-engine.ts";
+import { registerMorningBriefRoutes, startMorningBriefScheduler } from "./morning-brief.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -82,9 +83,11 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerRevenueTrackerRoutes(app);
   registerContentCalendarRoutes(app);
   registerInsightsRoutes(app);
+  registerMorningBriefRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();
+  startMorningBriefScheduler();
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/

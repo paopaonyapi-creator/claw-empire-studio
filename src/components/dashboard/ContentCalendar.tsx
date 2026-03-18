@@ -55,7 +55,7 @@ export function ContentCalendar() {
   const todayDay = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][today.getDay()];
 
   return (
-    <div style={styles.container}>
+    <div className="calendar-widget" style={styles.container}>
       <div style={styles.header}>
         <h2 style={styles.title}>📅 Content Calendar</h2>
         <span style={styles.weekLabel}>Week: {weekOf || "—"}</span>
@@ -64,7 +64,7 @@ export function ContentCalendar() {
       {loading ? (
         <div style={styles.loading}>⏳ Loading...</div>
       ) : (
-        <div style={styles.grid}>
+        <div className="calendar-grid-7" style={styles.grid}>
           {DAYS.map((day) => {
             const dayEntries = getEntriesForDay(day);
             const isToday = day === todayDay;
@@ -72,12 +72,13 @@ export function ContentCalendar() {
             return (
               <div
                 key={day}
+                className={`calendar-day-col ${isToday ? 'calendar-day-today' : ''}`}
                 style={{
                   ...styles.dayCol,
                   ...(isToday ? styles.dayColToday : {}),
                 }}
               >
-                <div style={{
+                <div className={isToday ? 'calendar-day-header-today' : 'calendar-day-header'} style={{
                   ...styles.dayHeader,
                   ...(isToday ? styles.dayHeaderToday : {}),
                 }}>

@@ -46,13 +46,14 @@ export function RevenueWidget() {
   const summary = data?.[period] || { total: 0, commission: 0, count: 0, byPlatform: {}, topProducts: [] };
 
   return (
-    <div style={styles.container}>
+    <div className="revenue-widget" style={styles.container}>
       <div style={styles.header}>
         <h2 style={styles.title}>💰 Revenue Tracker</h2>
         <div style={styles.tabs}>
           {(["today", "week", "month"] as Period[]).map((p) => (
             <button
               key={p}
+              className={`revenue-tab ${period === p ? 'revenue-tab-active' : ''}`}
               onClick={() => setPeriod(p)}
               style={{ ...styles.tab, ...(period === p ? styles.tabActive : {}) }}
             >
@@ -67,8 +68,8 @@ export function RevenueWidget() {
       ) : (
         <>
           {/* Big Numbers */}
-          <div style={styles.bigNumbers}>
-            <div style={styles.bigCard}>
+          <div className="revenue-big-numbers" style={styles.bigNumbers}>
+            <div className="revenue-big-card" style={styles.bigCard}>
               <div style={styles.bigValue}>฿{summary.total.toLocaleString()}</div>
               <div style={styles.bigLabel}>Revenue</div>
             </div>

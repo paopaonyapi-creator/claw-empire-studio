@@ -19,6 +19,7 @@ import { NotificationCenter } from "./dashboard/NotificationCenter";
 import { RevenueWidget } from "./dashboard/RevenueWidget";
 import { ContentCalendar } from "./dashboard/ContentCalendar";
 import { SmartInsights } from "./dashboard/SmartInsights";
+import { MorningBrief } from "./dashboard/MorningBrief";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -205,6 +206,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
         <TemplateSelector />
         <NotificationCenter />
       </div>
+
+      <MorningBrief />
 
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
 
