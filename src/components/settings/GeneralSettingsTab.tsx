@@ -51,12 +51,12 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
         style={{ background: "var(--th-card-bg)", border: "1px solid var(--th-card-border)" }}
       >
         <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: "var(--th-text-primary)" }}>
-          {t({ ko: "회사 정보", en: "Company", ja: "会社情報", zh: "公司信息" })}
+          {t({ ko: "회사 정보", en: "Company", ja: "会社情報", zh: "公司信息", th: "ข้อมูลบริษัท" })}
         </h3>
 
         <div>
           <label className="block text-xs mb-1" style={{ color: "var(--th-text-secondary)" }}>
-            {t({ ko: "회사명", en: "Company Name", ja: "会社名", zh: "公司名称" })}
+            {t({ ko: "회사명", en: "Company Name", ja: "会社名", zh: "公司名称", th: "ชื่อบริษัท" })}
           </label>
           <input
             type="text"
@@ -73,7 +73,7 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
 
         <div>
           <label className="block text-xs mb-1" style={{ color: "var(--th-text-secondary)" }}>
-            {t({ ko: "CEO 이름", en: "CEO Name", ja: "CEO 名", zh: "CEO 名称" })}
+            {t({ ko: "CEO 이름", en: "CEO Name", ja: "CEO 名", zh: "CEO 名称", th: "ชื่อ CEO" })}
           </label>
           <input
             type="text"
@@ -90,13 +90,13 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
 
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <ToggleSettingCard
-            label={t({ ko: "자동 배정", en: "Auto Assign", ja: "自動割り当て", zh: "自动分配" })}
+            label={t({ ko: "자동 배정", en: "Auto Assign", ja: "自動割り当て", zh: "自动分配", th: "มอบหมายอัตโนมัติ" })}
             checked={form.autoAssign}
             onToggle={() => setForm({ ...form, autoAssign: !form.autoAssign })}
           />
 
           <ToggleSettingCard
-            label={t({ ko: "YOLO 모드", en: "YOLO Mode", ja: "YOLO モード", zh: "YOLO 模式" })}
+            label={t({ ko: "YOLO 모드", en: "YOLO Mode", ja: "YOLO モード", zh: "YOLO 模式", th: "โหมด YOLO" })}
             checked={form.yoloMode === true}
             onToggle={() => setForm({ ...form, yoloMode: !(form.yoloMode === true) })}
             title={t({
@@ -165,7 +165,7 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
 
         <div>
           <label className="block text-xs mb-1" style={{ color: "var(--th-text-secondary)" }}>
-            {t({ ko: "언어", en: "Language", ja: "言語", zh: "语言" })}
+            {t({ ko: "언어", en: "Language", ja: "言語", zh: "语言", th: "ภาษา" })}
           </label>
           <select
             value={form.language}
@@ -177,10 +177,11 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
               color: "var(--th-text-primary)",
             }}
           >
-            <option value="ko">{t({ ko: "한국어", en: "Korean", ja: "韓国語", zh: "韩语" })}</option>
-            <option value="en">{t({ ko: "영어", en: "English", ja: "英語", zh: "英语" })}</option>
-            <option value="ja">{t({ ko: "일본어", en: "Japanese", ja: "日本語", zh: "日语" })}</option>
-            <option value="zh">{t({ ko: "중국어", en: "Chinese", ja: "中国語", zh: "中文" })}</option>
+            <option value="ko">{t({ ko: "한국어", en: "Korean", ja: "韓国語", zh: "韩语", th: "เกาหลี" })}</option>
+            <option value="en">{t({ ko: "영어", en: "English", ja: "英語", zh: "英语", th: "อังกฤษ" })}</option>
+            <option value="ja">{t({ ko: "일본어", en: "Japanese", ja: "日本語", zh: "日语", th: "ญี่ปุ่น" })}</option>
+            <option value="zh">{t({ ko: "중국어", en: "Chinese", ja: "中国語", zh: "中文", th: "จีน" })}</option>
+            <option value="th">{t({ ko: "태국어", en: "Thai", ja: "タイ語", zh: "泰语", th: "ไทย" })}</option>
           </select>
         </div>
       </section>
@@ -188,14 +189,14 @@ export default function GeneralSettingsTab({ t, form, setForm, saved, onSave }: 
       <div className="flex justify-end gap-3">
         {saved && (
           <span className="text-green-400 text-sm self-center">
-            ✅ {t({ ko: "저장 완료", en: "Saved", ja: "保存完了", zh: "已保存" })}
+            ✅ {t({ ko: "저장 완료", en: "Saved", ja: "保存完了", zh: "已保存", th: "บันทึกแล้ว" })}
           </span>
         )}
         <button
           onClick={onSave}
           className="px-8 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30"
         >
-          {t({ ko: "저장", en: "Save", ja: "保存", zh: "保存" })}
+          {t({ ko: "저장", en: "Save", ja: "保存", zh: "保存", th: "บันทึก" })}
         </button>
       </div>
     </>

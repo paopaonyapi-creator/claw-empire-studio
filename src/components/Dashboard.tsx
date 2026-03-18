@@ -58,13 +58,14 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
   const activeRate = totalAgents > 0 ? Math.round((activeAgents / totalAgents) * 100) : 0;
   const reviewQueue = reviewTasks + pendingTasks;
 
-  const primaryCtaLabel = t({ ko: "미션 시작", en: "Start Mission", ja: "ミッション開始", zh: "开始任务" });
-  const primaryCtaEyebrow = t({ ko: "빠른 실행", en: "Quick Start", ja: "クイック開始", zh: "快速开始" });
+  const primaryCtaLabel = t({ ko: "미션 시작", en: "Start Mission", ja: "ミッション開始", zh: "开始任务", th: "เริ่มภารกิจ" });
+  const primaryCtaEyebrow = t({ ko: "빠른 실행", en: "Quick Start", ja: "クイック開始", zh: "快速开始", th: "เริ่มเร็ว" });
   const primaryCtaDescription = t({
     ko: "핵심 업무를 바로 생성하고 실행으로 전환하세요",
     en: "Create a priority task and move execution immediately.",
     ja: "最優先タスクをすぐ作成して実行へ移行します。",
     zh: "立即创建优先任务并进入执行。",
+    th: "สร้างงานสำคัญและเริ่มทำทันที",
   });
 
   const deptData = useMemo<DepartmentPerformance[]>(() => {
