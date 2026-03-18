@@ -16,6 +16,7 @@ export function useWebSocket() {
     let ws: WebSocket;
     let reconnectTimer: ReturnType<typeof setTimeout>;
     let forceSessionBootstrap = false;
+    let wsConnected = false;
 
     async function connect() {
       if (!alive) return;
@@ -45,11 +46,12 @@ export function useWebSocket() {
       wsRef.current = ws;
 
       ws.onopen = () => {
-        if (alive) setConnected(true);
+        if (alive) { setConnected(true); wsConnected = true; }
       };
       ws.onclose = (event) => {
         if (!alive) return;
-        setConnected(false);
+        wsConnected = false;
+        // Don't set disconnected immediately — REST fallback will handle
         if (event.code === 1008) {
           forceSessionBootstrap = true;
         }
@@ -71,9 +73,35 @@ export function useWebSocket() {
     }
 
     void connect();
+
+    // ─── REST API health polling fallback ───
+    // If WS doesn't connect, poll /api/health to show "Connected" status
+    let healthPollTimer: ReturnType<typeof setInterval>;
+
+    async function pollHealth() {
+      if (!alive) return;
+      // If WS is connected, skip polling
+      if (wsConnected) { setConnected(true); return; }
+      try {
+        const res = await fetch("/api/health", { signal: AbortSignal.timeout(5000) });
+        if (alive) setConnected(res.ok);
+      } catch {
+        if (alive) setConnected(false);
+      }
+    }
+
+    // Start polling after 5s delay (give WS time to connect first)
+    const startPollTimer = setTimeout(() => {
+      if (!alive) return;
+      void pollHealth();
+      healthPollTimer = setInterval(pollHealth, 15000);
+    }, 5000);
+
     return () => {
       alive = false;
       clearTimeout(reconnectTimer);
+      clearTimeout(startPollTimer);
+      clearInterval(healthPollTimer);
       ws?.close();
     };
   }, []);
