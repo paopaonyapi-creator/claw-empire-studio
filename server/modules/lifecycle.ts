@@ -23,6 +23,9 @@ import { registerRevenueTrackerRoutes } from "./revenue-tracker.ts";
 import { registerContentCalendarRoutes } from "./content-calendar.ts";
 import { registerInsightsRoutes } from "./insights-engine.ts";
 import { registerMorningBriefRoutes, startMorningBriefScheduler } from "./morning-brief.ts";
+import { registerContentGeneratorRoutes } from "./content-generator.ts";
+import { registerAlertRoutes, startAlertScheduler } from "./performance-alerts.ts";
+import { registerDataExportRoutes } from "./data-export.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -84,10 +87,14 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerContentCalendarRoutes(app);
   registerInsightsRoutes(app);
   registerMorningBriefRoutes(app);
+  registerContentGeneratorRoutes(app);
+  registerAlertRoutes(app);
+  registerDataExportRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
   startSupabaseBackupScheduler();
   startMorningBriefScheduler();
+  startAlertScheduler();
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/

@@ -19,6 +19,9 @@ import { handleRevenueCommand } from "./revenue-tracker.ts";
 import { handleScheduleCommand } from "./content-calendar.ts";
 import { handleInsightsCommand } from "./insights-engine.ts";
 import { handleBriefCommand } from "./morning-brief.ts";
+import { handleGenerateCommand } from "./content-generator.ts";
+import { handleAlertsCommand } from "./performance-alerts.ts";
+import { handleExportCommand } from "./data-export.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -324,6 +327,27 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Brief command
       if (cmd === "/brief") {
         reply = handleBriefCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // Generate command
+      if (cmd === "/generate") {
+        reply = await handleGenerateCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Alerts command
+      if (cmd === "/alerts") {
+        reply = handleAlertsCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Export command
+      if (cmd === "/export") {
+        reply = handleExportCommand(arg);
         await sendTg(reply);
         return;
       }

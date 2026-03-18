@@ -20,6 +20,9 @@ import { RevenueWidget } from "./dashboard/RevenueWidget";
 import { ContentCalendar } from "./dashboard/ContentCalendar";
 import { SmartInsights } from "./dashboard/SmartInsights";
 import { MorningBrief } from "./dashboard/MorningBrief";
+import { ContentGeneratorWidget } from "./dashboard/ContentGeneratorWidget";
+import { AlertsWidget } from "./dashboard/AlertsWidget";
+import { DataExportWidget } from "./dashboard/DataExportWidget";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -209,9 +212,13 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
 
       <MorningBrief />
 
+      <AlertsWidget />
+
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
 
       <PerformanceCharts />
+
+      <ContentGeneratorWidget />
 
       <ContentLibrary />
 
@@ -223,6 +230,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       </div>
 
       <RevenueWidget />
+
+      <DataExportWidget />
 
       <SmartInsights />
 
