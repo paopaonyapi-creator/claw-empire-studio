@@ -17,6 +17,8 @@ import { registerTelegramWebhookRoutes, autoSetupTelegramWebhook } from "./teleg
 import { registerAutoPipelineRoutes } from "./auto-pipeline.ts";
 import { registerLinkTrackerRoutes } from "./link-tracker.ts";
 import { startDailyReportScheduler } from "./daily-report.ts";
+import { registerProductManagerRoutes } from "./product-manager.ts";
+import { registerSupabaseBackupRoutes, startSupabaseBackupScheduler } from "./supabase-backup.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -72,8 +74,11 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerTelegramWebhookRoutes(app);
   registerAutoPipelineRoutes(app);
   registerLinkTrackerRoutes(app);
+  registerProductManagerRoutes(app);
+  registerSupabaseBackupRoutes(app);
   autoSetupTelegramWebhook().catch(() => {});
   startDailyReportScheduler();
+  startSupabaseBackupScheduler();
 
   // ---------------------------------------------------------------------------
   // Production: serve React UI from dist/

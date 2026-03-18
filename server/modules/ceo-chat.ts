@@ -13,6 +13,8 @@ import { PORT } from "../config/runtime.ts";
 import { handlePipelineCommand } from "./auto-pipeline.ts";
 import { handleLinkCommand } from "./link-tracker.ts";
 import { handleReportCommand } from "./daily-report.ts";
+import { handleProductCommand } from "./product-manager.ts";
+import { handleSyncCommand } from "./supabase-backup.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -225,6 +227,8 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
     reply = await handleTemplateListCommand();
   } else if (trimmed === "/report" || trimmed === "/รายงาน") {
     reply = await handleReportCommand();
+  } else if (trimmed === "/sync" || trimmed === "/backup") {
+    reply = await handleSyncCommand();
   } else if (trimmed === "/leaderboard" || trimmed === "/rank") {
     try {
       const res = await fetch(`http://127.0.0.1:${PORT}/api/agents`);
@@ -281,6 +285,13 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       // Link commands
       if (cmd === "/link") {
         reply = handleLinkCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Product commands
+      if (cmd === "/product") {
+        reply = handleProductCommand(arg);
         await sendTg(reply);
         return;
       }
