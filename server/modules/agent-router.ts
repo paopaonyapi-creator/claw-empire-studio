@@ -9,7 +9,7 @@ import type { Express } from "express";
 // Types
 // ---------------------------------------------------------------------------
 
-export type ProviderName = "gemini" | "groq" | "openai" | "anthropic";
+export type ProviderName = "gemini" | "groq" | "openai" | "anthropic" | "kimi";
 
 interface ModelRoute {
   provider: ProviderName;
@@ -190,6 +190,10 @@ async function callProvider(
       case "groq": {
         const { groqGenerate } = await import("./groq-provider.ts");
         return await groqGenerate({ prompt: opts.prompt, systemInstruction: opts.systemInstruction, model: route.model as any, maxTokens: opts.maxTokens });
+      }
+      case "kimi": {
+        const { kimiGenerate } = await import("./kimi-provider.ts");
+        return await kimiGenerate({ prompt: opts.prompt, systemInstruction: opts.systemInstruction, model: route.model as any, maxTokens: opts.maxTokens });
       }
       default:
         return { text: "", error: `Provider ${route.provider} not implemented yet` };

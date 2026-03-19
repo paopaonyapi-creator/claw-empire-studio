@@ -135,9 +135,23 @@ async function checkAnthropic(): Promise<void> {
   }
 }
 
+async function checkKimi(): Promise<void> {
+  const health = initProvider("kimi", !!process.env.KIMI_API_KEY);
+  if (!health.configured) { health.status = "unchecked"; health.statusEmoji = "⚪"; return; }
+
+  const start = Date.now();
+  try {
+    const { testKimiConnection } = await import("./kimi-provider.ts");
+    const result = await testKimiConnection();
+    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
+  } catch (err) {
+    updateStatus(health, false, Date.now() - start, String(err));
+  }
+}
+
 // Run all checks
 async function runAllChecks(): Promise<ProviderHealth[]> {
-  await Promise.allSettled([checkGemini(), checkGroq(), checkOpenAI(), checkAnthropic()]);
+  await Promise.allSettled([checkGemini(), checkGroq(), checkOpenAI(), checkAnthropic(), checkKimi()]);
   return Array.from(healthStore.values());
 }
 
@@ -168,6 +182,7 @@ export function startHealthMonitor(): void {
   initProvider("groq", !!process.env.GROQ_API_KEY);
   initProvider("openai", !!process.env.OPENAI_API_KEY);
   initProvider("anthropic", !!process.env.ANTHROPIC_API_KEY);
+  initProvider("kimi", !!process.env.KIMI_API_KEY);
 
   console.log("[Health Monitor] ✅ Provider health checks active (5 min interval)");
 }
@@ -197,6 +212,7 @@ export function registerProviderHealthRoutes(app: Express): void {
       groq: checkGroq,
       openai: checkOpenAI,
       anthropic: checkAnthropic,
+      kimi: checkKimi,
     };
 
     const checker = checkers[name];

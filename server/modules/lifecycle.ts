@@ -59,6 +59,11 @@ import { registerMultiPublishRoutes } from "./multi-publish.ts";
 import { registerGroqRoutes } from "./groq-provider.ts";
 import { registerAgentRouterRoutes } from "./agent-router.ts";
 import { registerProviderHealthRoutes } from "./provider-health.ts";
+import { registerKimiRoutes } from "./kimi-provider.ts";
+import { registerAgentAutoTestRoutes } from "./agent-auto-test.ts";
+import { registerAnalyticsRoutes } from "./analytics-engine.ts";
+import { registerAgentLearningRoutes } from "./agent-learning.ts";
+import { registerWebhookRoutes } from "./webhook-integration.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -130,6 +135,11 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerGroqRoutes(app);
   registerAgentRouterRoutes(app);
   registerProviderHealthRoutes(app);
+  registerKimiRoutes(app);
+  registerAgentAutoTestRoutes(app);
+  registerAnalyticsRoutes(app);
+  registerAgentLearningRoutes(app);
+  registerWebhookRoutes(app);
 
   startContentScheduler();
   startAutoRetryAndArchive(db);
