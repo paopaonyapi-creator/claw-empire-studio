@@ -52,6 +52,10 @@ import { registerRevenueGoalsRoutes } from "./revenue-goals.ts";
 import { registerSmartAssignmentRoutes } from "./smart-assignment.ts";
 import { registerPerformanceSchedulerRoutes } from "./performance-scheduler.ts";
 import { registerAgentChatRoutes } from "./agent-chat.ts";
+import { registerAiReviewRoutes } from "./ai-review.ts";
+import { registerSmartNotificationRoutes } from "./smart-notifications.ts";
+import { registerAutoCalendarRoutes } from "./auto-calendar.ts";
+import { registerMultiPublishRoutes } from "./multi-publish.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -116,6 +120,10 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerSmartAssignmentRoutes(app);
   registerPerformanceSchedulerRoutes(app);
   registerAgentChatRoutes(app);
+  registerAiReviewRoutes(app);
+  registerSmartNotificationRoutes(app);
+  registerAutoCalendarRoutes(app);
+  registerMultiPublishRoutes(app);
 
   startContentScheduler();
   startAutoRetryAndArchive(db);
