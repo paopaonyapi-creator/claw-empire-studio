@@ -64,6 +64,8 @@ import { registerAgentAutoTestRoutes } from "./agent-auto-test.ts";
 import { registerAnalyticsRoutes } from "./analytics-engine.ts";
 import { registerAgentLearningRoutes } from "./agent-learning.ts";
 import { registerWebhookRoutes } from "./webhook-integration.ts";
+import { registerOpenAIRoutes } from "./openai-provider.ts";
+import { registerAnthropicRoutes } from "./anthropic-provider.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -140,6 +142,8 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerAnalyticsRoutes(app);
   registerAgentLearningRoutes(app);
   registerWebhookRoutes(app);
+  registerOpenAIRoutes(app);
+  registerAnthropicRoutes(app);
 
   startContentScheduler();
   startAutoRetryAndArchive(db);

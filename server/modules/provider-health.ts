@@ -106,11 +106,9 @@ async function checkOpenAI(): Promise<void> {
 
   const start = Date.now();
   try {
-    const res = await fetch("https://api.openai.com/v1/models", {
-      headers: { "Authorization": `Bearer ${process.env.OPENAI_API_KEY}` },
-      signal: AbortSignal.timeout(10000),
-    });
-    updateStatus(health, res.ok, Date.now() - start, res.ok ? undefined : `HTTP ${res.status}`);
+    const { testOpenAIConnection } = await import("./openai-provider.ts");
+    const result = await testOpenAIConnection();
+    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
   } catch (err) {
     updateStatus(health, false, Date.now() - start, String(err));
   }
@@ -122,14 +120,9 @@ async function checkAnthropic(): Promise<void> {
 
   const start = Date.now();
   try {
-    const res = await fetch("https://api.anthropic.com/v1/models", {
-      headers: {
-        "x-api-key": process.env.ANTHROPIC_API_KEY || "",
-        "anthropic-version": "2023-06-01",
-      },
-      signal: AbortSignal.timeout(10000),
-    });
-    updateStatus(health, res.ok, Date.now() - start, res.ok ? undefined : `HTTP ${res.status}`);
+    const { testAnthropicConnection } = await import("./anthropic-provider.ts");
+    const result = await testAnthropicConnection();
+    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
   } catch (err) {
     updateStatus(health, false, Date.now() - start, String(err));
   }

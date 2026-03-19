@@ -33,19 +33,19 @@ const ROUTING_TABLE: AgentModelConfig[] = [
   {
     agentRole: "content_writer",
     taskType: "tiktok-script",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "ฟรี + Thai content เก่ง" },
-    fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Backup เร็วมาก" },
+    primary: { provider: "openai", model: "gpt-4o-mini", reason: "Creative Thai content + เร็ว" },
+    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Backup ฟรี" },
   },
   {
     agentRole: "content_writer",
     taskType: "product-review",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Long-form review ดี" },
-    fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Fallback" },
+    primary: { provider: "openai", model: "gpt-4o", reason: "Long-form review คุณภาพสูง" },
+    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Fallback ฟรี" },
   },
   {
     agentRole: "hook_specialist",
     taskType: "tiktok-script",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Creative hooks" },
+    primary: { provider: "openai", model: "gpt-4o-mini", reason: "Creative hooks เร็ว" },
     fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Fast creative" },
   },
 
@@ -59,14 +59,14 @@ const ROUTING_TABLE: AgentModelConfig[] = [
   {
     agentRole: "content_strategist",
     taskType: "trend-research",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Strategic analysis" },
-    fallback: { provider: "groq", model: "mixtral-8x7b-32768", reason: "Analytical fallback" },
+    primary: { provider: "anthropic", model: "claude-3-5-haiku-20241022", reason: "Deep strategic analysis" },
+    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Analytical fallback" },
   },
   {
     agentRole: "audience_planner",
     taskType: "trend-research",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Audience insights" },
-    fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Quick insights" },
+    primary: { provider: "anthropic", model: "claude-3-5-haiku-20241022", reason: "Audience insights" },
+    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Quick insights" },
   },
 
   // Creative → Gemini (visual descriptions)
@@ -194,6 +194,14 @@ async function callProvider(
       case "kimi": {
         const { kimiGenerate } = await import("./kimi-provider.ts");
         return await kimiGenerate({ prompt: opts.prompt, systemInstruction: opts.systemInstruction, model: route.model as any, maxTokens: opts.maxTokens });
+      }
+      case "openai": {
+        const { openaiGenerate } = await import("./openai-provider.ts");
+        return await openaiGenerate({ prompt: opts.prompt, systemInstruction: opts.systemInstruction, model: route.model as any, maxTokens: opts.maxTokens });
+      }
+      case "anthropic": {
+        const { anthropicGenerate } = await import("./anthropic-provider.ts");
+        return await anthropicGenerate({ prompt: opts.prompt, systemInstruction: opts.systemInstruction, model: route.model as any, maxTokens: opts.maxTokens });
       }
       default:
         return { text: "", error: `Provider ${route.provider} not implemented yet` };
