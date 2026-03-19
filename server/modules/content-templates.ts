@@ -1,244 +1,188 @@
 /**
- * Content Templates — Pre-built task templates for quick creation
- *
- * Templates for common affiliate content workflows:
- * - TikTok Script (ปักตะกร้า)
- * - Product Review
- * - Trend Research
- * - Thumbnail Brief
- * - Comparison Post
- * - Unboxing Script
+ * Content Template Library — Ready-made templates per platform
+ * TikTok scripts, FB posts, IG captions, product reviews
  */
 
-import type { DatabaseSync } from "node:sqlite";
+import type { Express } from "express";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 interface ContentTemplate {
   id: string;
   name: string;
-  nameEn: string;
-  icon: string;
-  category: "research" | "content" | "creative" | "analytics";
-  description: string;
-  promptTemplate: string;
-  suggestedAgent: string;
-  estimatedTime: string;
-  platforms: string[];
+  category: string;
+  platform: "tiktok" | "facebook" | "instagram" | "all";
+  template: string;
+  variables: string[];
+  example: string;
+  tags: string[];
 }
+
+// ---------------------------------------------------------------------------
+// Built-in Templates
+// ---------------------------------------------------------------------------
 
 const TEMPLATES: ContentTemplate[] = [
   {
-    id: "tiktok-script",
-    name: "🎬 TikTok Script (ปักตะกร้า)",
-    nameEn: "TikTok Script",
-    icon: "🎬",
-    category: "content",
-    description: "สร้าง script วิดีโอ TikTok สำหรับปักตะกร้า พร้อม hook, content, CTA",
-    promptTemplate:
-      "เขียน TikTok script สำหรับรีวิวสินค้า {{product}} เน้นปักตะกร้า\n\n" +
-      "โครงสร้าง:\n" +
-      "1. Hook (3-5 วินาทีแรก) — ดึงดูดให้หยุดเลื่อน\n" +
-      "2. Content (15-30 วิ) — รีวิวจุดเด่น ข้อดี การใช้งาน\n" +
-      "3. CTA (5 วิ) — ปักตะกร้า / กดลิงก์\n\n" +
-      "ใส่ hashtag แนะนำ 5-8 อัน\n" +
-      "ระบุ music/sound effect แนะนำ\n" +
-      "ความยาวรวม 30-60 วิ",
-    suggestedAgent: "Content Writer",
-    estimatedTime: "5-10 min",
-    platforms: ["TikTok"],
+    id: "tiktok-review-30s",
+    name: "TikTok รีวิว 30 วินาที",
+    category: "product-review",
+    platform: "tiktok",
+    template: "HOOK (0-3s): \"{hook_line}\"\n\nBODY (4-25s):\nวันนี้มารีวิว {product_name}\n- ข้อดี: {pro_1}\n- ข้อดี: {pro_2}\n- ข้อเสีย: {con_1}\nราคา: {price}\n\nCTA (26-30s): กดตะกร้าส้มเลย! #รีวิว #{product_hashtag}",
+    variables: ["hook_line", "product_name", "pro_1", "pro_2", "con_1", "price", "product_hashtag"],
+    example: "รีวิวหูฟัง Bluetooth 299 บาท",
+    tags: ["review", "30s"],
   },
   {
-    id: "product-review",
-    name: "⭐ Product Review",
-    nameEn: "Product Review",
-    icon: "⭐",
-    category: "content",
-    description: "เขียนรีวิวสินค้าละเอียด พร้อม pros/cons สำหรับ Facebook post",
-    promptTemplate:
-      "เขียนรีวิวสินค้า {{product}} แบบละเอียด\n\n" +
-      "หัวข้อ:\n" +
-      "1. ภาพรวมสินค้า (ราคา, แบรนด์)\n" +
-      "2. Unboxing & First Impression\n" +
-      "3. ข้อดี 3-5 จุด\n" +
-      "4. ข้อเสีย 1-2 จุด (ให้ดูเป็นธรรมชาติ)\n" +
-      "5. เหมาะกับใคร?\n" +
-      "6. สรุป + ลิงก์สั่งซื้อ\n\n" +
-      "เขียนภาษาไทย กันเอง อ่านง่าย",
-    suggestedAgent: "Content Writer",
-    estimatedTime: "10-15 min",
-    platforms: ["Facebook", "Instagram"],
+    id: "tiktok-compare",
+    name: "TikTok เปรียบเทียบสินค้า",
+    category: "comparison",
+    platform: "tiktok",
+    template: "HOOK: \"{product_a} vs {product_b} ตัวไหนคุ้ม?\"\n\nเปรียบเทียบ:\n{product_a}: ราคา {price_a} | คุณภาพ {quality_a}\n{product_b}: ราคา {price_b} | คุณภาพ {quality_b}\n\nสรุป: {winner} ชนะ!\nCTA: กดตะกร้าเลย!",
+    variables: ["product_a", "product_b", "price_a", "price_b", "quality_a", "quality_b", "winner"],
+    example: "AirPods Pro vs Galaxy Buds",
+    tags: ["comparison", "versus"],
   },
   {
-    id: "trend-research",
-    name: "🔍 Trend Research",
-    nameEn: "Trend Research",
-    icon: "🔍",
-    category: "research",
-    description: "วิเคราะห์ trending สินค้า affiliate บน TikTok Shop / Shopee / Lazada",
-    promptTemplate:
-      "วิเคราะห์ trend สินค้า affiliate ในหมวด {{category}} ที่กำลังมาแรง\n\n" +
-      "ครอบคลุม:\n" +
-      "1. Top 5 สินค้าที่ trend\n" +
-      "2. เหตุผลที่ trend (seasonality, viral, influencer)\n" +
-      "3. ช่วงราคาที่ขายดี\n" +
-      "4. Commission rate โดยเฉลี่ย\n" +
-      "5. คู่แข่ง affiliate ที่ทำอยู่\n" +
-      "6. โอกาส gap ที่เราจะเข้าได้\n\n" +
-      "แพลตฟอร์ม: TikTok Shop, Shopee, Lazada",
-    suggestedAgent: "Trend Hunter",
-    estimatedTime: "10-15 min",
-    platforms: ["TikTok", "Shopee", "Lazada"],
+    id: "tiktok-unboxing",
+    name: "TikTok Unboxing",
+    category: "unboxing",
+    platform: "tiktok",
+    template: "HOOK: \"เพิ่งได้ {product_name} มา แกะเลย!\"\n\n1. กล่อง: {box_desc}\n2. ในกล่อง: {contents}\n3. First impression: {first_impression}\n\nให้ {rating}/10\nราคา: {price} | ซื้อได้ที่ลิงก์ด้านล่าง",
+    variables: ["product_name", "box_desc", "contents", "first_impression", "rating", "price"],
+    example: "แกะกล่อง iPhone 16 Pro",
+    tags: ["unboxing"],
   },
   {
-    id: "thumbnail-brief",
-    name: "🎨 Thumbnail Brief",
-    nameEn: "Thumbnail Brief",
-    icon: "🎨",
-    category: "creative",
-    description: "สร้าง brief สำหรับ thumbnail/cover ที่ดึงดูดคลิก",
-    promptTemplate:
-      "สร้าง thumbnail brief สำหรับ {{content_type}} เรื่อง {{topic}}\n\n" +
-      "รายละเอียด:\n" +
-      "1. ข้อความหลัก (2-3 คำ ตัวใหญ่)\n" +
-      "2. ข้อความรอง (1 บรรทัด)\n" +
-      "3. Color scheme แนะนำ\n" +
-      "4. Element ที่ต้องมี (สินค้า, emoji, before/after)\n" +
-      "5. Style reference (ถ้ามี)\n" +
-      "6. ขนาด: 1080x1920 (9:16 TikTok) หรือ 1080x1080 (IG)\n\n" +
-      "เน้น CTR สูง — ดึงดูดให้คลิกเข้าดู",
-    suggestedAgent: "Visual Designer",
-    estimatedTime: "5-8 min",
-    platforms: ["TikTok", "Instagram"],
+    id: "fb-affiliate",
+    name: "Facebook Affiliate Post",
+    category: "affiliate",
+    platform: "facebook",
+    template: "{product_name}\n\n{intro_text}\n\nข้อดี:\n- {pro_1}\n- {pro_2}\n- {pro_3}\n\nข้อควรรู้: {note_1}\n\nราคา: {price} (ปกติ {original_price}) ลด {discount}%!\n\nสั่งซื้อ: {link}\n#รีวิว #{product_hashtag}",
+    variables: ["product_name", "intro_text", "pro_1", "pro_2", "pro_3", "note_1", "price", "original_price", "discount", "link", "product_hashtag"],
+    example: "รีวิวเครื่องชงกาแฟ ลด 40%",
+    tags: ["affiliate", "promotion"],
   },
   {
-    id: "comparison-post",
-    name: "⚖️ Comparison Post",
-    nameEn: "Comparison Post",
-    icon: "⚖️",
-    category: "content",
-    description: "เปรียบเทียบ 2-3 สินค้าในหมวดเดียวกัน — content ที่ engagement สูง",
-    promptTemplate:
-      "เขียน comparison post เปรียบเทียบ {{product_list}}\n\n" +
-      "หัวข้อเปรียบเทียบ:\n" +
-      "1. ราคา\n" +
-      "2. คุณสมบัติหลัก\n" +
-      "3. ข้อดี/ข้อเสียแต่ละตัว\n" +
-      "4. เหมาะกับใคร (budget, premium, mid-range)\n" +
-      "5. สรุป: ตัวไหนคุ้มค่าที่สุด?\n\n" +
-      "ใส่ตารางเปรียบเทียบ\n" +
-      "ลิงก์สั่งซื้อแต่ละตัว",
-    suggestedAgent: "Hook & Copy Specialist",
-    estimatedTime: "10-15 min",
-    platforms: ["Facebook", "TikTok"],
+    id: "fb-storytelling",
+    name: "Facebook Storytelling",
+    category: "story",
+    platform: "facebook",
+    template: "{hook_story}\n\nก่อนหน้านี้... {before_story}\nแต่พอได้ลอง {product_name}...\n{after_story}\nตอนนี้ {current_result}\n\nแนะนำ {product_name} เลย!\nราคา: {price}\nลิงก์: {link}",
+    variables: ["hook_story", "before_story", "product_name", "after_story", "current_result", "price", "link"],
+    example: "เล่าประสบการณ์ใช้ครีมกันแดด",
+    tags: ["storytelling", "personal"],
   },
   {
-    id: "unboxing-script",
-    name: "📦 Unboxing Script",
-    nameEn: "Unboxing Script",
-    icon: "📦",
-    category: "content",
-    description: "Script สำหรับวิดีโอ unboxing สินค้า — ตื่นเต้นและจริงใจ",
-    promptTemplate:
-      "เขียน unboxing script สำหรับสินค้า {{product}}\n\n" +
-      "โครงสร้าง:\n" +
-      "1. Teaser (3 วิ) — กล่องเข้าฉาก ไม่เฉลย\n" +
-      "2. First Look (10 วิ) — เปิดกล่อง reaction จริง\n" +
-      "3. Detail (20 วิ) — ดูรายละเอียด สัมผัส ขนาด\n" +
-      "4. Quick Test (15 วิ) — ลองใช้งานจริง\n" +
-      "5. Verdict (10 วิ) — สรุป + ปักตะกร้า\n\n" +
-      "tone: ตื่นเต้น จริงใจ ไม่ overhype\n" +
-      "ความยาวรวม ~60 วิ",
-    suggestedAgent: "Video Script Producer",
-    estimatedTime: "5-10 min",
-    platforms: ["TikTok"],
+    id: "ig-carousel",
+    name: "IG Carousel Review",
+    category: "carousel",
+    platform: "instagram",
+    template: "Slide 1: {product_name} — Worth it? {emoji}\nSlide 2: สเปค + ราคา\nSlide 3: ข้อดี 3 ข้อ\nSlide 4: ข้อเสีย + ทางเลือก\nSlide 5: สรุป + CTA\n\nCaption: {caption_text}\n{hashtags}",
+    variables: ["product_name", "emoji", "caption_text", "hashtags"],
+    example: "รีวิว MacBook Air M3 carousel",
+    tags: ["carousel", "instagram"],
   },
   {
-    id: "competitor-spy-rewrite",
-    name: "🕵️ Competitor Spy & Rewrite",
-    nameEn: "Competitor Spy Rewrite",
-    icon: "🕵️",
-    category: "content",
-    description: "วิเคราะห์วิดีโอคู่แข่ง แล้วเขียนสคริปต์ใหม่ด้วยรูปแบบเดิม แต่ขายสินค้าของเราแทน",
-    promptTemplate:
-      "คุณคือสุดยอดนักแกะสคริปต์ล้านซับ กรุณาวิเคราะห์ข้อมูลต่อไปนี้:\n{{product}}\n\n" +
-      "หน้าที่ของคุณ:\n" +
-      "1. ถอดโครงสร้างลิงก์/เนื้อหาของคู่แข่ง (Hook, Story/Body, CTA)\n" +
-      "2. เขียนสคริปต์ใหม่ 1 สคริปต์ โดยใช้จังหวะ (Pacing) และรูปแบบอารมณ์เดียวกับคู่แข่ง แต่เปลี่ยนเนื้อหามาขาย 'สินค้าของเรา'\n" +
-      "3. ใส่ Hashtag แนะนำ 5 อัน\n",
-    suggestedAgent: "Hook & Copy Specialist",
-    estimatedTime: "5-10 min",
-    platforms: ["TikTok"],
+    id: "ig-reel",
+    name: "IG Reel Script",
+    category: "reel",
+    platform: "instagram",
+    template: "HOOK (0-2s): {hook_text}\nDEMO (3-12s): {demo_description}\nRESULT (13-18s): {result_text}\nCTA (19-20s): {cta_text}\n\nCaption: {caption}\nMusic: {music_suggestion}",
+    variables: ["hook_text", "demo_description", "result_text", "cta_text", "caption", "music_suggestion"],
+    example: "Reel สาธิตเครื่องสำอาง 20 วินาที",
+    tags: ["reel", "short-form"],
+  },
+  {
+    id: "top-list",
+    name: "Top N List (All Platforms)",
+    category: "list",
+    platform: "all",
+    template: "TOP {count} {category} ที่ต้องมี!\n\n1. {item_1} — {reason_1} ({price_1})\n2. {item_2} — {reason_2} ({price_2})\n3. {item_3} — {reason_3} ({price_3})\n\nแนะนำที่สุด: {best_pick}\nเหตุผล: {best_reason}\n\nลิงก์ทั้งหมดอยู่ในคอมเม้นท์!",
+    variables: ["count", "category", "item_1", "reason_1", "price_1", "item_2", "reason_2", "price_2", "item_3", "reason_3", "price_3", "best_pick", "best_reason"],
+    example: "Top 3 หูฟัง Bluetooth ไม่เกิน 1,000",
+    tags: ["top-list", "ranking"],
   },
 ];
+
+const userTemplates: ContentTemplate[] = [];
+
+// ---------------------------------------------------------------------------
+// Core
+// ---------------------------------------------------------------------------
+
+export function fillTemplate(templateId: string, vars: Record<string, string>): string {
+  const tmpl = [...userTemplates, ...TEMPLATES].find(t => t.id === templateId);
+  if (!tmpl) return "";
+  let result = tmpl.template;
+  for (const [key, value] of Object.entries(vars)) {
+    result = result.replace(new RegExp(`\\{${key}\\}`, "g"), value);
+  }
+  return result;
+}
 
 // ---------------------------------------------------------------------------
 // API Routes
 // ---------------------------------------------------------------------------
 
-export function registerTemplateRoutes(app: any, db: DatabaseSync): void {
-  // GET /api/templates — list all templates
-  app.get("/api/templates", (_req: any, res: any) => {
-    res.json({
-      ok: true,
-      templates: TEMPLATES.map((t) => ({
-        id: t.id,
-        name: t.name,
-        nameEn: t.nameEn,
-        icon: t.icon,
-        category: t.category,
-        description: t.description,
-        suggestedAgent: t.suggestedAgent,
-        estimatedTime: t.estimatedTime,
-        platforms: t.platforms,
-      })),
-      total: TEMPLATES.length,
-    });
+export function registerContentTemplateRoutes(app: Express): void {
+  app.get("/api/templates", (req, res) => {
+    const platform = req.query.platform as string;
+    const category = req.query.category as string;
+    let all = [...userTemplates, ...TEMPLATES];
+    if (platform) all = all.filter(t => t.platform === platform || t.platform === "all");
+    if (category) all = all.filter(t => t.category === category);
+    res.json({ ok: true, templates: all, total: all.length });
   });
 
-  // POST /api/templates/:id/create — create task from template
-  app.post("/api/templates/:id/create", (req: any, res: any) => {
-    const template = TEMPLATES.find((t) => t.id === req.params.id);
-    if (!template) return res.status(404).json({ error: "Template not found" });
+  app.get("/api/templates/:id", (req, res) => {
+    const tmpl = [...userTemplates, ...TEMPLATES].find(t => t.id === req.params.id);
+    if (!tmpl) return res.status(404).json({ ok: false, error: "Template not found" });
+    res.json({ ok: true, template: tmpl });
+  });
 
-    const variables = req.body?.variables || {};
-    let prompt = template.promptTemplate;
-    for (const [key, value] of Object.entries(variables)) {
-      prompt = prompt.replace(new RegExp(`\\{\\{${key}\\}\\}`, "g"), String(value));
-    }
+  app.post("/api/templates/:id/fill", (req, res) => {
+    const result = fillTemplate(req.params.id, req.body || {});
+    if (!result) return res.status(404).json({ ok: false, error: "Template not found" });
+    res.json({ ok: true, content: result });
+  });
 
-    // Find suggested agent
-    let agentId: string | null = null;
+  app.post("/api/templates/:id/generate", async (req, res) => {
+    const { product } = req.body || {};
+    const tmpl = [...userTemplates, ...TEMPLATES].find(t => t.id === req.params.id);
+    if (!tmpl) return res.status(404).json({ ok: false, error: "Template not found" });
     try {
-      const agentRow = db
-        .prepare("SELECT id FROM agents WHERE name LIKE ? LIMIT 1")
-        .get(`%${template.suggestedAgent}%`) as { id: string } | undefined;
-      agentId = agentRow?.id || null;
-    } catch {
-      // skip
-    }
-
-    // Create task
-    const taskId = `tmpl-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-    try {
-      db.prepare(
-        `INSERT INTO tasks (id, title, description, status, assigned_agent_id, created_at, task_type)
-         VALUES (?, ?, ?, 'inbox', ?, ?, ?)`,
-      ).run(taskId, template.name, prompt, agentId, Date.now(), template.category);
-
-      res.json({
-        ok: true,
-        task: {
-          id: taskId,
-          title: template.name,
-          description: prompt,
-          assigned_agent_id: agentId,
-          status: "inbox",
-          template_id: template.id,
-        },
+      const { routedGenerate } = await import("./agent-router.ts");
+      const result = await routedGenerate({
+        agentRole: "content_writer",
+        taskType: tmpl.category,
+        prompt: `ใช้ template นี้สร้าง content:\n\n${tmpl.template}\n\nสินค้า: ${product || "สินค้าตัวอย่าง"}\n\nเติมตัวแปรทั้งหมดให้ครบ เขียนให้น่าสนใจ`,
+        maxTokens: 768,
       });
+      res.json({ ok: true, template: tmpl.name, ...result });
     } catch (err) {
-      res.status(500).json({ error: "task_creation_failed", detail: err instanceof Error ? err.message : String(err) });
+      res.status(500).json({ ok: false, error: String(err) });
     }
   });
 
-  console.log(`[Templates] ✅ API ready: /api/templates (${TEMPLATES.length} templates)`);
+  app.post("/api/templates", (req, res) => {
+    const data = req.body as Partial<ContentTemplate>;
+    if (!data.name || !data.template) return res.status(400).json({ ok: false, error: "name and template required" });
+    const tmpl: ContentTemplate = {
+      id: `custom_${Date.now()}`,
+      name: data.name,
+      category: data.category || "custom",
+      platform: (data.platform as any) || "all",
+      template: data.template,
+      variables: data.variables || [],
+      example: data.example || "",
+      tags: data.tags || ["custom"],
+    };
+    userTemplates.push(tmpl);
+    res.json({ ok: true, template: tmpl });
+  });
+
+  console.log(`[Templates] ✅ ${TEMPLATES.length} content templates loaded`);
 }

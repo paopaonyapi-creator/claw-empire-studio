@@ -12,7 +12,7 @@ import { startContentScheduler } from "./content-scheduler.ts";
 import { startAutoRetryAndArchive, registerContentArchiveRoutes } from "./auto-retry-archive.ts";
 import { startSupabaseSyncAndExtras } from "./supabase-sync-extras.ts";
 import { applyAgentSpecialization, registerSpecializationRoutes } from "./agent-specialization.ts";
-import { registerTemplateRoutes } from "./content-templates.ts";
+import { registerContentTemplateRoutes as registerTemplateRoutes } from "./content-templates.ts";
 import { registerTelegramWebhookRoutes, autoSetupTelegramWebhook } from "./telegram-webhook.ts";
 import { registerAutoPipelineRoutes } from "./auto-pipeline.ts";
 import { registerLinkTrackerRoutes } from "./link-tracker.ts";
@@ -70,6 +70,10 @@ import { registerABTestRoutes } from "./ab-content-test.ts";
 import { registerCostOptimizerRoutes } from "./cost-optimizer.ts";
 import { registerCEOAutoPilotRoutes } from "./ceo-autopilot.ts";
 import { registerTelegramCommandRoutes } from "./telegram-commands.ts";
+import { registerRateLimiterRoutes } from "./rate-limiter.ts";
+import { registerAgentPersonaRoutes } from "./agent-persona.ts";
+import { registerContentTemplateRoutes } from "./content-templates.ts";
+import { registerRealtimeAnalyticsRoutes } from "./realtime-analytics.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -152,6 +156,10 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerCostOptimizerRoutes(app);
   registerCEOAutoPilotRoutes(app);
   registerTelegramCommandRoutes(app);
+  registerRateLimiterRoutes(app);
+  registerAgentPersonaRoutes(app);
+  registerContentTemplateRoutes(app);
+  registerRealtimeAnalyticsRoutes(app);
 
   startContentScheduler();
   startAutoRetryAndArchive(db);
@@ -160,7 +168,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   startSupabaseSyncAndExtras(app, db);
   registerSpecializationRoutes(app);
   applyAgentSpecialization(db);
-  registerTemplateRoutes(app, db);
+  registerTemplateRoutes(app);
   registerTelegramWebhookRoutes(app);
   registerAutoPipelineRoutes(app);
   registerLinkTrackerRoutes(app);
