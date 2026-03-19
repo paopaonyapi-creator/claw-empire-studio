@@ -66,6 +66,10 @@ import { registerAgentLearningRoutes } from "./agent-learning.ts";
 import { registerWebhookRoutes } from "./webhook-integration.ts";
 import { registerOpenAIRoutes } from "./openai-provider.ts";
 import { registerAnthropicRoutes } from "./anthropic-provider.ts";
+import { registerABTestRoutes } from "./ab-content-test.ts";
+import { registerCostOptimizerRoutes } from "./cost-optimizer.ts";
+import { registerCEOAutoPilotRoutes } from "./ceo-autopilot.ts";
+import { registerTelegramCommandRoutes } from "./telegram-commands.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -144,6 +148,10 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerWebhookRoutes(app);
   registerOpenAIRoutes(app);
   registerAnthropicRoutes(app);
+  registerABTestRoutes(app);
+  registerCostOptimizerRoutes(app);
+  registerCEOAutoPilotRoutes(app);
+  registerTelegramCommandRoutes(app);
 
   startContentScheduler();
   startAutoRetryAndArchive(db);
