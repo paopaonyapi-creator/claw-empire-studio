@@ -56,6 +56,9 @@ import { registerAiReviewRoutes } from "./ai-review.ts";
 import { registerSmartNotificationRoutes } from "./smart-notifications.ts";
 import { registerAutoCalendarRoutes } from "./auto-calendar.ts";
 import { registerMultiPublishRoutes } from "./multi-publish.ts";
+import { registerGroqRoutes } from "./groq-provider.ts";
+import { registerAgentRouterRoutes } from "./agent-router.ts";
+import { registerProviderHealthRoutes } from "./provider-health.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -124,6 +127,9 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerSmartNotificationRoutes(app);
   registerAutoCalendarRoutes(app);
   registerMultiPublishRoutes(app);
+  registerGroqRoutes(app);
+  registerAgentRouterRoutes(app);
+  registerProviderHealthRoutes(app);
 
   startContentScheduler();
   startAutoRetryAndArchive(db);
