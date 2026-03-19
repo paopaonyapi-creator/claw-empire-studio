@@ -49,6 +49,8 @@ import { PushAlertsWidget } from "./dashboard/PushAlertsWidget";
 import { ContentCalendarProWidget } from "./dashboard/ContentCalendarProWidget";
 import { TikTokIdeasWidget } from "./dashboard/TikTokIdeasWidget";
 import { RevenueGoalWidget } from "./dashboard/RevenueGoalWidget";
+import AgentPerformanceWidget from "./dashboard/AgentPerformanceWidget";
+import AgentChatWidget from "./dashboard/AgentChatWidget";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -315,6 +317,11 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <TikTokIdeasWidget />
         <RevenueGoalWidget />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <AgentPerformanceWidget />
+        <AgentChatWidget />
       </div>
 
       <DashboardRankingBoard

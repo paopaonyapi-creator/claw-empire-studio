@@ -130,6 +130,19 @@ async function createTaskFromTemplate(templateId: string, product: string): Prom
 
     const data = (await res.json()) as { ok?: boolean; task?: { id: string; title: string } };
     if (data.ok && data.task) {
+      // Smart Auto-Assign: find best agent for this step
+      try {
+        const { findBestAgentForStep } = await import("./smart-assignment.ts");
+        const bestAgentId = await findBestAgentForStep(templateId, data.task.title);
+        if (bestAgentId) {
+          await fetch(`http://127.0.0.1:${PORT}/api/tasks/${data.task.id}/assign`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ agent_id: bestAgentId }),
+          }).catch(() => {});
+        }
+      } catch {}
+
       // Auto-run the task
       fetch(`http://127.0.0.1:${PORT}/api/tasks/${data.task.id}/run`, { method: "POST" }).catch(() => {});
       return { ok: true, taskId: data.task.id, title: data.task.title };
@@ -139,6 +152,7 @@ async function createTaskFromTemplate(templateId: string, product: string): Prom
     return { ok: false };
   }
 }
+
 
 export async function sendTgNotification(text: string, reply_markup?: any): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN || "";

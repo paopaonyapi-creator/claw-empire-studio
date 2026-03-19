@@ -49,6 +49,9 @@ import { registerPushAlertsRoutes } from "./push-alerts.ts";
 import { registerContentCalendarRoutes } from "./content-calendar.ts";
 import { registerTikTokIdeasRoutes } from "./tiktok-ideas.ts";
 import { registerRevenueGoalsRoutes } from "./revenue-goals.ts";
+import { registerSmartAssignmentRoutes } from "./smart-assignment.ts";
+import { registerPerformanceSchedulerRoutes } from "./performance-scheduler.ts";
+import { registerAgentChatRoutes } from "./agent-chat.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -110,6 +113,9 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerContentCalendarRoutes(app);
   registerTikTokIdeasRoutes(app);
   registerRevenueGoalsRoutes(app);
+  registerSmartAssignmentRoutes(app);
+  registerPerformanceSchedulerRoutes(app);
+  registerAgentChatRoutes(app);
 
   startContentScheduler();
   startAutoRetryAndArchive(db);
