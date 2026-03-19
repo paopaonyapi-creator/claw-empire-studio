@@ -56,7 +56,7 @@ export function DashboardHeroHeader({
             <h1 className="dashboard-title-gradient text-2xl font-black tracking-tight sm:text-3xl">{companyName}</h1>
             <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-              {t({ ko: "실시간", en: "LIVE", ja: "ライブ", zh: "实时" , th: "LIVE" })}
+              {t({ ko: "실시간", en: "LIVE", ja: "ライブ", zh: "实时", th: "สด" })}
             </span>
           </div>
           <p className="text-xs" style={{ color: "var(--th-text-muted)" }}>
@@ -93,7 +93,7 @@ export function DashboardHeroHeader({
           </div>
           {reviewQueue > 0 && (
             <span className="flex items-center gap-1.5 rounded-lg border border-orange-400/30 bg-orange-500/15 px-3 py-1.5 text-xs font-bold text-orange-300 animate-neon-pulse-orange">
-              🔔 {t({ ko: "대기", en: "Queued", ja: "待機", zh: "待处理" , th: "Queued" })} {numberFormatter.format(reviewQueue)}
+              🔔 {t({ ko: "대기", en: "Queued", ja: "待機", zh: "待处理", th: "รอดำเนินการ" })} {numberFormatter.format(reviewQueue)}
               {t({ ko: "건", en: "", ja: "件", zh: "项" , th: "" })}
             </span>
           )}
@@ -207,7 +207,7 @@ export function DashboardRankingBoard({
           </span>
           <div>
             <h2 className="dashboard-ranking-gradient text-lg font-black uppercase tracking-wider">
-              {t({ ko: "랭킹 보드", en: "RANKING BOARD", ja: "ランキングボード", zh: "排行榜" , th: "RANKING BOARD" })}
+              {t({ ko: "랭킹 보드", en: "RANKING BOARD", ja: "ランキングボード", zh: "排行榜", th: "ตารางคะแนน" })}
             </h2>
             <p className="text-[10px]" style={{ color: "var(--th-text-muted)" }}>
               {t({
@@ -357,7 +357,7 @@ export function DashboardRankingBoard({
                         {agent.name}
                       </p>
                       <p className="text-[10px]" style={{ color: "var(--th-text-muted)" }}>
-                        {agent.department || t({ ko: "미지정", en: "Unassigned", ja: "未指定", zh: "未指定" , th: "Unassigned" })}
+                        {agent.department || t({ ko: "미지정", en: "Unassigned", ja: "未指定", zh: "未指定", th: "ยังไม่ได้กำหนด" })}
                       </p>
                     </div>
                     <div className="hidden w-28 sm:block">

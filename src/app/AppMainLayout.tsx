@@ -195,7 +195,7 @@ export default function AppMainLayout({
   children,
 }: AppMainLayoutProps) {
   const uiLanguage =
-    labels.uiLanguage === "ko" || labels.uiLanguage === "ja" || labels.uiLanguage === "zh" ? labels.uiLanguage : "en";
+    labels.uiLanguage === "ko" || labels.uiLanguage === "ja" || labels.uiLanguage === "zh" || labels.uiLanguage === "th" ? labels.uiLanguage : "en";
   const officePackKey = normalizeOfficeWorkflowPack(activeOfficeWorkflowPack);
   const officePackOptions = useMemo(() => listOfficePackOptions(uiLanguage), [uiLanguage]);
   const officePackLabel =
@@ -205,12 +205,15 @@ export default function AppMainLayout({
         ? "オフィスパック"
         : labels.uiLanguage === "zh"
           ? "办公室包"
-          : "Office Pack";
+          : labels.uiLanguage === "th"
+            ? "ชุดออฟฟิศ"
+            : "Office Pack";
   const officePackBootstrappingMessage = useMemo(() => {
     if (!officePackBootstrappingLabel) return null;
     if (uiLanguage === "ko") return `${officePackBootstrappingLabel} 오피스 팩 배치중...`;
     if (uiLanguage === "ja") return `${officePackBootstrappingLabel} オフィスパックを配置中...`;
     if (uiLanguage === "zh") return `${officePackBootstrappingLabel} 办公室包部署中...`;
+    if (uiLanguage === "th") return `กำลังติดตั้งชุดออฟฟิศ ${officePackBootstrappingLabel}...`;
     return `Deploying ${officePackBootstrappingLabel} office pack...`;
   }, [officePackBootstrappingLabel, uiLanguage]);
   const generatedOfficePresentation = useMemo(

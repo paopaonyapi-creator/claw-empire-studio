@@ -109,7 +109,7 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
             className="text-[10px] uppercase font-semibold mb-1.5 tracking-wider"
             style={{ color: "var(--th-text-muted)" }}
           >
-            {tr("부서 현황", "Department Status", "部門状況", "部门状态")}
+            {tr("부서 현황", "Department Status", "部門状況", "部门状态", "สถานะแผนก")}
           </div>
           {departments.map((d) => {
             const deptAgents = agents.filter((a) => a.department_id === d.id);
@@ -138,9 +138,9 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
           {!collapsed && (
             <div className="text-[10px]" style={{ color: "var(--th-text-muted)" }}>
               {connected
-                ? tr("연결됨", "Connected", "接続中", "已连接")
-                : tr("연결 끊김", "Disconnected", "接続なし", "已断开")}{" "}
-              · {workingCount}/{totalAgents} {tr("근무중", "working", "稼働中", "工作中")}
+                ? tr("연결됨", "Connected", "接続中", "已连接", "เชื่อมต่อแล้ว")
+                : tr("연결 끊김", "Disconnected", "接続なし", "已断开", "ขาดการเชื่อมต่อ")}{" "}
+              · {workingCount}/{totalAgents} {tr("근무중", "working", "稼働中", "工作中", "กำลังทำงาน")}
             </div>
           )}
         </div>

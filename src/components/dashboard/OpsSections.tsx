@@ -125,7 +125,7 @@ export function DashboardDeptAndSquad({
             >
               🤖
             </span>
-            {t({ ko: "스쿼드", en: "SQUAD", ja: "スクワッド", zh: "小队" , th: "SQUAD" })}
+            {t({ ko: "스쿼드", en: "SQUAD", ja: "スクワッド", zh: "小队", th: "ทีมงาน" })}
           </h2>
           <div className="flex items-center gap-2 text-[10px]">
             <span className="flex items-center gap-1 rounded-md border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 font-bold text-emerald-300">

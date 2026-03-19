@@ -31,14 +31,14 @@ export function useAppLabels({
     en: "Loading Claw-Empire...",
     ja: "Claw-Empireを読み込み中...",
     zh: "Claw-Empire 加载中...",
-    th: "Loading Claw-Empire...",
+    th: "กำลังโหลด Claw-Empire...",
   });
   const loadingSubtitle = pickLang(uiLanguage, {
     ko: "AI 에이전트 제국을 준비하고 있습니다",
     en: "Preparing your AI agent empire",
     ja: "AIエージェント帝国を準備しています",
     zh: "正在准备你的 AI 代理帝国",
-    th: "Preparing your AI agent empire",
+    th: "กำลังเตรียมอาณาจักร AI ของคุณ",
   });
   const viewTitle = (() => {
     switch (view) {
@@ -105,14 +105,14 @@ export function useAppLabels({
     en: "Announcement",
     ja: "全社告知",
     zh: "全员公告",
-    th: "Announcement",
+    th: "ประกาศ",
   })}`;
   const roomManagerLabel = `🏢 ${pickLang(uiLanguage, {
     ko: "사무실 관리",
     en: "Office Manager",
     ja: "オフィス管理",
     zh: "办公室管理",
-    th: "Office Manager",
+    th: "จัดการสำนักงาน",
   })}`;
   const roomManagerDepartments = useMemo(
     () => [
@@ -123,7 +123,7 @@ export function useAppLabels({
           en: "CEO Office",
           ja: "CEOオフィス",
           zh: "CEO办公室",
-          th: "CEO Office",
+          th: "ออฟฟิศ CEO",
         }),
       },
       ...departments,
@@ -134,7 +134,7 @@ export function useAppLabels({
           en: "Break Room",
           ja: "休憩室",
           zh: "休息室",
-          th: "Break Room",
+          th: "ห้องพัก",
         }),
       },
     ],
@@ -221,14 +221,14 @@ export function useAppLabels({
     en: "Release Notes",
     ja: "リリースノート",
     zh: "发布说明",
-    th: "Release Notes",
+    th: "บันทึกการอัปเดต",
   });
   const updateDismissLabel = pickLang(uiLanguage, {
     ko: "나중에",
     en: "Dismiss",
     ja: "後で",
     zh: "稍后",
-    th: "Dismiss",
+    th: "ปิด",
   });
   const autoUpdateNoticeVisible = Boolean(settings.autoUpdateNoticePending);
   const autoUpdateNoticeTitle = pickLang(uiLanguage, {
@@ -236,14 +236,14 @@ export function useAppLabels({
     en: "Update notice: Auto Update toggle has been added.",
     ja: "更新のお知らせ: Auto Update トグルが追加されました。",
     zh: "更新提示：已新增 Auto Update 开关。",
-    th: "Update notice: Auto Update toggle has been added.",
+    th: "แจ้งเตือน: เพิ่มตัวเลือกอัปเดตอัตโนมัติแล้ว",
   });
   const autoUpdateNoticeHint = pickLang(uiLanguage, {
     ko: "기존 설치(1.1.3 이하)에서는 기본값이 OFF입니다. Settings > General에서 필요 시 ON으로 전환할 수 있습니다.",
     en: "For existing installs (v1.1.3 and below), the default remains OFF. You can enable it in Settings > General when needed.",
     ja: "既存インストール（v1.1.3 以下）では既定値は OFF のままです。必要に応じて Settings > General で ON にできます。",
     zh: "对于现有安装（v1.1.3 及以下），默认仍为 OFF。可在 Settings > General 中按需开启。",
-    th: "For existing installs (v1.1.3 and below), the default remains OFF. You can enable it in Settings > General when needed.",
+    th: "สำหรับการติดตั้งเดิม (v1.1.3 และต่ำกว่า) ค่าเริ่มต้นยังคงเป็น OFF สามารถเปิดได้ที่ ตั้งค่า > ทั่วไป",
   });
   const autoUpdateNoticeActionLabel = pickLang(uiLanguage, {
     ko: "확인",

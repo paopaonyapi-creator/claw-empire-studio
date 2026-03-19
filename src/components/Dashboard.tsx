@@ -152,33 +152,33 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
   const hudStats: HudStat[] = [
     {
       id: "total",
-      label: t({ ko: "미션", en: "MISSIONS", ja: "ミッション", zh: "任务" , th: "MISSIONS" }),
+      label: t({ ko: "미션", en: "MISSIONS", ja: "ミッション", zh: "任务", th: "ภารกิจ" }),
       value: totalTasks,
-      sub: t({ ko: "누적 태스크", en: "Total tasks", ja: "累積タスク", zh: "累计任务" , th: "Total tasks" }),
+      sub: t({ ko: "누적 태스크", en: "Total tasks", ja: "累積タスク", zh: "累计任务", th: "งานทั้งหมด" }),
       color: "#3b82f6",
       icon: "📋",
     },
     {
       id: "clear",
-      label: t({ ko: "완료율", en: "CLEAR RATE", ja: "クリア率", zh: "完成率" , th: "CLEAR RATE" }),
+      label: t({ ko: "완료율", en: "CLEAR RATE", ja: "クリア率", zh: "完成率", th: "อัตราสำเร็จ" }),
       value: `${completionRate}%`,
-      sub: `${numberFormatter.format(completedTasks)} ${t({ ko: "클리어", en: "cleared", ja: "クリア", zh: "完成" , th: "cleared" })}`,
+      sub: `${numberFormatter.format(completedTasks)} ${t({ ko: "클리어", en: "cleared", ja: "クリア", zh: "完成", th: "สำเร็จ" })}`,
       color: "#10b981",
       icon: "✅",
     },
     {
       id: "squad",
-      label: t({ ko: "스쿼드", en: "SQUAD", ja: "スクワッド", zh: "小队" , th: "SQUAD" }),
+      label: t({ ko: "스쿼드", en: "SQUAD", ja: "スクワッド", zh: "小队", th: "ทีมงาน" }),
       value: `${activeAgents}/${totalAgents}`,
-      sub: `${t({ ko: "가동률", en: "uptime", ja: "稼働率", zh: "运行率" , th: "uptime" })} ${activeRate}%`,
+      sub: `${t({ ko: "가동률", en: "uptime", ja: "稼働率", zh: "运行率", th: "อัตราการทำงาน" })} ${activeRate}%`,
       color: "#00f0ff",
       icon: "🤖",
     },
     {
       id: "active",
-      label: t({ ko: "진행중", en: "IN PROGRESS", ja: "進行中", zh: "进行中" , th: "IN PROGRESS" }),
+      label: t({ ko: "진행중", en: "IN PROGRESS", ja: "進行中", zh: "进行中", th: "กำลังดำเนินการ" }),
       value: inProgressTasks,
-      sub: `${t({ ko: "계획", en: "planned", ja: "計画", zh: "计划" , th: "planned" })} ${numberFormatter.format(plannedTasks)}${t({
+      sub: `${t({ ko: "계획", en: "planned", ja: "計画", zh: "计划", th: "วางแผน" })} ${numberFormatter.format(plannedTasks)}${t({
         ko: "건",
         en: "",
         ja: "件",

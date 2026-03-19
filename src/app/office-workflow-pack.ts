@@ -1,6 +1,6 @@
 import type { Agent, AgentRole, CliProvider, Department, RoomTheme, WorkflowPackKey } from "../types";
 
-export type UiLanguageLike = "ko" | "en" | "ja" | "zh";
+export type UiLanguageLike = "ko" | "en" | "ja" | "zh" | "th";
 
 type Localized = { ko: string; en: string; ja: string; zh: string; th?: string };
 type DeptPreset = {
@@ -420,14 +420,14 @@ const PACK_PRESETS: Record<WorkflowPackKey, PackPreset> = {
       en: "Roleplay Studio",
       ja: "ロールプレイスタジオ",
       zh: "角色扮演工作室",
-      th: "Roleplay Studio",
+      th: "สตูดิโอสวมบทบาท",
     },
     summary: {
       ko: "캐릭터 연기와 대사 몰입 중심",
       en: "Character role and dialogue immersion",
       ja: "キャラ演技と会話没入",
       zh: "角色演绎与对话沉浸",
-      th: "Character role and dialogue immersion",
+      th: "การสวมบทบาทตัวละครและบทสนทนา",
     },
     roomThemes: {
       ceoOffice: { floor1: 0xf3e7dc, floor2: 0xebdbc9, wall: 0x7d5c4d, accent: 0xbe6f53 },
@@ -477,14 +477,14 @@ const PACK_PRESETS: Record<WorkflowPackKey, PackPreset> = {
       en: "Affiliate Content Studio",
       ja: "アフィリエイトスタジオ",
       zh: "联盟营销内容工作室",
-      th: "Affiliate Content Studio",
+      th: "สตูดิโอคอนเทนต์พันธมิตร",
     },
     summary: {
       ko: "TikTok/Facebook 어필리에이트 콘텐츠 제작",
       en: "TikTok & Facebook affiliate content production",
       ja: "TikTok/Facebookアフィリエイトコンテンツ制作",
       zh: "TikTok/Facebook联盟营销内容制作",
-      th: "TikTok & Facebook affiliate content production",
+      th: "ผลิตคอนเทนต์ Affiliate บน TikTok & Facebook",
     },
     roomThemes: {
       ceoOffice: { floor1: 0xfff3e0, floor2: 0xffe0b2, wall: 0xe65100, accent: 0xff6d00 },
@@ -498,27 +498,27 @@ const PACK_PRESETS: Record<WorkflowPackKey, PackPreset> = {
     },
     departments: {
       planning: {
-        name: { ko: "전략기획실", en: "Strategy & Insights", ja: "戦略企画室", zh: "策略与洞察" , th: "Strategy & Insights" },
+        name: { ko: "전략기획실", en: "Strategy & Insights", ja: "戦略企画室", zh: "策略与洞察", th: "กลยุทธ์และข้อมูลเชิงลึก" },
         icon: "🎯",
-        agentPrefix: { ko: "전략가", en: "Strategist", ja: "ストラテジスト", zh: "策略师" , th: "Strategist" },
+        agentPrefix: { ko: "전략가", en: "Strategist", ja: "ストラテジスト", zh: "策略师", th: "นักกลยุทธ์" },
         avatarPool: ["🎯", "🔍", "🧠"],
       },
       dev: {
-        name: { ko: "콘텐츠제작팀", en: "Content Production", ja: "コンテンツ制作", zh: "内容制作" , th: "Content Production" },
+        name: { ko: "콘텐츠제작팀", en: "Content Production", ja: "コンテンツ制作", zh: "内容制作", th: "ผลิตคอนเทนต์" },
         icon: "✍️",
-        agentPrefix: { ko: "콘텐츠 작가", en: "Content Writer", ja: "コンテンツライター", zh: "内容撰稿人" , th: "Content Writer" },
+        agentPrefix: { ko: "콘텐츠 작가", en: "Content Writer", ja: "コンテンツライター", zh: "内容撰稿人", th: "นักเขียนคอนเทนต์" },
         avatarPool: ["✍️", "🪝", "📝"],
       },
       design: {
-        name: { ko: "크리에이티브 스튜디오", en: "Creative Studio", ja: "クリエイティブスタジオ", zh: "创意工作室" , th: "Creative Studio" },
+        name: { ko: "크리에이티브 스튜디오", en: "Creative Studio", ja: "クリエイティブスタジオ", zh: "创意工作室", th: "สตูดิโอสร้างสรรค์" },
         icon: "🎨",
         agentPrefix: { ko: "크리에이터", en: "Creative", ja: "クリエイター", zh: "创意师" , th: "สร้างสรรค์" },
         avatarPool: ["🎨", "🎬", "📷"],
       },
       qa: {
-        name: { ko: "배포분석팀", en: "Distribution & Analytics", ja: "配信分析", zh: "分发与分析" , th: "Distribution & Analytics" },
+        name: { ko: "배포분석팀", en: "Distribution & Analytics", ja: "配信分析", zh: "分发与分析", th: "การกระจายและวิเคราะห์" },
         icon: "📊",
-        agentPrefix: { ko: "분석가", en: "Analyst", ja: "アナリスト", zh: "分析师" , th: "Analyst" },
+        agentPrefix: { ko: "분석가", en: "Analyst", ja: "アナリスト", zh: "分析师", th: "นักวิเคราะห์" },
         avatarPool: ["📊", "📅", "📢"],
       },
     },
@@ -541,6 +541,8 @@ function pickText(locale: UiLanguageLike, text: Localized): string {
       return text.ja || text.en;
     case "zh":
       return text.zh || text.en;
+    case "th":
+      return text.th || text.en;
     case "en":
     default:
       return text.en;
@@ -614,7 +616,7 @@ function buildSeedPersonality(params: {
   role: AgentRole;
   locale: UiLanguageLike;
   defaultPrefix: Localized;
-  departmentName: { ko: string; en: string; ja: string; zh: string };
+  departmentName: { ko: string; en: string; ja: string; zh: string; th?: string };
 }): string | null {
   if (params.packKey === "development") return null;
   const tone = PACK_SEED_PROFILE[params.packKey]?.tone;
@@ -645,12 +647,19 @@ function buildSeedPersonality(params: {
       junior: "初级成员",
       intern: "实习成员",
     },
+    th: {
+      team_leader: "หัวหน้าทีม",
+      senior: "สมาชิกอาวุโส",
+      junior: "สมาชิกรุ่นเยาว์",
+      intern: "ฝึกงาน",
+    },
   };
   const focusByLocale: Record<UiLanguageLike, string> = {
     ko: params.defaultPrefix.ko?.trim() || `${params.departmentName.ko} 담당`,
     en: params.defaultPrefix.en?.trim() || `${params.departmentName.en} coverage`,
     ja: params.defaultPrefix.ja?.trim() || `${params.departmentName.ja}担当`,
     zh: params.defaultPrefix.zh?.trim() || `${params.departmentName.zh}职责`,
+    th: params.defaultPrefix.th?.trim() || `${params.departmentName.th || params.departmentName.en} หน้าที่`,
   };
   const roleLabel = roleLabelMap[locale][params.role];
   const focus = focusByLocale[locale];
@@ -658,6 +667,7 @@ function buildSeedPersonality(params: {
   if (locale === "ko") return `${toneText} ${focus} 역할의 ${roleLabel}입니다.`;
   if (locale === "ja") return `${toneText} ${focus}を担当する${roleLabel}として動きます。`;
   if (locale === "zh") return `${toneText} 作为负责${focus}的${roleLabel}推进工作。`;
+  if (locale === "th") return `${toneText} ทำงานเป็น${roleLabel}ที่เน้น${focus}`;
   return `${toneText} Serves as a ${roleLabel} focused on ${focus}.`;
 }
 
@@ -672,6 +682,7 @@ function buildPackDepartmentDescription(params: {
   if (locale === "ko") return `${deptName}입니다. ${summary} 목표를 중심으로 협업합니다.`;
   if (locale === "ja") return `${deptName}です。${summary}の目標達成に向けて連携します。`;
   if (locale === "zh") return `${deptName}团队。围绕${summary}目标协作推进。`;
+  if (locale === "th") return `ทีม${deptName} ร่วมมือทำงานเพื่อบรรลุเป้าหมาย ${summary}`;
   return `${deptName} team. Collaborates to deliver the ${summary.toLowerCase()} goal.`;
 }
 
@@ -691,6 +702,9 @@ function buildPackDepartmentPrompt(params: {
   }
   if (locale === "zh") {
     return `[部门职责] ${deptName}\n[执行基准] ${summary}\n请将请求拆分为可执行步骤，并清晰提供依据与产出物。`;
+  }
+  if (locale === "th") {
+    return `[บทบาทแผนก] ${deptName}\n[มาตรฐานการทำงาน] ${summary}\nแบ่งคำขอเป็นขั้นตอนที่ทำได้ และระบุเหตุผลและผลลัพธ์อย่างชัดเจน`;
   }
   return `[Department Role] ${deptName}\n[Execution Standard] ${summary}\nBreak requests into actionable steps and clearly provide rationale and deliverables.`;
 }
@@ -746,6 +760,7 @@ export function buildOfficePackPresentation(params: {
       en: deptPreset.name.en || dept.name,
       ja: deptPreset.name.ja || dept.name_ja || dept.name,
       zh: deptPreset.name.zh || dept.name_zh || dept.name,
+      th: deptPreset.name.th || (dept as any).name_th || dept.name,
     };
     return {
       ...dept,
@@ -754,6 +769,7 @@ export function buildOfficePackPresentation(params: {
       name_ko: deptPreset.name.ko,
       name_ja: deptPreset.name.ja,
       name_zh: deptPreset.name.zh,
+      name_th: deptPreset.name.th,
       description: buildPackDepartmentDescription({
         locale,
         packSummary: preset.summary,

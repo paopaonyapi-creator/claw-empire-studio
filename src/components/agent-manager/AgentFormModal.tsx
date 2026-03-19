@@ -84,7 +84,7 @@ export default function AgentFormModal({
         {/* Modal header */}
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-base font-bold" style={{ color: "var(--th-text-heading)" }}>
-            {isEdit ? tr("직원 정보 수정", "Edit Agent") : tr("신규 직원 채용", "Hire New Agent")}
+            {isEdit ? t({ ko: "직원 정보 수정", en: "Edit Agent", ja: "エージェント編集", zh: "编辑特工", th: "แก้ไขเอเจนต์" }) : t({ ko: "신규 직원 채용", en: "Hire New Agent", ja: "新規採用", zh: "招聘新特工", th: "จ้างเอเจนต์ใหม่" })}
           </h3>
           <button
             onClick={onClose}
@@ -103,7 +103,7 @@ export default function AgentFormModal({
               className="text-[10px] font-semibold uppercase tracking-widest"
               style={{ color: "var(--th-text-muted)" }}
             >
-              {tr("기본 정보", "Basic Info")}
+              {t({ ko: "기본 정보", en: "Basic Info", ja: "基本情報", zh: "基本信息", th: "ข้อมูลพื้นฐาน" })}
             </div>
             {/* ── 스프라이트 얼굴 미리보기 + 위/아래 변경 ── */}
             <div className="flex items-center gap-3">
@@ -157,7 +157,7 @@ export default function AgentFormModal({
                 </span>
                 <div className="mt-2">
                   <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                    {tr("영문 이름", "Name")} <span className="text-red-400">*</span>
+                    {t({ ko: "영문 이름", en: "Name", ja: "名前", zh: "名字", th: "ชื่อ" })} <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
@@ -189,7 +189,7 @@ export default function AgentFormModal({
             {locale.startsWith("ja") && (
               <div>
                 <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                  {t({ ko: "일본어 이름", en: "Japanese Name", ja: "日本語名", zh: "日语名" , th: "Japanese Name" })}
+                  {t({ ko: "일본어 이름", en: "Japanese Name", ja: "日本語名", zh: "日语名", th: "ชื่อภาษาญี่ปุ่น" })}
                 </label>
                 <input
                   type="text"
@@ -204,7 +204,7 @@ export default function AgentFormModal({
             {locale.startsWith("zh") && (
               <div>
                 <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                  {t({ ko: "중국어 이름", en: "Chinese Name", ja: "中国語名", zh: "中文名" , th: "Chinese Name" })}
+                  {t({ ko: "중국어 이름", en: "Chinese Name", ja: "中国語名", zh: "中文名", th: "ชื่อภาษาจีน" })}
                 </label>
                 <input
                   type="text"
@@ -219,7 +219,7 @@ export default function AgentFormModal({
             <div className="grid grid-cols-[72px_1fr] gap-2">
               <div>
                 <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                  {tr("이모지", "Emoji")}
+                  {t({ ko: "이모지", en: "Emoji", ja: "絵文字", zh: "表情", th: "อีโมจิ" })}
                 </label>
                 <EmojiPicker
                   value={form.avatar_emoji}
@@ -228,7 +228,7 @@ export default function AgentFormModal({
               </div>
               <div>
                 <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                  {tr("소속 부서", "Department")}
+                  {t({ ko: "소속 부서", en: "Department", ja: "部署", zh: "部门", th: "แผนก" })}
                 </label>
                 <select
                   value={form.department_id}
@@ -236,7 +236,7 @@ export default function AgentFormModal({
                   className={`${inputCls} cursor-pointer`}
                   style={inputStyle}
                 >
-                  <option value="">{tr("— 미배정 —", "— Unassigned —")}</option>
+                  <option value="">{t({ ko: "— 미배정 —", en: "— Unassigned —", ja: "— 未配属 —", zh: "— 未分配 —", th: "— ยังไม่ได้สังกัด —" })}</option>
                   {departments.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.icon} {localeName(locale, d)}
@@ -253,12 +253,12 @@ export default function AgentFormModal({
               className="text-[10px] font-semibold uppercase tracking-widest"
               style={{ color: "var(--th-text-muted)" }}
             >
-              {tr("역할 설정", "Role Config")}
+              {t({ ko: "역할 설정", en: "Role Config", ja: "役割設定", zh: "角色设置", th: "ตั้งค่าบทบาท" })}
             </div>
             {/* 직급 */}
             <div>
               <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                {tr("직급", "Role")}
+                {t({ ko: "직급", en: "Role", ja: "役職", zh: "职级", th: "ตำแหน่ง" })}
               </label>
               <div className="grid grid-cols-4 gap-1.5">
                 {ROLES.map((r) => {
@@ -283,7 +283,7 @@ export default function AgentFormModal({
             {/* CLI Provider */}
             <div>
               <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                {tr("CLI 도구", "CLI Provider")}
+                {t({ ko: "CLI 도구", en: "CLI Provider", ja: "CLIツール", zh: "CLI工具", th: "ผู้ให้บริการ CLI" })}
               </label>
               <div className="flex flex-wrap gap-1.5">
                 {CLI_PROVIDERS.map((p) => {
@@ -308,13 +308,13 @@ export default function AgentFormModal({
             {/* 성격/프롬프트 */}
             <div>
               <label className="block text-xs mb-1.5 font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                {tr("성격 / 역할 프롬프트", "Personality / Prompt")}
+                {t({ ko: "성격 / 역할 프롬프트", en: "Personality / Prompt", ja: "性格 / プロンプト", zh: "性格 / 提示词", th: "บุคลิกภาพ / พรอมต์" })}
               </label>
               <textarea
                 value={form.personality}
                 onChange={(e) => setForm({ ...form, personality: e.target.value })}
                 rows={3}
-                placeholder={tr("전문 분야나 성격 설명...", "Expertise or personality...")}
+                placeholder={t({ ko: "전문 분야나 성격 설명...", en: "Expertise or personality...", ja: "専門分野や性格...", zh: "专业领域或性格...", th: "ความเชี่ยวชาญหรือบุคลิกภาพ..." })}
                 className={`${inputCls} resize-none`}
                 style={inputStyle}
               />
@@ -328,7 +328,7 @@ export default function AgentFormModal({
             className="text-[10px] font-semibold uppercase tracking-widest mb-3"
             style={{ color: "var(--th-text-muted)" }}
           >
-            {tr("캐릭터 스프라이트", "Character Sprite")}
+            {t({ ko: "캐릭터 스프라이트", en: "Character Sprite", ja: "キャラスプライト", zh: "角色精灵图", th: "สไปรท์ตัวละคร" })}
           </div>
 
           {!previews && !processing && (
@@ -338,16 +338,16 @@ export default function AgentFormModal({
             >
               <span className="text-2xl">🖼️</span>
               <span className="text-xs">
-                {tr("4방향 스프라이트 시트 업로드 (2x2 그리드)", "Upload 4-direction sprite sheet (2x2 grid)")}
+                {t({ ko: "4방향 스프라이트 시트 업로드 (2x2 그리드)", en: "Upload 4-direction sprite sheet (2x2 grid)", ja: "4方向スプライトシート (2x2)", zh: "上传4方向精灵图 (2x2)", th: "อัปโหลดสไปรท์ชีท 4 ทิศทาง (2x2)" })}
               </span>
-              <span className="text-xs">{tr("앞 / 왼 / 뒤 / 오른 순서", "Front / Left / Back / Right order")}</span>
+              <span className="text-xs">{t({ ko: "앞 / 왼 / 뒤 / 오른 순서", en: "Front / Left / Back / Right order", ja: "前 / 左 / 後 / 右", zh: "前 / 左 / 后 / 右", th: "หน้า / ซ้าย / หลัง / ขวา" })}</span>
               <span className="text-xs">
                 {t({
                   ko: "(흰색배경)",
                   en: "(White background)",
                   ja: "（白背景）",
                   zh: "（白色背景）",
-                  th: "(White background)",
+                  th: "(พื้นหลังสีขาว)",
                 })}
               </span>
               <input
@@ -380,7 +380,7 @@ export default function AgentFormModal({
             <div className="flex items-center justify-center gap-2 py-8" style={{ color: "var(--th-text-muted)" }}>
               <span className="animate-spin text-lg">⏳</span>
               <span className="text-sm">
-                {tr("배경 제거 및 분할 처리 중...", "Removing background & splitting...")}
+                {t({ ko: "배경 제거 및 분할 처리 중...", en: "Removing background & splitting...", ja: "背景除去中...", zh: "正在去除背景...", th: "กำลังลบพื้นหลังและแบ่ง..." })}
               </span>
             </div>
           )}
@@ -392,7 +392,7 @@ export default function AgentFormModal({
                 {(["D", "L", "R"] as const).map((dir) => (
                   <div key={dir} className="text-center">
                     <div className="text-[10px] font-medium mb-1" style={{ color: "var(--th-text-muted)" }}>
-                      {dir === "D" ? tr("정면", "Front") : dir === "L" ? tr("좌측", "Left") : tr("우측", "Right")}
+                      {dir === "D" ? t({ ko: "정면", en: "Front", ja: "正面", zh: "正面", th: "หน้า" }) : dir === "L" ? t({ ko: "좌측", en: "Left", ja: "左", zh: "左", th: "ซ้าย" }) : t({ ko: "우측", en: "Right", ja: "右", zh: "右", th: "ขวา" })}
                     </div>
                     <div
                       className="rounded-lg p-2 flex items-center justify-center h-24"
@@ -419,7 +419,7 @@ export default function AgentFormModal({
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                   <label className="text-xs font-medium" style={{ color: "var(--th-text-secondary)" }}>
-                    {tr("스프라이트 번호", "Sprite #")}
+                    {t({ ko: "스프라이트 번호", en: "Sprite #", ja: "スプライト番号", zh: "精灵图编号", th: "เลขสไปรท์" })}
                   </label>
                   <input
                     type="number"
@@ -456,10 +456,10 @@ export default function AgentFormModal({
                   } disabled:opacity-50`}
                 >
                   {registering
-                    ? tr("등록 중...", "Registering...")
+                    ? t({ ko: "\ub4f1\ub85d \uc911...", en: "Registering...", ja: "\u767b\u9332\u4e2d...", zh: "\u6ce8\u518c\u4e2d...", th: "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e25\u0e07\u0e17\u0e30\u0e40\u0e1a\u0e35\u0e22\u0e19..." })
                     : registered
-                      ? tr("등록 완료!", "Registered!")
-                      : tr("스프라이트 등록", "Register Sprite")}
+                      ? t({ ko: "\ub4f1\ub85d \uc644\ub8cc!", en: "Registered!", ja: "\u767b\u9332\u5b8c\u4e86!", zh: "\u6ce8\u518c\u6210\u529f!", th: "\u0e25\u0e07\u0e17\u0e30\u0e40\u0e1a\u0e35\u0e22\u0e19\u0e41\u0e25\u0e49\u0e27!" })
+                      : t({ ko: "\uc2a4\ud504\ub77c\uc774\ud2b8 \ub4f1\ub85d", en: "Register Sprite", ja: "\u30b9\u30d7\u30e9\u30a4\u30c8\u767b\u9332", zh: "\u6ce8\u518c\u7cbe\u7075\u56fe", th: "\u0e25\u0e07\u0e17\u0e30\u0e40\u0e1a\u0e35\u0e22\u0e19\u0e2a\u0e44\u0e1b\u0e23\u0e17\u0e4c" })}
                 </button>
                 {previews && (
                   <button
@@ -471,7 +471,7 @@ export default function AgentFormModal({
                     className="text-xs px-2 py-1 rounded-lg hover:bg-[var(--th-bg-surface-hover)] transition-colors"
                     style={{ color: "var(--th-text-muted)" }}
                   >
-                    {tr("다시 업로드", "Re-upload")}
+                    {t({ ko: "다시 업로드", en: "Re-upload", ja: "再アップロード", zh: "重新上传", th: "อัปโหลดใหม่" })}
                   </button>
                 )}
               </div>
@@ -487,17 +487,17 @@ export default function AgentFormModal({
             className="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white disabled:opacity-40 shadow-sm shadow-blue-600/20"
           >
             {saving
-              ? tr("처리 중...", "Saving...")
+              ? t({ ko: "처리 중...", en: "Saving...", ja: "保存中...", zh: "保存中...", th: "กำลังบันทึก..." })
               : isEdit
-                ? tr("변경사항 저장", "Save Changes")
-                : tr("채용 확정", "Confirm Hire")}
+                ? t({ ko: "변경사항 저장", en: "Save Changes", ja: "変更を保存", zh: "保存更改", th: "บันทึกการเปลี่ยนแปลง" })
+              : t({ ko: "채용 확정", en: "Confirm Hire", ja: "採用確定", zh: "确认招聘", th: "ยืนยันการจ้าง" })}
           </button>
           <button
             onClick={onClose}
             className="px-4 py-2.5 rounded-lg text-sm font-medium transition-all hover:bg-[var(--th-bg-surface-hover)]"
             style={{ border: "1px solid var(--th-input-border)", color: "var(--th-text-secondary)" }}
           >
-            {tr("취소", "Cancel")}
+            {t({ ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", th: "ยกเลิก" })}
           </button>
         </div>
       </div>

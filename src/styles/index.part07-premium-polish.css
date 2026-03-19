@@ -1,0 +1,284 @@
+/* ═══════════════════════════════════════════════════════════════
+   Part 07: Premium UI Polish
+   Glassmorphism, view transitions, card effects, mobile nav
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Glassmorphism Sidebar (dark mode) ─── */
+[data-theme="dark"] .sidebar-panel {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.85) 0%,
+    rgba(15, 17, 30, 0.92) 100%
+  ) !important;
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-right: 1px solid rgba(148, 163, 184, 0.08) !important;
+}
+
+/* ─── Glassmorphism Sidebar (light mode) ─── */
+[data-theme="light"] .sidebar-panel {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 252, 245, 0.88) 0%,
+    rgba(245, 240, 230, 0.94) 100%
+  ) !important;
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border-right: 1px solid rgba(168, 146, 116, 0.15) !important;
+}
+
+/* ─── Glassmorphism Header ─── */
+[data-theme="dark"] header.sticky {
+  background: rgba(15, 23, 42, 0.72) !important;
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08) !important;
+}
+[data-theme="light"] header.sticky {
+  background: rgba(255, 252, 245, 0.82) !important;
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border-bottom: 1px solid rgba(168, 146, 116, 0.12) !important;
+}
+
+/* ─── Smooth View Transition (fade + slide-up) ─── */
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main > div > :first-child {
+  animation: view-enter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Premium Card Hover Effects ─── */
+[data-theme="dark"] .bg-slate-700\/30:hover,
+[data-theme="dark"] [class*="bg-slate-800"]:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(148, 163, 184, 0.06);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* ─── Settings Section Cards: subtle float on hover ─── */
+section[class*="rounded-xl"][class*="p-5"]:hover,
+section[class*="rounded-xl"][class*="p-6"]:hover {
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(148, 163, 184, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+/* ─── Sidebar Nav Item: smooth highlight with glow ─── */
+.sidebar-nav-btn {
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-nav-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .sidebar-nav-btn:hover::before {
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+  opacity: 1;
+}
+
+[data-theme="light"] .sidebar-nav-btn:hover::before {
+  background: linear-gradient(90deg, rgba(168, 146, 116, 0.06) 0%, transparent 60%);
+  opacity: 1;
+}
+
+/* ─── Active sidebar item: accent bar ─── */
+.sidebar-nav-btn[data-active="true"]::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, #818cf8, #6366f1);
+  animation: accent-bar-enter 0.3s ease both;
+}
+
+[data-theme="light"] .sidebar-nav-btn[data-active="true"]::after {
+  background: linear-gradient(180deg, #92400e, #b45309);
+}
+
+@keyframes accent-bar-enter {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* ─── Premium Scrollbar (thin, subtle) ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 3px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.25);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(168, 146, 116, 0.2);
+  border-radius: 3px;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 146, 116, 0.35);
+}
+
+/* ─── Focus-visible ring (accessibility + premium) ─── */
+:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+[data-theme="light"] :focus-visible {
+  outline-color: rgba(168, 146, 116, 0.5);
+}
+
+/* ─── Button micro-interaction: subtle press ─── */
+button:active:not(:disabled),
+[role="button"]:active:not(:disabled) {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+/* ─── Connection status dot: pulse when live ─── */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.bg-green-500 {
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Enhanced Mobile Responsive
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Mobile: swipe-friendly sidebar overlay ─── */
+@media (max-width: 1023px) {
+  .sidebar-panel {
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Better mobile header spacing */
+  header.sticky {
+    padding-top: max(0.5rem, env(safe-area-inset-top, 0.5rem));
+  }
+}
+
+/* ─── Mobile: touch-optimized cards ─── */
+@media (max-width: 768px) {
+  /* Prevent card hover on touch devices */
+  @media (hover: none) {
+    [data-theme="dark"] .bg-slate-700\/30:hover,
+    [data-theme="dark"] [class*="bg-slate-800"]:hover {
+      box-shadow: none !important;
+      transform: none !important;
+    }
+  }
+  
+  /* Better tap targets for header buttons */
+  .header-action-btn {
+    padding: 0.5rem 0.65rem !important;
+    font-size: 0.7rem !important;
+  }
+  
+  /* Stack KPI cards nicely */
+  .hud-stats-grid {
+    gap: 8px !important;
+  }
+  
+  /* Full-width settings sections */
+  section[class*="rounded-xl"] {
+    border-radius: 0.75rem !important;
+  }
+}
+
+/* ─── Extra small: compact mode ─── */
+@media (max-width: 380px) {
+  .hud-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .header-action-btn span.hidden.sm\\:inline {
+    display: none !important;
+  }
+  
+  header.sticky h1 {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* ─── Loading skeleton shimmer (reusable) ─── */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton-loading {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.08) 0%,
+    rgba(148, 163, 184, 0.15) 50%,
+    rgba(148, 163, 184, 0.08) 100%
+  );
+  background-size: 200px 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* ─── Smooth tooltip appearance ─── */
+[title] {
+  position: relative;
+}
+
+/* ─── Print styles: clean output ─── */
+@media print {
+  header.sticky,
+  .sidebar-panel,
+  .theme-toggle-btn {
+    display: none !important;
+  }
+  main {
+    overflow: visible !important;
+  }
+}

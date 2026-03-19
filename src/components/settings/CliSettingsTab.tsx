@@ -18,7 +18,7 @@ export default function CliSettingsTab({
     >
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: "var(--th-text-primary)" }}>
-          {t({ ko: "CLI 도구 상태", en: "CLI Tool Status", ja: "CLI ツール状態", zh: "CLI 工具状态" , th: "CLI Tool Status" })}
+          {t({ ko: "CLI 도구 상태", en: "CLI Tool Status", ja: "CLI ツール状態", zh: "CLI 工具状态", th: "สถานะเครื่องมือ CLI" })}
         </h3>
         <button onClick={onRefresh} className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
           🔄 {t({ ko: "새로고침", en: "Refresh", ja: "更新", zh: "刷新", th: "รีเฟรช" })}
@@ -56,9 +56,9 @@ export default function CliSettingsTab({
                                 en: "Version unknown",
                                 ja: "バージョン不明",
                                 zh: "版本未知",
-                                th: "Version unknown",
+                                th: "ไม่ทราบเวอร์ชัน",
                               })
-                            : t({ ko: "미설치", en: "Not installed", ja: "未インストール", zh: "未安装" , th: "Not installed" }))}
+                            : t({ ko: "미설치", en: "Not installed", ja: "未インストール", zh: "未安装", th: "ยังไม่ได้ติดตั้ง" }))}
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -78,8 +78,8 @@ export default function CliSettingsTab({
                           }`}
                         >
                           {status.authenticated
-                            ? t({ ko: "인증됨", en: "Authenticated", ja: "認証済み", zh: "已认证" , th: "Authenticated" })
-                            : t({ ko: "미인증", en: "Not Authenticated", ja: "未認証", zh: "未认证" , th: "Not Authenticated" })}
+                            ? t({ ko: "인증됨", en: "Authenticated", ja: "認証済み", zh: "已认证", th: "ยืนยันแล้ว" })
+                            : t({ ko: "미인증", en: "Not Authenticated", ja: "未認証", zh: "未认证", th: "ยังไม่ได้ยืนยัน" })}
                         </span>
                       )}
                     </div>
@@ -208,7 +208,7 @@ export default function CliSettingsTab({
                               </select>
                             ) : (
                               <span className="text-xs text-slate-500">
-                                {t({ ko: "모델 목록 없음", en: "No models", ja: "モデル一覧なし", zh: "无模型列表" , th: "No models" })}
+                                {t({ ko: "모델 목록 없음", en: "No models", ja: "モデル一覧なし", zh: "无模型列表", th: "ไม่มีโมเดล" })}
                               </span>
                             )}
                           </div>
@@ -257,7 +257,16 @@ export default function CliSettingsTab({
         </div>
       ) : (
         <div className="text-center py-4 text-slate-500 text-sm">
-          {t({ ko: "로딩 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中..." , th: "กำลังโหลด..." })}
+          {t({ ko: "로딩 중...", en: "Loading...", ja: "読み込み中...", zh: "加载中...", th: "กำลังโหลด..." })}
+          <p className="text-xs text-slate-600 mt-2">
+            {t({
+              ko: "오래 걸리면 새로고침을 눌러주세요.",
+              en: "If this takes too long, click Refresh above.",
+              ja: "時間がかかる場合は上の更新をクリックしてください。",
+              zh: "如果加载时间过长，请点击上方的刷新。",
+              th: "หากใช้เวลานาน กรุณากดรีเฟรชด้านบน",
+            })}
+          </p>
         </div>
       )}
 

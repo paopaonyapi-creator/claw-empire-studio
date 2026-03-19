@@ -1,5 +1,6 @@
 import type { WorkflowPackKey } from "../types";
 import type { View } from "./types";
+import { useI18n } from "../i18n";
 
 type OfficePackOption = {
   key: WorkflowPackKey;
@@ -67,6 +68,7 @@ export default function AppHeaderBar({
   onToggleMobileHeaderMenu,
   onCloseMobileHeaderMenu,
 }: AppHeaderBarProps) {
+  const { t } = useI18n();
   return (
     <header
       className="sticky top-0 z-30 flex items-center justify-between px-3 py-2 backdrop-blur-sm sm:px-4 sm:py-3 lg:px-6"
@@ -170,7 +172,7 @@ export default function AppHeaderBar({
           onClick={onToggleTheme}
           className="theme-toggle-btn"
           aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          title={theme === "dark" ? "라이트 모드" : "다크 모드"}
+          title={theme === "dark" ? t({ ko: "라이트 모드", en: "Light mode", ja: "ライトモード", zh: "浅色模式", th: "โหมดสว่าง" }) : t({ ko: "다크 모드", en: "Dark mode", ja: "ダークモード", zh: "深色模式", th: "โหมดมืด" })}
         >
           <span className="theme-toggle-icon">
             {theme === "dark" ? (
@@ -310,7 +312,7 @@ export default function AppHeaderBar({
         </div>
         <div className="flex items-center gap-2 text-xs" style={{ color: "var(--th-text-muted)" }}>
           <div className={`w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
-          <span className="hidden sm:inline">{connected ? "Live" : "Offline"}</span>
+          <span className="hidden sm:inline">{connected ? t({ ko: "Live", en: "Live", ja: "Live", zh: "在线", th: "สด" }) : t({ ko: "Offline", en: "Offline", ja: "Offline", zh: "离线", th: "ออฟไลน์" })}</span>
         </div>
       </div>
     </header>

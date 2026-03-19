@@ -9,6 +9,7 @@ export interface Department {
   name_ko: string;
   name_ja?: string | null;
   name_zh?: string | null;
+  name_th?: string | null;
   icon: string;
   color: string;
   description: string | null;
@@ -30,6 +31,7 @@ export interface Agent {
   name_ko: string;
   name_ja?: string | null;
   name_zh?: string | null;
+  name_th?: string | null;
   department_id: string | null;
   workflow_pack_key?: WorkflowPackKey | null;
   department?: Department;
