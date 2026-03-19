@@ -51,6 +51,7 @@ import { TikTokIdeasWidget } from "./dashboard/TikTokIdeasWidget";
 import { RevenueGoalWidget } from "./dashboard/RevenueGoalWidget";
 import AgentPerformanceWidget from "./dashboard/AgentPerformanceWidget";
 import AgentChatWidget from "./dashboard/AgentChatWidget";
+import AICommandCenter from "./dashboard/AICommandCenter";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -343,6 +344,8 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
         numberFormatter={numberFormatter}
         t={t}
       />
+
+      <AICommandCenter />
 
       <DashboardMissionLog
         recentTasks={recentTasks}
