@@ -136,7 +136,16 @@ export async function autoSetupTelegramWebhook(): Promise<void> {
     : process.env.APP_URL || "";
 
   if (!railwayUrl) {
-    console.log("[TG-Webhook] ⚠️ No RAILWAY_PUBLIC_DOMAIN or APP_URL — set webhook manually via /api/telegram/setup-webhook");
+    console.log("[TG-Webhook] ⚠️ No RAILWAY_PUBLIC_DOMAIN or APP_URL — reverting to Long-Polling mode for local dev");
+    try {
+      // If there's an old webhook registered, getUpdates (polling) will fail with 409 Conflict.
+      // So we delete it to allow polling to take over.
+      const res = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/deleteWebhook`, { method: "POST" });
+      const data = await res.json() as { ok?: boolean; description?: string };
+      if (data.ok) {
+        console.log("[TG-Webhook] ✅ Webhook deleted to allow long-polling");
+      }
+    } catch { /* ignore */ }
     return;
   }
 

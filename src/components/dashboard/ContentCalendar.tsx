@@ -32,6 +32,14 @@ export function ContentCalendar() {
   const [weekOf, setWeekOf] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Modal State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState("");
+  const [formTime, setFormTime] = useState("18:00");
+  const [formPlatform, setFormPlatform] = useState("tiktok");
+  const [formProduct, setFormProduct] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
   const fetchCalendar = useCallback(async () => {
     try {
       const res = await fetch("/api/calendar");
@@ -54,6 +62,36 @@ export function ContentCalendar() {
   const today = new Date();
   const todayDay = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][today.getDay()];
 
+  const openAddModal = (day: string) => {
+    setSelectedDay(day);
+    setFormTime("18:00");
+    setFormPlatform("tiktok");
+    setFormProduct("");
+    setShowAddModal(true);
+  };
+
+  const handleSavePost = async () => {
+    if (!formProduct.trim()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/calendar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          day: selectedDay,
+          time: formTime,
+          platform: formPlatform,
+          productName: formProduct,
+        }),
+      });
+      if (res.ok) {
+        await fetchCalendar();
+        setShowAddModal(false);
+      }
+    } catch { /* ignore */ }
+    setSubmitting(false);
+  };
+
   return (
     <div className="calendar-widget" style={styles.container}>
       <div style={styles.header}>
@@ -72,10 +110,12 @@ export function ContentCalendar() {
             return (
               <div
                 key={day}
+                onClick={() => openAddModal(day)}
                 className={`calendar-day-col ${isToday ? 'calendar-day-today' : ''}`}
                 style={{
                   ...styles.dayCol,
                   ...(isToday ? styles.dayColToday : {}),
+                  cursor: "pointer",
                 }}
               >
                 <div className={isToday ? 'calendar-day-header-today' : 'calendar-day-header'} style={{
@@ -122,7 +162,71 @@ export function ContentCalendar() {
 
       {!loading && entries.length === 0 && (
         <div style={styles.empty}>
-          📭 ยังไม่มีตาราง — ใช้ /schedule add &lt;วัน&gt; &lt;เวลา&gt; &lt;สินค้า&gt;
+          📭 ยังไม่มีตาราง — คลิกที่คอลัมน์เพื่อเพิ่มโพสต์!
+        </div>
+      )}
+
+      {/* Add Post Modal */}
+      {showAddModal && (
+        <div style={styles.modalOverlay} onClick={() => setShowAddModal(false)}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3 style={styles.modalTitle}>📅 Schedule Post ({DAY_LABELS[selectedDay]})</h3>
+            
+            <div style={styles.inputGroup}>
+              <label style={styles.modalLabel}>Product Name (สินค้า)</label>
+              <input 
+                type="text" 
+                value={formProduct} 
+                onChange={e => setFormProduct(e.target.value)}
+                placeholder="เช่น ลิปสติก, ครีมทาหน้า, ยาดม"
+                style={styles.modalInput}
+                autoFocus
+              />
+            </div>
+            
+            <div style={{ display: "flex", gap: 12 }}>
+              <div style={{ ...styles.inputGroup, flex: 1 }}>
+                <label style={styles.modalLabel}>Time (เวลา)</label>
+                <input 
+                  type="time" 
+                  value={formTime}
+                  onChange={e => setFormTime(e.target.value)}
+                  style={styles.modalInput}
+                />
+              </div>
+              <div style={{ ...styles.inputGroup, flex: 1 }}>
+                <label style={styles.modalLabel}>Platform</label>
+                <select 
+                  value={formPlatform} 
+                  onChange={e => setFormPlatform(e.target.value)}
+                  style={styles.modalInput}
+                >
+                  <option value="tiktok">TikTok</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="shopee">Shopee</option>
+                  <option value="lazada">Lazada</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={styles.modalActions}>
+              <button 
+                style={styles.btnCancel} 
+                onClick={() => setShowAddModal(false)}
+                disabled={submitting}
+              >
+                Cancel
+              </button>
+              <button 
+                style={{...styles.btnSave, opacity: (!formProduct.trim() || submitting) ? 0.6 : 1}}
+                onClick={handleSavePost}
+                disabled={!formProduct.trim() || submitting}
+              >
+                {submitting ? "Saving..." : "Schedule Post"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -167,4 +271,33 @@ const styles: Record<string, React.CSSProperties> = {
   },
   statusIcon: { fontSize: 10 },
   empty: { textAlign: "center" as const, padding: 20, color: "#94a3b8", fontSize: 12, marginTop: 8 },
+  
+  // Modal Styles
+  modalOverlay: {
+    position: "fixed" as const, top: 0, left: 0, right: 0, bottom: 0,
+    background: "rgba(15, 23, 42, 0.4)", backdropFilter: "blur(2px)",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    zIndex: 1000,
+  },
+  modalContent: {
+    background: "#fff", borderRadius: 16, padding: 24, width: "100%", maxWidth: 360,
+    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+  },
+  modalTitle: { margin: "0 0 16px 0", fontSize: 16, color: "#1e293b" },
+  inputGroup: { marginBottom: 16, display: "flex", flexDirection: "column" as const, gap: 6 },
+  modalLabel: { fontSize: 12, fontWeight: 600, color: "#64748b" },
+  modalInput: {
+    padding: "8px 12px", borderRadius: 8, border: "1px solid #e2e8f0",
+    fontSize: 14, outline: "none", background: "#f8fafc", width: "100%",
+    boxSizing: "border-box" as const,
+  },
+  modalActions: { display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 24 },
+  btnCancel: {
+    padding: "8px 16px", borderRadius: 8, background: "#f1f5f9",
+    color: "#64748b", border: "none", fontWeight: 600, cursor: "pointer",
+  },
+  btnSave: {
+    padding: "8px 16px", borderRadius: 8, background: "#3b82f6",
+    color: "#fff", border: "none", fontWeight: 600, cursor: "pointer",
+  },
 };
