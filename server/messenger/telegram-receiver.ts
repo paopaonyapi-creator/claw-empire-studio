@@ -3,6 +3,7 @@ import { INBOX_WEBHOOK_SECRET, OAUTH_BASE_HOST, PORT } from "../config/runtime.t
 import { buildMessengerSourceWithTokenHint, buildMessengerTokenKey } from "./token-hint.ts";
 import { decryptMessengerTokenForRuntime } from "./token-crypto.ts";
 import { processCeoTelegramMessage } from "../modules/ceo-chat.ts";
+import { handleTelegramCallback } from "../modules/auto-pipeline.ts";
 
 const MESSENGER_SETTINGS_KEY = "messengerChannels";
 const TELEGRAM_RECEIVER_OFFSET_KEY = "telegramReceiverOffset";
@@ -44,10 +45,18 @@ type TelegramUpdateMessage = {
   };
 };
 
+type TelegramCallbackQuery = {
+  id: string;
+  from: any;
+  message?: TelegramUpdateMessage;
+  data?: string;
+};
+
 type TelegramUpdate = {
   update_id?: number;
   message?: TelegramUpdateMessage;
   channel_post?: TelegramUpdateMessage;
+  callback_query?: TelegramCallbackQuery;
 };
 
 type TelegramGetUpdatesResponse = {
@@ -423,7 +432,7 @@ export async function pollTelegramReceiverOnce(options: {
       body: JSON.stringify({
         offset: nextOffset,
         timeout: TELEGRAM_POLL_TIMEOUT_SECONDS,
-        allowed_updates: ["message", "channel_post"],
+        allowed_updates: ["message", "channel_post", "callback_query"],
       }),
     });
 
@@ -441,14 +450,20 @@ export async function pollTelegramReceiverOnce(options: {
       if (updateId === null) continue;
       if (updateId < nextOffset) continue;
 
-      const result = await forwardTelegramUpdate({
-        update,
-        source: route.source,
-        allowedChatIds: route.allowedChatIds,
-        fetchImpl,
-      });
-      if (result === "forwarded") {
+      if (update.callback_query && update.callback_query.data) {
+        const chatId = update.callback_query.message?.chat?.id ? String(update.callback_query.message.chat.id) : "";
+        handleTelegramCallback(update.callback_query.id, update.callback_query.data, chatId).catch(() => {});
         forwardedAny = true;
+      } else {
+        const result = await forwardTelegramUpdate({
+          update,
+          source: route.source,
+          allowedChatIds: route.allowedChatIds,
+          fetchImpl,
+        });
+        if (result === "forwarded") {
+          forwardedAny = true;
+        }
       }
       if (updateId > maxUpdateId) {
         maxUpdateId = updateId;

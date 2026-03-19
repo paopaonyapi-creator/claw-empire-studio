@@ -11,6 +11,14 @@
     <link rel="icon" type="image/svg+xml" href="/claw-empire.svg" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+      // Injected config from environment — will be overridden by server in production
+      window.__GOOGLE_CLIENT_ID = "";
+      window.__SUPABASE_URL = "";
+      window.__SUPABASE_ANON_KEY = "";
+    </script>
   </head>
   <body class="bg-slate-900 text-white">
     <div id="root"></div>

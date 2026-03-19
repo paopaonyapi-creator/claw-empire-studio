@@ -12,6 +12,7 @@ import path from "path";
 
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || "";
 const GEMINI_KEY = process.env.GEMINI_API_KEY || "";
+const KIMI_KEY = process.env.KIMI_API_KEY || "";
 
 interface GeneratedContent {
   id: string;
@@ -103,6 +104,25 @@ async function generateWithAI(product: string, platform: string): Promise<Genera
       if (res.ok) {
         const data = await res.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
         result = data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+      }
+    } catch { /* ignore */ }
+  }
+
+  // Try KIMI (Moonshot) as third provider
+  if (!result && KIMI_KEY) {
+    try {
+      const res = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${KIMI_KEY}` },
+        body: JSON.stringify({
+          model: "moonshot-v1-8k",
+          messages: [{ role: "user", content: fullPrompt }],
+          temperature: 0.7,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json() as { choices?: Array<{ message?: { content?: string } }> };
+        result = data.choices?.[0]?.message?.content || null;
       }
     } catch { /* ignore */ }
   }

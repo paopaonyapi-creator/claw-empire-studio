@@ -1,97 +1,38 @@
 /**
  * Performance Alerts — Auto-detect drops & anomalies
- *
- * Monitors: clicks, revenue, task completion
- * Auto-sends TG alerts when thresholds are hit
- * TG: /alerts, /alerts set <metric> <op> <value>
- * API: GET /api/alerts
+ * NOW BACKED BY SQLite (via studio-db.ts).
  */
 
 import type { Express, Request, Response } from "express";
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import path from "path";
+import {
+  dbGetAlertRules, dbAddAlertRule, dbGetAlerts, dbAddAlert, dbClearAlerts,
+  dbHasRecentAlert, dbGetTodayClickCount, dbGetTodayRevenue,
+  getStudioDb, type StudioAlertRule, type StudioAlert,
+} from "./studio-db.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
-interface AlertRule {
-  id: string;
-  metric: string;
-  operator: "<" | ">" | "=";
-  value: number;
-  enabled: boolean;
-  createdAt: string;
-}
-
-interface ActiveAlert {
-  id: string;
-  ruleId: string;
-  type: "warning" | "critical" | "info";
-  icon: string;
-  title: string;
-  message: string;
-  metric: string;
-  currentValue: number;
-  threshold: number;
-  timestamp: string;
-  acknowledged: boolean;
-}
-
-const RULES_FILE = path.resolve("data/alert-rules.json");
-const ALERTS_FILE = path.resolve("data/active-alerts.json");
-
-function loadRules(): AlertRule[] {
-  try { if (existsSync(RULES_FILE)) return JSON.parse(readFileSync(RULES_FILE, "utf-8")) || []; } catch {} return [];
-}
-function saveRules(d: AlertRule[]): void { mkdirSync(path.dirname(RULES_FILE), { recursive: true }); writeFileSync(RULES_FILE, JSON.stringify(d, null, 2)); }
-function loadAlerts(): ActiveAlert[] {
-  try { if (existsSync(ALERTS_FILE)) return JSON.parse(readFileSync(ALERTS_FILE, "utf-8")) || []; } catch {} return [];
-}
-function saveAlerts(d: ActiveAlert[]): void { mkdirSync(path.dirname(ALERTS_FILE), { recursive: true }); writeFileSync(ALERTS_FILE, JSON.stringify(d, null, 2)); }
-
-function loadJson(f: string): unknown[] {
-  try { const p = path.resolve(`data/${f}`); if (existsSync(p)) return JSON.parse(readFileSync(p, "utf-8")) || []; } catch {} return [];
-}
-
+// ---------------------------------------------------------------------------
+// Metric Value Lookup (from SQLite)
+// ---------------------------------------------------------------------------
 function getMetricValue(metric: string): number {
-  const now = new Date();
-  const todayStr = now.toISOString().split("T")[0];
-
   switch (metric) {
-    case "clicks": {
-      const links = loadJson("link-clicks.json") as Array<{ timestamp?: string }>;
-      return links.filter((l) => (l.timestamp || "").startsWith(todayStr)).length;
-    }
-    case "revenue": {
-      const rev = loadJson("revenue.json") as Array<{ amount?: number; timestamp?: string }>;
-      return rev.filter((r) => (r.timestamp || "").startsWith(todayStr)).reduce((s, r) => s + (r.amount || 0), 0);
-    }
-    case "tasks_done": {
-      const tasks = loadJson("tasks.json") as Array<{ status?: string }>;
-      return tasks.filter((t) => t.status === "done").length;
-    }
-    case "tasks_pending": {
-      const tasks = loadJson("tasks.json") as Array<{ status?: string }>;
-      return tasks.filter((t) => t.status === "pending" || t.status === "queued").length;
-    }
-    case "agents_working": {
-      const agents = loadJson("agents.json") as Array<{ status?: string }>;
-      return agents.filter((a) => a.status === "working" || a.status === "busy").length;
-    }
+    case "clicks": return dbGetTodayClickCount();
+    case "revenue": return dbGetTodayRevenue();
     default: return 0;
   }
 }
 
 // Built-in default rules
-function getDefaultRules(): AlertRule[] {
+function getDefaultRules(): StudioAlertRule[] {
   return [
     { id: "default-1", metric: "clicks", operator: "<", value: 5, enabled: true, createdAt: new Date().toISOString() },
     { id: "default-2", metric: "revenue", operator: "<", value: 1, enabled: true, createdAt: new Date().toISOString() },
-    { id: "default-3", metric: "tasks_pending", operator: ">", value: 20, enabled: true, createdAt: new Date().toISOString() },
   ];
 }
 
-function checkRule(rule: AlertRule, value: number): boolean {
+function checkRule(rule: StudioAlertRule, value: number): boolean {
   switch (rule.operator) {
     case "<": return value < rule.value;
     case ">": return value > rule.value;
@@ -103,7 +44,6 @@ function checkRule(rule: AlertRule, value: number): boolean {
 // ---------------------------------------------------------------------------
 // Auto-check (runs every 30 min)
 // ---------------------------------------------------------------------------
-
 async function sendTg(text: string): Promise<void> {
   if (!TG_BOT_TOKEN || !TG_CHAT_ID) return;
   try {
@@ -115,20 +55,16 @@ async function sendTg(text: string): Promise<void> {
 }
 
 function runAlertCheck(): void {
-  const rules = [...getDefaultRules(), ...loadRules()].filter((r) => r.enabled);
-  const existing = loadAlerts();
-  const newAlerts: ActiveAlert[] = [];
+  const rules = [...getDefaultRules(), ...dbGetAlertRules()].filter((r) => r.enabled);
+  const newAlerts: StudioAlert[] = [];
 
   for (const rule of rules) {
     const value = getMetricValue(rule.metric);
     if (checkRule(rule, value)) {
       // Don't duplicate alerts for same rule within 6 hours
-      const recent = existing.find(
-        (a) => a.ruleId === rule.id && Date.now() - new Date(a.timestamp).getTime() < 6 * 3600000
-      );
-      if (recent) continue;
+      if (dbHasRecentAlert(rule.id, 6 * 3600000)) continue;
 
-      const alert: ActiveAlert = {
+      const alert: StudioAlert = {
         id: `alert-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         ruleId: rule.id,
         type: rule.operator === "<" && value === 0 ? "critical" : "warning",
@@ -146,14 +82,10 @@ function runAlertCheck(): void {
   }
 
   if (newAlerts.length > 0) {
-    const all = [...newAlerts, ...existing].slice(0, 50);
-    saveAlerts(all);
+    for (const a of newAlerts) dbAddAlert(a);
 
-    // Send TG notification
     let msg = "🚨 PERFORMANCE ALERT\n\n";
-    for (const a of newAlerts) {
-      msg += `${a.icon} ${a.title}\n   ${a.message}\n\n`;
-    }
+    for (const a of newAlerts) msg += `${a.icon} ${a.title}\n   ${a.message}\n\n`;
     msg += "💡 /alerts ดูรายละเอียด";
     sendTg(msg);
     console.log(`[alerts] 🚨 ${newAlerts.length} new alerts triggered`);
@@ -161,9 +93,7 @@ function runAlertCheck(): void {
 }
 
 export function startAlertScheduler(): void {
-  // Initial check after 2 minutes
   setTimeout(() => runAlertCheck(), 120000);
-  // Then every 30 minutes
   setInterval(() => runAlertCheck(), 30 * 60000);
   console.log("[alerts] ⏰ Alert checker active — every 30 min");
 }
@@ -171,32 +101,28 @@ export function startAlertScheduler(): void {
 // ---------------------------------------------------------------------------
 // TG Command
 // ---------------------------------------------------------------------------
-
 export function handleAlertsCommand(arg: string): string {
   const sub = arg.trim().toLowerCase();
 
   if (sub.startsWith("set ")) {
-    // /alerts set clicks < 10
     const match = sub.match(/^set\s+(\w+)\s*([<>=])\s*(\d+)/);
-    if (!match) return "❌ ใช้: /alerts set <metric> <op> <value>\n\nMetrics: clicks, revenue, tasks_done, tasks_pending";
+    if (!match) return "❌ ใช้: /alerts set <metric> <op> <value>\n\nMetrics: clicks, revenue";
     const [, metric, op, val] = match;
-    const rules = loadRules();
-    const rule: AlertRule = {
+    const rule: StudioAlertRule = {
       id: `rule-${Date.now()}`, metric, operator: op as "<" | ">" | "=",
       value: parseInt(val), enabled: true, createdAt: new Date().toISOString(),
     };
-    rules.push(rule);
-    saveRules(rules);
+    dbAddAlertRule(rule);
     return `✅ Alert rule added!\n${metric} ${op} ${val}`;
   }
 
   if (sub === "clear") {
-    saveAlerts([]); return "✅ Alerts cleared!";
+    dbClearAlerts();
+    return "✅ Alerts cleared!";
   }
 
-  // Show current alerts
-  const alerts = loadAlerts().filter((a) => !a.acknowledged);
-  const rules = loadRules();
+  const alerts = dbGetAlerts(true);
+  const rules = dbGetAlertRules();
 
   let msg = "🚨 Performance Alerts\n";
   msg += `${"═".repeat(24)}\n\n`;
@@ -216,14 +142,15 @@ export function handleAlertsCommand(arg: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// API Routes  
+// API Routes
 // ---------------------------------------------------------------------------
-
 export function registerAlertRoutes(app: Express): void {
+  getStudioDb();
+
   app.get("/api/alerts", (_req: Request, res: Response) => {
     res.json({
-      alerts: loadAlerts().filter((a) => !a.acknowledged).slice(0, 10),
-      rules: [...getDefaultRules(), ...loadRules()],
+      alerts: dbGetAlerts(true).slice(0, 10),
+      rules: [...getDefaultRules(), ...dbGetAlertRules()],
     });
   });
 }

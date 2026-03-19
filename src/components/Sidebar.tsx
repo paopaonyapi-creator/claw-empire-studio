@@ -145,6 +145,23 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
           )}
         </div>
       </div>
+
+      {/* Logout */}
+      <div className="px-2 py-2" style={{ borderTop: "1px solid var(--th-border)" }}>
+        <button
+          onClick={() => {
+            localStorage.removeItem("auth_token");
+            localStorage.removeItem("auth_user");
+            window.location.href = "/login";
+          }}
+          className={`w-full flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium transition-colors hover:bg-red-500/10 ${collapsed ? "justify-center" : ""}`}
+          style={{ color: "var(--th-text-muted)" }}
+          title={tr("로그아웃", "Logout", "ログアウト", "登出", "ออกจากระบบ")}
+        >
+          <span className="text-sm">🚪</span>
+          {!collapsed && <span>{tr("로그아웃", "Logout", "ログアウト", "登出", "ออกจากระบบ")}</span>}
+        </button>
+      </div>
     </aside>
   );
 }

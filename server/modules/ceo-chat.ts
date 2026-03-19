@@ -30,6 +30,9 @@ import { handleMultiPostCommand, handleSheetsCommand, handleAbTestCommand, handl
 import { handlePipelineCommand as handleContentPipelineCommand, handleIncomeReportCommand, handleTeamCommand } from "./content-pipeline.ts";
 import { handleHelpCommand, handleOrderCommand } from "./studio-utils.ts";
 import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
+import { getStudioDb } from "./studio-db.ts";
+import { handleNotifCommand } from "./tg-notifier.ts";
+import { handleSummaryCommand } from "./auto-summary.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
@@ -222,6 +225,23 @@ async function handleTemplateListCommand(): Promise<string> {
   );
 }
 
+function handleUsersCommand(): string {
+  try {
+    const db = getStudioDb();
+    const rows = db.prepare("SELECT username, display_name, role, created_at FROM studio_users ORDER BY created_at").all() as any[];
+    if (rows.length === 0) return "📭 ไม่มีผู้ใช้ในระบบ";
+
+    const roleIcons: Record<string, string> = { ceo: "👑", admin: "⚙️", viewer: "👁️" };
+    const list = rows.map((r: any) => {
+      const icon = roleIcons[r.role] || "👤";
+      return `${icon} <b>${r.display_name || r.username}</b> (@${r.username}) — ${r.role.toUpperCase()}`;
+    }).join("\n");
+    return `👥 <b>รายชื่อผู้ใช้</b> (${rows.length})\n\n${list}`;
+  } catch {
+    return "❌ ไม่สามารถดึงข้อมูลผู้ใช้ได้";
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Public: Process incoming TG message
 // ---------------------------------------------------------------------------
@@ -277,6 +297,9 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       `/link — ดู links\n` +
       `/link <url> — สร้าง short link\n` +
       `/link stats — สถิติ\n\n` +
+      `<b>🔐 Admin:</b>\n` +
+      `/users — รายชื่อ users\n` +
+      `/revenue — สรุปรายได้\n\n` +
       `💬 หรือพิมพ์อะไรก็ได้ — Gemini ✨`;
   } else {
     // Check template shortcuts
@@ -458,6 +481,34 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
         await sendTg(reply);
         return;
       }
+
+      // Users command
+      if (cmd === "/users") {
+        reply = handleUsersCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // Notification settings
+      if (cmd === "/notif") {
+        reply = handleNotifCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+
+      // Daily summary
+      if (cmd === "/summary") {
+        reply = await handleSummaryCommand();
+        await sendTg(reply);
+        return;
+      }
+
+      // Mini Dashboard
+      if (cmd === "/dash") {
+        reply = await buildDashReply();
+        await sendTg(reply);
+        return;
+      }
     }
 
     reply = await handleSmartReply(trimmed);
@@ -466,3 +517,52 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
   await sendTg(reply);
 }
 
+// ---------------------------------------------------------------------------
+// /dash — Mini Dashboard for TG
+// ---------------------------------------------------------------------------
+async function buildDashReply(): Promise<string> {
+  let text = "📱 <b>Mini Dashboard</b>\n━━━━━━━━━━━━━━━\n";
+  try {
+    const kpiRes = await fetch(`http://127.0.0.1:${PORT}/api/kpi-goals`);
+    const kpiData = await kpiRes.json() as any;
+    if (kpiData.ok && kpiData.goals?.length > 0) {
+      text += "\n🎯 <b>KPI Goals:</b>\n";
+      for (const g of kpiData.goals.slice(0, 5)) {
+        const bar = "█".repeat(Math.floor(g.percent / 10)) + "░".repeat(10 - Math.floor(g.percent / 10));
+        text += `  ${g.icon} ${g.metric}: ${bar} ${g.percent}%\n`;
+      }
+    }
+  } catch {}
+  try {
+    const gamiRes = await fetch(`http://127.0.0.1:${PORT}/api/gamification`);
+    const gamiData = await gamiRes.json() as any;
+    if (gamiData.ok) {
+      const s = gamiData.stats;
+      text += `\n🏆 <b>Level:</b> ${s.badge} ${s.title} (Lv.${s.level})\n`;
+      text += `  ⭐ ${s.totalXp} XP | 🔥 ${s.currentStreak} day streak\n`;
+    }
+  } catch {}
+  try {
+    const revRes = await fetch(`http://127.0.0.1:${PORT}/api/revenue/chart?period=7d`);
+    const revData = await revRes.json() as any;
+    if (revData.ok) {
+      text += `\n💰 <b>Revenue (7d):</b>\n`;
+      text += `  Total: ฿${revData.summary.totalRevenue.toLocaleString()}\n`;
+      text += `  Orders: ${revData.summary.totalOrders} | Avg: ฿${revData.summary.avgDaily.toLocaleString()}/day\n`;
+    }
+  } catch {}
+  try {
+    const insRes = await fetch(`http://127.0.0.1:${PORT}/api/smart-insights`);
+    const insData = await insRes.json() as any;
+    if (insData.ok && insData.totalInsights > 0) {
+      const high = insData.insights.filter((i: any) => i.priority === "high").length;
+      text += `\n🧠 <b>Insights:</b> ${insData.totalInsights} total`;
+      if (high > 0) text += ` (${high} ⚠️ high priority)`;
+      text += "\n";
+    }
+  } catch {}
+
+  text += "\n━━━━━━━━━━━━━━━\n";
+  text += "🖥️ Full dashboard: http://localhost:8800";
+  return text;
+}

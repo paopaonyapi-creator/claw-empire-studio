@@ -13,14 +13,32 @@ interface BriefData {
   agents: { total: number; working: number; topAgent: string };
 }
 
+interface TrendingProduct {
+  id: string;
+  name: string;
+  url: string;
+  imageUrl?: string;
+  commissionRate: string;
+  reason: string;
+}
+
 export function MorningBrief() {
   const [brief, setBrief] = useState<BriefData | null>(null);
+  const [trends, setTrends] = useState<TrendingProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [startingId, setStartingId] = useState<string | null>(null);
 
   const fetchBrief = useCallback(async () => {
     try {
-      const res = await fetch("/api/brief");
-      if (res.ok) setBrief(await res.json());
+      const [resBrief, resTrends] = await Promise.all([
+        fetch("/api/brief").catch(() => null),
+        fetch("/api/trends/recommended").catch(() => null)
+      ]);
+      if (resBrief?.ok) setBrief(await resBrief.json());
+      if (resTrends?.ok) {
+        const tData = await resTrends.json();
+        if (tData.ok) setTrends(tData.trends);
+      }
     } catch { /* ignore */ }
     setLoading(false);
   }, []);
@@ -33,6 +51,21 @@ export function MorningBrief() {
 
   if (loading) return null;
   if (!brief) return null;
+
+  const startTrendPipeline = async (t: TrendingProduct) => {
+    setStartingId(t.id);
+    try {
+      await fetch(`/api/pipelines/tiktok-full/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ product: t.name, url: t.url }),
+      });
+      // Optionally show a toast here
+    } catch (e) {
+      console.error(e);
+    }
+    setStartingId(null);
+  };
 
   return (
     <div className="morning-brief-widget" style={styles.container}>
@@ -120,6 +153,39 @@ export function MorningBrief() {
           </div>
         </div>
       </div>
+
+      {trends.length > 0 && (
+        <div style={{...styles.card, marginTop: 12}}>
+          <div style={{...styles.cardLabel, display: "flex", justifyContent: "space-between"}}>
+            <span>🔥 สอดแนมเทรนด์ล่าสุด (Auto-Crawler)</span>
+            <span style={{ fontSize: 10, color: "#3b82f6", border: "1px solid rgba(59,130,246,0.3)", padding: "2px 6px", borderRadius: 4 }}>Live Updates</span>
+          </div>
+          <div style={{display: "flex", flexDirection: "column" as const, gap: 8}}>
+             {trends.map(t => (
+                <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.03)", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                   {t.imageUrl ? (
+                     <img src={t.imageUrl} alt={t.name} style={{ width: 42, height: 42, borderRadius: 6, objectFit: "cover" as const }} />
+                   ) : (
+                     <div style={{ width: 42, height: 42, borderRadius: 6, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🛒</div>
+                   )}
+                   <div style={{ flex: 1, minWidth: 0 }}>
+                     <div style={{ fontSize: 13, fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" as const, overflow: "hidden" as const, textOverflow: "ellipsis" as const }}>
+                       {t.name} <span style={{ color: "#10b981", fontSize: 11, marginLeft: 4 }}>[ค่าคอม {t.commissionRate}]</span>
+                     </div>
+                     <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{t.reason}</div>
+                   </div>
+                   <button 
+                     style={{ ...styles.exportBtn, background: startingId === t.id ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)", color: "white", padding: "6px 12px", border: "none" }}
+                     onClick={() => startTrendPipeline(t)}
+                     disabled={startingId === t.id}
+                   >
+                     {startingId === t.id ? "กำลังปั่น..." : "✨ ปั่นคอนเทนต์"}
+                   </button>
+                </div>
+             ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

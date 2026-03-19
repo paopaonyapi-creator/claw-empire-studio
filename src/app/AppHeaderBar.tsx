@@ -132,7 +132,7 @@ export default function AppHeaderBar({
           </label>
         )}
       </div>
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-1 sm:gap-2 md:gap-3 flex-shrink-0 overflow-hidden">
         <button
           onClick={onOpenTasks}
           className="header-action-btn header-action-btn-primary"
@@ -161,7 +161,7 @@ export default function AppHeaderBar({
         <button onClick={onOpenReportHistory} className="header-action-btn header-action-btn-secondary mobile-hidden">
           {reportLabel}
         </button>
-        <button onClick={onOpenAnnouncement} className="header-action-btn header-action-btn-secondary">
+        <button onClick={onOpenAnnouncement} className="header-action-btn header-action-btn-secondary hidden sm:inline-flex">
           <span className="sm:hidden">📢</span>
           <span className="hidden sm:inline">{announcementLabel}</span>
         </button>
@@ -305,6 +305,28 @@ export default function AppHeaderBar({
                   style={{ color: "var(--th-text-primary)" }}
                 >
                   {roomManagerLabel}
+                </button>
+                <button
+                  onClick={() => {
+                    onOpenAnnouncement();
+                    onCloseMobileHeaderMenu();
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition hover:opacity-80"
+                  style={{ color: "var(--th-text-primary)" }}
+                >
+                  📢 {announcementLabel}
+                </button>
+                <div style={{ borderTop: "1px solid var(--th-border)", margin: "4px 0" }} />
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("auth_token");
+                    localStorage.removeItem("auth_user");
+                    window.location.href = "/login";
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition hover:opacity-80"
+                  style={{ color: "#ef4444" }}
+                >
+                  🚪 {t({ ko: "로그아웃", en: "Logout", ja: "ログアウト", zh: "登出", th: "ออกจากระบบ" })}
                 </button>
               </div>
             </>

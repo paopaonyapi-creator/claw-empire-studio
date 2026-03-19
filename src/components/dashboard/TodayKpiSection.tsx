@@ -15,6 +15,7 @@ interface DashboardTodayKpiProps {
 
 export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps) {
   const [kpi, setKpi] = useState<TodayKpi | null>(null);
+  const [linksData, setLinksData] = useState<{ total: number; totalClicks: number } | null>(null);
 
   useEffect(() => {
     const token = sessionStorage.getItem("claw_api_auth_token") || "";
@@ -27,6 +28,11 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
       .then((d) => d && setKpi(d))
       .catch(() => {});
 
+    fetch("/api/links")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d && setLinksData(d))
+      .catch(() => {});
+
     const interval = setInterval(() => {
       fetch("/api/dashboard/today", {
         headers: { Authorization: `Bearer ${token}`, "x-csrf-token": csrf },
@@ -35,7 +41,12 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => d && setKpi(d))
         .catch(() => {});
-    }, 60_000);
+
+      fetch("/api/links")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => d && setLinksData(d))
+        .catch(() => {});
+    }, 15_000);
 
     return () => clearInterval(interval);
   }, []);
@@ -78,30 +89,30 @@ export function DashboardTodayKpi({ t, numberFormatter }: DashboardTodayKpiProps
             className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15 text-sm"
             style={{ boxShadow: "0 0 8px rgba(245,158,11,0.3)" }}
           >
-            📈
+            🔥
           </span>
           <h3
             className="text-xs font-black uppercase tracking-wider"
             style={{ color: "var(--th-text-primary)" }}
           >
-            {t({ ko: "오늘 성과", en: "TODAY'S PERFORMANCE", ja: "今日の成果", zh: "今日绩效" , th: "TODAY'S PERFORMANCE" })}
+            TRAFFIC PERFORMANCE
           </h3>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/[0.06] p-3 text-center">
             <p className="text-2xl font-black text-emerald-400" style={{ textShadow: "0 0 15px rgba(16,185,129,0.4)" }}>
-              {numberFormatter.format(kpi.today.done)}
+              {numberFormatter.format(linksData?.totalClicks || 0)}
             </p>
             <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "var(--th-text-muted)" }}>
-              {t({ ko: "오늘 완료", en: "Done Today", ja: "今日完了", zh: "今日完成" , th: "Done Today" })}
+              TOTAL CLICKS
             </p>
           </div>
           <div className="rounded-xl border border-blue-400/20 bg-blue-500/[0.06] p-3 text-center">
             <p className="text-2xl font-black text-blue-400" style={{ textShadow: "0 0 15px rgba(59,130,246,0.4)" }}>
-              {numberFormatter.format(kpi.week.done)}
+              {numberFormatter.format(linksData?.total || 0)}
             </p>
             <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "var(--th-text-muted)" }}>
-              {t({ ko: "이번 주", en: "This Week", ja: "今週", zh: "本周", th: "สัปดาห์นี้" })}
+              ACTIVE LINKS
             </p>
           </div>
         </div>

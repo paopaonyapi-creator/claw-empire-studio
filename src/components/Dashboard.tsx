@@ -27,7 +27,28 @@ import { DataExportWidget } from "./dashboard/DataExportWidget";
 import { FacebookWidget } from "./dashboard/FacebookWidget";
 import { GoalWidget } from "./dashboard/GoalWidget";
 import { LinkShortenerWidget } from "./dashboard/LinkShortenerWidget";
+import { AffiliatePipelineWidget } from "./dashboard/AffiliatePipelineWidget";
+import { CarouselStudioWidget } from "./dashboard/CarouselStudioWidget";
+import { CompetitorSpyWidget } from "./dashboard/CompetitorSpyWidget";
+import { AutoReplyWidget } from "./dashboard/AutoReplyWidget";
+import { AnalyticsWidget } from "./dashboard/AnalyticsWidget";
+import { NotificationHub } from "./dashboard/NotificationHub";
+import { UserManagementWidget } from "./dashboard/UserManagementWidget";
 import StudioExtrasWidget from "./dashboard/StudioExtrasWidget";
+import { ActivityLogWidget } from "./dashboard/ActivityLogWidget";
+import { KpiGoalsWidget } from "./dashboard/KpiGoalsWidget";
+import { BackupManagerWidget } from "./dashboard/BackupManagerWidget";
+import { GlobalSearchBar } from "./dashboard/GlobalSearchBar";
+import { GamificationWidget } from "./dashboard/GamificationWidget";
+import { SystemSettingsWidget } from "./dashboard/SystemSettingsWidget";
+import { RevenueDashboardWidget } from "./dashboard/RevenueDashboardWidget";
+import { AiSchedulerWidget } from "./dashboard/AiSchedulerWidget";
+import { SmartInsightsProWidget } from "./dashboard/SmartInsightsProWidget";
+import { TeamPerformanceWidget } from "./dashboard/TeamPerformanceWidget";
+import { PushAlertsWidget } from "./dashboard/PushAlertsWidget";
+import { ContentCalendarProWidget } from "./dashboard/ContentCalendarProWidget";
+import { TikTokIdeasWidget } from "./dashboard/TikTokIdeasWidget";
+import { RevenueGoalWidget } from "./dashboard/RevenueGoalWidget";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -210,6 +231,10 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
         t={t}
       />
 
+      <div style={{ display: "flex", justifyContent: "center", padding: "4px 0" }}>
+        <GlobalSearchBar />
+      </div>
+
       <DashboardHudStats hudStats={hudStats} numberFormatter={numberFormatter} />
 
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -227,6 +252,31 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
 
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
 
+      <AffiliatePipelineWidget />
+
+      <CarouselStudioWidget />
+
+      <CompetitorSpyWidget />
+
+      <AutoReplyWidget />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <NotificationHub />
+        <UserManagementWidget />
+      </div>
+
+      <AnalyticsWidget />
+
+      <KpiGoalsWidget />
+
+      <RevenueDashboardWidget />
+
+      <GamificationWidget />
+
+      <TeamPerformanceWidget />
+
+      <PushAlertsWidget />
+
       <PerformanceCharts />
 
       <ContentGeneratorWidget />
@@ -241,7 +291,7 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
 
       <ContentCalendar />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <LinkStatsWidget />
         <AgentLeaderboard />
       </div>
@@ -250,7 +300,22 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
 
       <DataExportWidget />
 
-      <SmartInsights />
+      <ActivityLogWidget />
+
+      <BackupManagerWidget />
+
+      <AiSchedulerWidget />
+
+      <ContentCalendarProWidget />
+
+      <SystemSettingsWidget />
+
+      <SmartInsightsProWidget />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <TikTokIdeasWidget />
+        <RevenueGoalWidget />
+      </div>
 
       <DashboardRankingBoard
         topAgents={topAgents}

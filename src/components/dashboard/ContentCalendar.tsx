@@ -38,6 +38,7 @@ export function ContentCalendar() {
   const [formTime, setFormTime] = useState("18:00");
   const [formPlatform, setFormPlatform] = useState("tiktok");
   const [formProduct, setFormProduct] = useState("");
+  const [formCaption, setFormCaption] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const fetchCalendar = useCallback(async () => {
@@ -67,6 +68,7 @@ export function ContentCalendar() {
     setFormTime("18:00");
     setFormPlatform("tiktok");
     setFormProduct("");
+    setFormCaption("");
     setShowAddModal(true);
   };
 
@@ -82,6 +84,7 @@ export function ContentCalendar() {
           time: formTime,
           platform: formPlatform,
           productName: formProduct,
+          caption: formCaption,
         }),
       });
       if (res.ok) {
@@ -181,6 +184,16 @@ export function ContentCalendar() {
                 placeholder="เช่น ลิปสติก, ครีมทาหน้า, ยาดม"
                 style={styles.modalInput}
                 autoFocus
+              />
+            </div>
+            
+            <div style={styles.inputGroup}>
+              <label style={styles.modalLabel}>Caption (AI Draft / ข้อความโพสต์)</label>
+              <textarea 
+                value={formCaption} 
+                onChange={e => setFormCaption(e.target.value)}
+                placeholder="พิมพ์แคปชันที่นี่..."
+                style={{...styles.modalInput, minHeight: 60, resize: "vertical"}}
               />
             </div>
             

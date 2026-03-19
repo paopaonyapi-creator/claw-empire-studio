@@ -142,6 +142,23 @@ export function isPublicApiPath(pathname: string): boolean {
   if (pathname.startsWith("/s/")) return true; // Link shortener redirects are public
   if (pathname === "/api/orders/webhook") return true; // Order webhooks from Shopee/Lazada
   if (pathname.startsWith("/api/analytics/")) return true; // Analytics tracking
+  if (pathname === "/api/auth/login") return true; // Studio RBAC login
+  if (pathname === "/api/auth/google") return true; // Google OAuth login
+  if (pathname === "/api/auth/logout") return true; // Studio RBAC logout
+  if (pathname.startsWith("/api/activity-log")) return true; // Activity log
+  if (pathname.startsWith("/api/notifications")) return true; // Notification status
+  if (pathname.startsWith("/api/kpi-goals")) return true; // KPI goals widget
+  if (pathname.startsWith("/api/search")) return true; // Global search
+  if (pathname.startsWith("/api/gamification")) return true; // Gamification
+  if (pathname.startsWith("/api/settings")) return true; // System settings
+  if (pathname.startsWith("/api/revenue")) return true; // Revenue dashboard
+  if (pathname.startsWith("/api/ai-scheduler")) return true; // AI scheduler
+  if (pathname.startsWith("/api/smart-insights")) return true; // Smart insights
+  if (pathname.startsWith("/api/team-performance")) return true; // Team performance
+  if (pathname.startsWith("/api/push-alerts")) return true; // Push alerts
+  if (pathname.startsWith("/api/calendar")) return true; // Content calendar
+  if (pathname.startsWith("/api/tiktok")) return true; // TikTok Ideas
+  if (pathname.startsWith("/api/revenue-goals")) return true; // Revenue Goals
   return false;
 }
 
@@ -202,6 +219,19 @@ export function installSecurityMiddleware(app: Express): void {
       }
       next();
     });
+  });
+
+  // Security headers (Helmet-like, no extra dependency)
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("X-XSS-Protection", "1; mode=block");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    if (_req.secure || _req.header("x-forwarded-proto") === "https") {
+      res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    }
+    next();
   });
 
   app.use(express.json({ limit: "12mb" }));

@@ -20,7 +20,6 @@ import { startDailyReportScheduler } from "./daily-report.ts";
 import { registerProductManagerRoutes } from "./product-manager.ts";
 import { registerSupabaseBackupRoutes, startSupabaseBackupScheduler } from "./supabase-backup.ts";
 import { registerRevenueTrackerRoutes } from "./revenue-tracker.ts";
-import { registerContentCalendarRoutes } from "./content-calendar.ts";
 import { registerInsightsRoutes } from "./insights-engine.ts";
 import { registerMorningBriefRoutes, startMorningBriefScheduler } from "./morning-brief.ts";
 import { registerContentGeneratorRoutes } from "./content-generator.ts";
@@ -33,6 +32,23 @@ import { registerHealthRoutes, startHealthScheduler } from "./api-health.ts";
 import { registerMultiPlatformRoutes } from "./multi-platform.ts";
 import { registerPipelineRoutes } from "./content-pipeline.ts";
 import { registerUtilityRoutes, setupTelegramBotMenu, startDailyReportCron } from "./studio-utils.ts";
+import { registerApiMiddleware, registerErrorHandler } from "./api-middleware.ts";
+import { registerAuthRoutes } from "./auth.ts";
+import { registerNotificationRoutes } from "./notification-ws.ts";
+import { registerActivityLogRoutes } from "./activity-log.ts";
+import { registerKpiGoalsRoutes } from "./kpi-goals.ts";
+import { registerSearchRoutes } from "./global-search.ts";
+import { startAutoSummaryScheduler } from "./auto-summary.ts";
+import { registerGamificationRoutes } from "./gamification.ts";
+import { registerSettingsRoutes } from "./system-settings.ts";
+import { registerRevenueDashboardRoutes } from "./revenue-dashboard.ts";
+import { registerAiSchedulerRoutes } from "./ai-content-scheduler.ts";
+import { registerSmartInsightsRoutes } from "./smart-insights.ts";
+import { registerTeamPerformanceRoutes } from "./team-performance.ts";
+import { registerPushAlertsRoutes } from "./push-alerts.ts";
+import { registerContentCalendarRoutes } from "./content-calendar.ts";
+import { registerTikTokIdeasRoutes } from "./tiktok-ideas.ts";
+import { registerRevenueGoalsRoutes } from "./revenue-goals.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -78,8 +94,26 @@ export function startLifecycle(ctx: RuntimeContext): void {
   // ---------------------------------------------------------------------------
   // Register custom API routes BEFORE static serving (Express order matters)
   // ---------------------------------------------------------------------------
+  registerApiMiddleware(app);
+  registerAuthRoutes(app);
+  registerNotificationRoutes(app);
+  registerActivityLogRoutes(app);
+  registerKpiGoalsRoutes(app);
+  registerSearchRoutes(app);
+  registerGamificationRoutes(app);
+  registerSettingsRoutes(app);
+  registerRevenueDashboardRoutes(app);
+  registerAiSchedulerRoutes(app);
+  registerSmartInsightsRoutes(app);
+  registerTeamPerformanceRoutes(app);
+  registerPushAlertsRoutes(app);
+  registerContentCalendarRoutes(app);
+  registerTikTokIdeasRoutes(app);
+  registerRevenueGoalsRoutes(app);
+
   startContentScheduler();
   startAutoRetryAndArchive(db);
+  startAutoSummaryScheduler();
   registerContentArchiveRoutes(app, db);
   startSupabaseSyncAndExtras(app, db);
   registerSpecializationRoutes(app);
@@ -91,7 +125,6 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerProductManagerRoutes(app);
   registerSupabaseBackupRoutes(app);
   registerRevenueTrackerRoutes(app);
-  registerContentCalendarRoutes(app);
   registerInsightsRoutes(app);
   registerMorningBriefRoutes(app);
   registerContentGeneratorRoutes(app);
@@ -114,25 +147,37 @@ export function startLifecycle(ctx: RuntimeContext): void {
   startHealthScheduler();
   startDailyReportCron();
 
+  // Register central error handler AFTER all routes
+  registerErrorHandler(app);
+
   // ---------------------------------------------------------------------------
-  // Production: serve React UI from dist/
+  // Production: serve React UI from dist/ with env injection
   // ---------------------------------------------------------------------------
   if (isProduction) {
-    app.use(express.static(distDir));
-    // SPA fallback: serve index.html for non-API routes (Express 5 named wildcard)
+    // Inject env config into index.html (cached)
+    const rawHtml = fs.readFileSync(path.join(distDir, "index.html"), "utf-8");
+    const injectedHtml = rawHtml
+      .replace('window.__GOOGLE_CLIENT_ID = ""', `window.__GOOGLE_CLIENT_ID = "${process.env.GOOGLE_CLIENT_ID || ""}"`) 
+      .replace('window.__SUPABASE_URL = ""', `window.__SUPABASE_URL = "${process.env.SUPABASE_URL || ""}"`) 
+      .replace('window.__SUPABASE_ANON_KEY = ""', `window.__SUPABASE_ANON_KEY = "${process.env.SUPABASE_ANON_KEY || ""}"`);
+
+    app.use(express.static(distDir, { index: false })); // disable auto index.html
+
+    // SPA fallback: serve injected index.html for non-API routes
     app.get(
       "/{*splat}",
       (
         req: { path: string },
         res: {
           status(code: number): { json(payload: unknown): unknown };
-          sendFile(filePath: string): unknown;
+          type(contentType: string): any;
+          send(body: string): unknown;
         },
       ) => {
         if (req.path.startsWith("/api/") || req.path === "/health" || req.path === "/healthz") {
           return res.status(404).json({ error: "not_found" });
         }
-        res.sendFile(path.join(distDir, "index.html"));
+        res.type("html").send(injectedHtml);
       },
     );
   }

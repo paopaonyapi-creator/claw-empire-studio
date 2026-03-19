@@ -1,176 +1,110 @@
 /**
- * Content Calendar — Schedule posts across platforms
- *
- * Weekly scheduling Mon-Sun, assign products/templates to time slots
- * TG command: /schedule [list|add <day> <time> <product>|clear]
+ * Content Calendar Pro — CRUD events for content scheduling
  */
 
 import type { Express, Request, Response } from "express";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import path from "path";
+import { getStudioDb } from "./studio-db.ts";
+import { logActivity } from "./activity-log.ts";
 
-interface CalendarEntry {
-  id: string;
-  day: string;           // "mon"|"tue"|"wed"|"thu"|"fri"|"sat"|"sun"
-  time: string;          // "09:00" | "12:00" | "18:00" etc.
-  platform: string;      // "tiktok" | "facebook" | "instagram"
-  productName: string;
-  templateType: string;  // "review" | "comparison" | "hook" | "trend"
-  status: "scheduled" | "posted" | "skipped";
-  note: string;
-  weekOf: string;        // ISO date of week start
-  createdAt: string;
+function initCalendarTable(): void {
+  const db = getStudioDb();
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS studio_calendar_events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT DEFAULT '',
+      date TEXT NOT NULL,
+      time TEXT DEFAULT '09:00',
+      platform TEXT DEFAULT 'facebook',
+      content_type TEXT DEFAULT 'post',
+      status TEXT DEFAULT 'planned',
+      color TEXT DEFAULT '#6366f1',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+  `);
 }
-
-const DATA_FILE = path.resolve("data/calendar.json");
-let calendar: CalendarEntry[] = [];
-
-const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
-const DAY_NAMES: Record<string, string> = {
-  mon: "จันทร์", tue: "อังคาร", wed: "พุธ", thu: "พฤหัส",
-  fri: "ศุกร์", sat: "เสาร์", sun: "อาทิตย์",
-};
-
-function loadData(): void {
-  try {
-    if (existsSync(DATA_FILE)) {
-      calendar = JSON.parse(readFileSync(DATA_FILE, "utf-8"));
-    }
-  } catch { calendar = []; }
-}
-
-function saveData(): void {
-  try {
-    const dir = path.dirname(DATA_FILE);
-    if (!existsSync(dir)) {
-      const { mkdirSync } = require("node:fs");
-      mkdirSync(dir, { recursive: true });
-    }
-    writeFileSync(DATA_FILE, JSON.stringify(calendar, null, 2));
-  } catch { /* ignore */ }
-}
-
-loadData();
-
-function genId(): string {
-  return `cal_${Date.now().toString(36)}`;
-}
-
-function getCurrentWeekStart(): string {
-  const now = new Date();
-  const day = now.getDay();
-  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(now.setDate(diff)).toISOString().split("T")[0];
-}
-
-function addEntry(day: string, time: string, productName: string, platform = "tiktok"): CalendarEntry {
-  const entry: CalendarEntry = {
-    id: genId(),
-    day: day.toLowerCase().slice(0, 3),
-    time: time || "18:00",
-    platform,
-    productName,
-    templateType: "review",
-    status: "scheduled",
-    note: "",
-    weekOf: getCurrentWeekStart(),
-    createdAt: new Date().toISOString(),
-  };
-  calendar.push(entry);
-  saveData();
-  return entry;
-}
-
-function getWeekSchedule(weekOf?: string): CalendarEntry[] {
-  const week = weekOf || getCurrentWeekStart();
-  return calendar
-    .filter((e) => e.weekOf === week)
-    .sort((a, b) => {
-      const dayDiff = DAYS.indexOf(a.day as typeof DAYS[number]) - DAYS.indexOf(b.day as typeof DAYS[number]);
-      if (dayDiff !== 0) return dayDiff;
-      return a.time.localeCompare(b.time);
-    });
-}
-
-// ---------------------------------------------------------------------------
-// TG Command Handler
-// ---------------------------------------------------------------------------
-
-export function handleScheduleCommand(arg: string): string {
-  const parts = arg.trim().split(/\s+/);
-  const sub = parts[0]?.toLowerCase() || "";
-
-  if (!sub || sub === "list") {
-    const schedule = getWeekSchedule();
-    if (schedule.length === 0) {
-      return `📅 Content Calendar\n${"─".repeat(20)}\n📭 สัปดาห์นี้ว่าง\n\n/schedule add <วัน> <เวลา> <สินค้า>\nตัวอย่าง: /schedule add mon 18:00 หมวกแก๊ป`;
-    }
-
-    let msg = `📅 Content Calendar (${getCurrentWeekStart()})\n${"─".repeat(28)}\n`;
-    let currentDay = "";
-
-    for (const entry of schedule) {
-      if (entry.day !== currentDay) {
-        currentDay = entry.day;
-        msg += `\n📌 ${DAY_NAMES[currentDay] || currentDay}:\n`;
-      }
-      const statusIcon = entry.status === "posted" ? "✅" : entry.status === "skipped" ? "⏭️" : "⏰";
-      msg += `  ${statusIcon} ${entry.time} — ${entry.productName} (${entry.platform})\n`;
-    }
-
-    return msg;
-  }
-
-  if (sub === "add") {
-    const day = parts[1] || "";
-    const time = parts[2] || "18:00";
-    const product = parts.slice(3).join(" ") || "Unnamed";
-
-    if (!DAYS.includes(day.toLowerCase().slice(0, 3) as typeof DAYS[number])) {
-      return `❌ วันไม่ถูก! ใช้: mon tue wed thu fri sat sun\nตัวอย่าง: /schedule add fri 18:00 หมวก`;
-    }
-
-    const entry = addEntry(day, time, product);
-    return `✅ เพิ่มลง Calendar!\n📅 ${DAY_NAMES[entry.day]} ${entry.time}\n📦 ${entry.productName}\n📱 ${entry.platform}`;
-  }
-
-  if (sub === "clear") {
-    const week = getCurrentWeekStart();
-    calendar = calendar.filter((e) => e.weekOf !== week);
-    saveData();
-    return "🗑️ ล้าง Calendar สัปดาห์นี้แล้ว";
-  }
-
-  return `📅 Content Calendar\n\n/schedule — ดูตาราง\n/schedule add <วัน> <เวลา> <สินค้า>\n/schedule clear — ล้างสัปดาห์นี้`;
-}
-
-// ---------------------------------------------------------------------------
-// API Routes
-// ---------------------------------------------------------------------------
 
 export function registerContentCalendarRoutes(app: Express): void {
-  app.get("/api/calendar", (_req: Request, res: Response) => {
-    const weekOf = String(_req.query.week || "") || undefined;
+  initCalendarTable();
+
+  // GET /api/calendar — list events (optional month filter)
+  app.get("/api/calendar", (req: Request, res: Response) => {
+    const month = String(req.query.month || ""); // format: 2026-03
+    const db = getStudioDb();
+
+    let query = "SELECT * FROM studio_calendar_events";
+    const params: any[] = [];
+    if (month) {
+      query += " WHERE date LIKE ?";
+      params.push(`${month}%`);
+    }
+    query += " ORDER BY date ASC, time ASC";
+
+    const rows = db.prepare(query).all(...params) as any[];
     res.json({
-      weekOf: weekOf || getCurrentWeekStart(),
-      entries: getWeekSchedule(weekOf),
-      allEntries: calendar.slice(-200),
+      ok: true,
+      events: rows.map(r => ({
+        id: r.id, title: r.title, description: r.description,
+        date: r.date, time: r.time, platform: r.platform,
+        contentType: r.content_type, status: r.status,
+        color: r.color, createdAt: r.created_at,
+      })),
     });
   });
 
+  // POST /api/calendar — create event
   app.post("/api/calendar", (req: Request, res: Response) => {
-    const { day, time, productName, platform } = req.body || {};
-    if (!day || !productName) {
-      return res.status(400).json({ error: "day and productName required" });
-    }
-    const entry = addEntry(day, time || "18:00", productName, platform || "tiktok");
-    res.json({ ok: true, entry });
+    const { title, description, date, time, platform, contentType, color } = req.body;
+    if (!title || !date) return res.status(400).json({ ok: false, error: "title and date required" });
+
+    const db = getStudioDb();
+    const result = db.prepare(
+      "INSERT INTO studio_calendar_events (title, description, date, time, platform, content_type, color) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    ).run(title, description || "", date, time || "09:00", platform || "facebook", contentType || "post", color || "#6366f1");
+
+    logActivity({ action: "create_calendar_event", category: "content", detail: `${title} → ${date}` });
+    res.json({ ok: true, id: (result as any).lastInsertRowid });
   });
 
-  app.delete("/api/calendar/:id", (req: Request, res: Response) => {
+  // PATCH /api/calendar/:id — update event status
+  app.patch("/api/calendar/:id", (req: Request, res: Response) => {
+    const { status, title, date, time } = req.body;
     const id = String(req.params.id);
-    calendar = calendar.filter((e) => e.id !== id);
-    saveData();
+    const db = getStudioDb();
+
+    if (status) db.prepare("UPDATE studio_calendar_events SET status = ? WHERE id = ?").run(status, id);
+    if (title) db.prepare("UPDATE studio_calendar_events SET title = ? WHERE id = ?").run(title, id);
+    if (date) db.prepare("UPDATE studio_calendar_events SET date = ? WHERE id = ?").run(date, id);
+    if (time) db.prepare("UPDATE studio_calendar_events SET time = ? WHERE id = ?").run(time, id);
+
     res.json({ ok: true });
   });
+
+  // DELETE /api/calendar/:id
+  app.delete("/api/calendar/:id", (req: Request, res: Response) => {
+    const id = String(req.params.id);
+    const db = getStudioDb();
+    db.prepare("DELETE FROM studio_calendar_events WHERE id = ?").run(id);
+    res.json({ ok: true });
+  });
+
+  console.log("[Calendar Pro] 📆 API ready");
+}
+
+// TG command handler (used by ceo-chat.ts)
+export async function handleScheduleCommand(_text: string): Promise<string> {
+  const db = getStudioDb();
+  const today = new Date().toISOString().split("T")[0];
+  const upcoming = db.prepare(
+    "SELECT title, date, time, platform, status FROM studio_calendar_events WHERE date >= ? ORDER BY date ASC, time ASC LIMIT 5"
+  ).all(today) as any[];
+
+  if (upcoming.length === 0) return "📆 ยังไม่มี content ที่กำหนดไว้";
+
+  let msg = "📆 <b>Content Schedule:</b>\n";
+  for (const e of upcoming) {
+    const statusIcon = e.status === "published" ? "✅" : e.status === "in_progress" ? "🔄" : "📝";
+    msg += `\n${statusIcon} ${e.title}\n   📅 ${e.date} ⏰ ${e.time} | ${e.platform}`;
+  }
+  return msg;
 }

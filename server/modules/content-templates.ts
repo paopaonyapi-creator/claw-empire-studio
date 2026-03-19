@@ -151,6 +151,23 @@ const TEMPLATES: ContentTemplate[] = [
     estimatedTime: "5-10 min",
     platforms: ["TikTok"],
   },
+  {
+    id: "competitor-spy-rewrite",
+    name: "🕵️ Competitor Spy & Rewrite",
+    nameEn: "Competitor Spy Rewrite",
+    icon: "🕵️",
+    category: "content",
+    description: "วิเคราะห์วิดีโอคู่แข่ง แล้วเขียนสคริปต์ใหม่ด้วยรูปแบบเดิม แต่ขายสินค้าของเราแทน",
+    promptTemplate:
+      "คุณคือสุดยอดนักแกะสคริปต์ล้านซับ กรุณาวิเคราะห์ข้อมูลต่อไปนี้:\n{{product}}\n\n" +
+      "หน้าที่ของคุณ:\n" +
+      "1. ถอดโครงสร้างลิงก์/เนื้อหาของคู่แข่ง (Hook, Story/Body, CTA)\n" +
+      "2. เขียนสคริปต์ใหม่ 1 สคริปต์ โดยใช้จังหวะ (Pacing) และรูปแบบอารมณ์เดียวกับคู่แข่ง แต่เปลี่ยนเนื้อหามาขาย 'สินค้าของเรา'\n" +
+      "3. ใส่ Hashtag แนะนำ 5 อัน\n",
+    suggestedAgent: "Hook & Copy Specialist",
+    estimatedTime: "5-10 min",
+    platforms: ["TikTok"],
+  },
 ];
 
 // ---------------------------------------------------------------------------

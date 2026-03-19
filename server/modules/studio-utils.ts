@@ -12,6 +12,9 @@
 import type { Express, Request, Response } from "express";
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "path";
+import {
+  dbGetTotalRevenueSum, dbGetFbPostCount, dbGetTotalClicks, dbGetGoals,
+} from "./studio-db.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
@@ -120,39 +123,13 @@ export async function setupTelegramBotMenu(): Promise<void> {
 async function sendDailyReport(): Promise<void> {
   if (!TG_BOT_TOKEN || !TG_CHAT_ID) return;
 
-  // Collect data from files
-  let revenue = 0, fbPosts = 0, clicks = 0, goals = 0;
+  // Collect data from SQLite
+  const revenue = dbGetTotalRevenueSum();
+  const fbPosts = dbGetFbPostCount();
+  const clicks = dbGetTotalClicks();
+  const goals = dbGetGoals().length;
 
-  try {
-    const revFile = path.resolve("data/revenue.json");
-    if (existsSync(revFile)) {
-      const data = JSON.parse(readFileSync(revFile, "utf-8")) as { entries?: Array<{ amount?: number }> };
-      revenue = (data.entries || []).reduce((s: number, e: { amount?: number }) => s + (e.amount || 0), 0);
-    }
-  } catch {}
-  try {
-    const fbFile = path.resolve("data/fb-posts.json");
-    if (existsSync(fbFile)) {
-      const data = JSON.parse(readFileSync(fbFile, "utf-8")) as Array<{ status?: string }>;
-      fbPosts = data.filter((p) => p.status === "posted").length;
-    }
-  } catch {}
-  try {
-    const linksFile = path.resolve("data/short-links.json");
-    if (existsSync(linksFile)) {
-      const data = JSON.parse(readFileSync(linksFile, "utf-8")) as Array<{ clicks?: number }>;
-      clicks = data.reduce((s: number, l: { clicks?: number }) => s + (l.clicks || 0), 0);
-    }
-  } catch {}
-  try {
-    const goalsFile = path.resolve("data/goals.json");
-    if (existsSync(goalsFile)) {
-      const data = JSON.parse(readFileSync(goalsFile, "utf-8")) as { goals?: unknown[] };
-      goals = (data.goals || []).length;
-    }
-  } catch {}
-
-  // Get API health
+  // Get API health (still from file — not migrated)
   let apiUp = 0, apiTotal = 0;
   try {
     const healthFile = path.resolve("data/api-health.json");
