@@ -89,13 +89,13 @@ export function FacebookWidget() {
           rows={3}
         />
         <div style={styles.actions}>
-          <span style={styles.charCount}>{message.length} chars</span>
+          <span style={styles.charCount}>{message.length} ตัวอักษร</span>
           <button
             style={{ ...styles.postBtn, opacity: (!message.trim() || posting) ? 0.5 : 1 }}
             onClick={postToFb}
             disabled={!message.trim() || posting}
           >
-            {posting ? "⏳ Posting..." : "📤 Post to Facebook"}
+            {posting ? "⏳ กำลังโพสต์..." : "📤 โพสต์ลง Facebook"}
           </button>
         </div>
         {feedback && <div style={styles.feedback}>{feedback}</div>}
@@ -104,7 +104,7 @@ export function FacebookWidget() {
       {/* Recent Posts */}
       {history.length > 0 && (
         <div style={styles.historySection}>
-          <div style={styles.historyLabel}>📋 Recent Posts</div>
+          <div style={styles.historyLabel}>📋 โพสต์ล่าสุด</div>
           {history.slice(0, 5).map((h) => (
             <div key={h.id} style={styles.historyRow}>
               <span style={styles.historyIcon}>{h.status === "posted" ? "✅" : "❌"}</span>

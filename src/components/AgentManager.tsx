@@ -23,7 +23,7 @@ export default function AgentManager({
 }: AgentManagerProps) {
   const { t, locale } = useI18n();
   const isKo = locale.startsWith("ko");
-  const tr = (ko: string, en: string) => t({ ko, en, ja: en, zh: en });
+  const tr = (ko: string, en: string, th?: string) => t({ ko, en, ja: en, zh: en, th: th ?? en });
   const officePackKey = normalizeOfficeWorkflowPack(activeOfficeWorkflowPack);
   const isIsolatedPack = officePackKey !== "development";
   const useDbBackedPack = isIsolatedPack && dbBackedOfficePack;
@@ -490,13 +490,13 @@ export default function AgentManager({
           className="px-3 py-2 rounded-lg text-sm font-medium transition-all hover:opacity-90 active:opacity-80 shadow-sm"
           style={{ background: "#7c3aed", color: "#ffffff", boxShadow: "0 1px 3px rgba(124,58,237,0.3)" }}
         >
-          + {tr("부서 추가", "Add Dept")}
+          + {tr("부서 추가", "Add Dept", "เพิ่มแผนก")}
         </button>
         <button
           onClick={openCreate}
           className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white shadow-sm shadow-blue-600/20"
         >
-          + {tr("신규 채용", "Hire Agent")}
+          + {tr("신규 채용", "Hire Agent", "จ้างเอเจนต์")}
         </button>
       </div>
 
@@ -507,10 +507,10 @@ export default function AgentManager({
         {[
           {
             key: "agents" as const,
-            label: tr("직원관리", "Agents"),
+            label: tr("직원관리", "Agents", "เอเจนต์"),
             icon: <StackedSpriteIcon sprites={randomIconSprites.tab} />,
           },
-          { key: "departments" as const, label: tr("부서관리", "Departments"), icon: "🏢" },
+          { key: "departments" as const, label: tr("부서관리", "Departments", "แผนก"), icon: "🏢" },
         ].map((tab) => (
           <button
             key={tab.key}
