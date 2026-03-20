@@ -344,7 +344,7 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
 
       // Schedule commands
       if (cmd === "/schedule") {
-        reply = handleScheduleCommand(arg);
+        reply = await handleScheduleCommand(arg);
         await sendTg(reply);
         return;
       }
