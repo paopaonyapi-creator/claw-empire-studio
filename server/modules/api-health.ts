@@ -173,7 +173,7 @@ async function checkSupabase(): Promise<{ ok: boolean; latency: number; error?: 
       signal: AbortSignal.timeout(10000),
     });
     const latency = Date.now() - start;
-    return { ok: res.ok || res.status === 404, latency }; // 404 is ok = no tables yet
+    return { ok: res.status < 500, latency }; // Any non-5xx = server is reachable
   } catch (e) { return { ok: false, latency: Date.now() - start, error: String(e) }; }
 }
 

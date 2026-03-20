@@ -161,7 +161,7 @@ export function seedAnthropicApiProvider(db: DbLike): void {
       name: "Google AI",
       type: "google",
       base_url: "https://generativelanguage.googleapis.com/v1beta",
-      models: ["gemini-2.0-flash", "gemini-2.0-pro"],
+      models: ["gemini-2.5-flash", "gemini-2.5-pro"],
     },
   ];
 

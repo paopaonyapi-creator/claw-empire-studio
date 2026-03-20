@@ -1,7 +1,7 @@
 /**
  * Google Gemini Provider — Direct integration with Google AI Studio
  *
- * Uses Gemini 2.0 Flash (free tier) for all AI tasks:
+ * Uses Gemini 2.5 Flash (free tier) for all AI tasks:
  * - Content generation
  * - Trend analysis
  * - Script writing
@@ -15,9 +15,9 @@ const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
 
 // Available Gemini models
 export const GEMINI_MODELS = {
-  flash: "gemini-2.0-flash",           // Fast, free, great for most tasks
-  flashLite: "gemini-2.0-flash-lite",   // Ultra-fast, lighter tasks
-  pro: "gemini-2.0-pro-exp-02-05",     // Most capable (experimental)
+  flash: "gemini-2.5-flash",           // Fast, free, great for most tasks
+  flashLite: "gemini-2.5-flash-lite",   // Ultra-fast, lighter tasks
+  pro: "gemini-2.5-pro",               // Most capable
 } as const;
 
 export type GeminiModel = (typeof GEMINI_MODELS)[keyof typeof GEMINI_MODELS];

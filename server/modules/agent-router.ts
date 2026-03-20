@@ -34,13 +34,13 @@ const ROUTING_TABLE: AgentModelConfig[] = [
     agentRole: "content_writer",
     taskType: "tiktok-script",
     primary: { provider: "openai", model: "gpt-4o-mini", reason: "Creative Thai content + เร็ว" },
-    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Backup ฟรี" },
+    fallback: { provider: "gemini", model: "gemini-2.5-flash", reason: "Backup ฟรี" },
   },
   {
     agentRole: "content_writer",
     taskType: "product-review",
     primary: { provider: "openai", model: "gpt-4o", reason: "Long-form review คุณภาพสูง" },
-    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Fallback ฟรี" },
+    fallback: { provider: "gemini", model: "gemini-2.5-flash", reason: "Fallback ฟรี" },
   },
   {
     agentRole: "hook_specialist",
@@ -53,27 +53,27 @@ const ROUTING_TABLE: AgentModelConfig[] = [
   {
     agentRole: "trend_hunter",
     taskType: "trend-research",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Research + analysis" },
+    primary: { provider: "gemini", model: "gemini-2.5-flash", reason: "Research + analysis" },
     fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Quick research" },
   },
   {
     agentRole: "content_strategist",
     taskType: "trend-research",
     primary: { provider: "anthropic", model: "claude-3-5-haiku-20241022", reason: "Deep strategic analysis" },
-    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Analytical fallback" },
+    fallback: { provider: "gemini", model: "gemini-2.5-flash", reason: "Analytical fallback" },
   },
   {
     agentRole: "audience_planner",
     taskType: "trend-research",
     primary: { provider: "anthropic", model: "claude-3-5-haiku-20241022", reason: "Audience insights" },
-    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Quick insights" },
+    fallback: { provider: "gemini", model: "gemini-2.5-flash", reason: "Quick insights" },
   },
 
   // Creative → Gemini (visual descriptions)
   {
     agentRole: "visual_designer",
     taskType: "thumbnail-brief",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Visual descriptions" },
+    primary: { provider: "gemini", model: "gemini-2.5-flash", reason: "Visual descriptions" },
     fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Backup creative" },
   },
 
@@ -82,26 +82,26 @@ const ROUTING_TABLE: AgentModelConfig[] = [
     agentRole: "*",
     taskType: "chat",
     primary: { provider: "groq", model: "llama-3.1-8b-instant", reason: "Ultra-fast chat" },
-    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Chat fallback" },
+    fallback: { provider: "gemini", model: "gemini-2.5-flash", reason: "Chat fallback" },
   },
   {
     agentRole: "*",
     taskType: "summary",
     primary: { provider: "groq", model: "llama-3.1-8b-instant", reason: "Fast summarization" },
-    fallback: { provider: "gemini", model: "gemini-2.0-flash", reason: "Summary fallback" },
+    fallback: { provider: "gemini", model: "gemini-2.5-flash", reason: "Summary fallback" },
   },
 
   // Publisher/Analytics → Gemini
   {
     agentRole: "publisher",
     taskType: "*",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Publishing tasks" },
+    primary: { provider: "gemini", model: "gemini-2.5-flash", reason: "Publishing tasks" },
     fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Publish fallback" },
   },
   {
     agentRole: "analytics",
     taskType: "*",
-    primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Data analysis" },
+    primary: { provider: "gemini", model: "gemini-2.5-flash", reason: "Data analysis" },
     fallback: { provider: "groq", model: "mixtral-8x7b-32768", reason: "Analysis fallback" },
   },
 ];
@@ -110,7 +110,7 @@ const ROUTING_TABLE: AgentModelConfig[] = [
 const DEFAULT_ROUTE: AgentModelConfig = {
   agentRole: "*",
   taskType: "*",
-  primary: { provider: "gemini", model: "gemini-2.0-flash", reason: "Default provider (free)" },
+  primary: { provider: "gemini", model: "gemini-2.5-flash", reason: "Default provider (free)" },
   fallback: { provider: "groq", model: "llama-3.3-70b-versatile", reason: "Default fallback" },
 };
 

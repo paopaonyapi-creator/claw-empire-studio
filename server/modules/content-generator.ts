@@ -79,7 +79,7 @@ async function generateWithAI(product: string, platform: string): Promise<Genera
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${OPENROUTER_KEY}` },
         body: JSON.stringify({
-          model: "google/gemini-2.0-flash-001",
+          model: "google/gemini-2.5-flash-001",
           messages: [{ role: "user", content: fullPrompt }],
           max_tokens: 500,
         }),
@@ -94,7 +94,7 @@ async function generateWithAI(product: string, platform: string): Promise<Genera
   if (!result && GEMINI_KEY) {
     try {
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
