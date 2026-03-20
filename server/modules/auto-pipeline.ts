@@ -6,8 +6,15 @@
  */
 
 import type { Express } from "express";
+import { SESSION_AUTH_TOKEN, PORT } from "../config/runtime.ts";
 
-const PORT = process.env.PORT || 3000;
+// Internal auth headers for server-to-server HTTP calls
+function internalHeaders(): Record<string, string> {
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${SESSION_AUTH_TOKEN}`,
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Pipeline Definitions
@@ -120,35 +127,58 @@ function getVariableKey(templateId: string): string {
 async function createTaskFromTemplate(templateId: string, product: string): Promise<{ ok: boolean; taskId?: string; title?: string }> {
   try {
     const variableKey = getVariableKey(templateId);
-    const res = await fetch(`http://127.0.0.1:${PORT}/api/templates/${templateId}/create`, {
+    
+    // Get filled template context
+    const { fillTemplate } = await import("./content-templates.ts");
+    let content = fillTemplate(templateId, { [variableKey]: product });
+    if (!content) content = `Generate content for ${product}`;
+
+    const taskTitle = `[Auto] ${templateId} - ${product}`.substring(0, 100);
+
+    // Create the task via HTTP (core DB is only accessible through Express routes)
+    const res = await fetch(`http://127.0.0.1:${PORT}/api/tasks`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ variables: { [variableKey]: product } }),
+      headers: internalHeaders(),
+      body: JSON.stringify({ 
+        title: taskTitle,
+        description: `[Pipeline: ${templateId}]\n\n${content}`,
+        task_type: "general",
+        status: "inbox",
+        priority: 1
+      }),
     });
 
-    if (!res.ok) return { ok: false };
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "unknown error");
+      console.error(`[Pipeline] ❌ Failed to create task for ${templateId}:`, errText);
+      return { ok: false };
+    }
 
-    const data = (await res.json()) as { ok?: boolean; task?: { id: string; title: string } };
-    if (data.ok && data.task) {
+    const data = (await res.json()) as { id?: string; task?: { id: string; title: string } };
+    const taskId = data.id || data.task?.id;
+    
+    if (taskId) {
+      console.log(`[Pipeline] ✅ Task created: ${taskTitle} (${taskId})`);
+      
       // Smart Auto-Assign: find best agent for this step
       try {
         const { findBestAgentForStep } = await import("./smart-assignment.ts");
-        const bestAgentId = await findBestAgentForStep(templateId, data.task.title);
+        const bestAgentId = await findBestAgentForStep(templateId, taskTitle);
         if (bestAgentId) {
-          await fetch(`http://127.0.0.1:${PORT}/api/tasks/${data.task.id}/assign`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ agent_id: bestAgentId }),
+          await fetch(`http://127.0.0.1:${PORT}/api/tasks/${taskId}`, {
+            method: "PATCH",
+            headers: internalHeaders(),
+            body: JSON.stringify({ assigned_agent_id: bestAgentId }),
           }).catch(() => {});
+          console.log(`[Pipeline] 🤖 Auto-assigned agent ${bestAgentId} to ${taskTitle}`);
         }
       } catch {}
 
-      // Auto-run the task
-      fetch(`http://127.0.0.1:${PORT}/api/tasks/${data.task.id}/run`, { method: "POST" }).catch(() => {});
-      return { ok: true, taskId: data.task.id, title: data.task.title };
+      return { ok: true, taskId, title: taskTitle };
     }
     return { ok: false };
-  } catch {
+  } catch (err) {
+    console.error(`[Pipeline] ❌ Exception in createTaskFromTemplate(${templateId}):`, err);
     return { ok: false };
   }
 }
@@ -360,7 +390,7 @@ export async function handleTelegramCallback(queryId: string, data: string, chat
       const linkTracker = await import("./link-tracker.ts");
       const link = linkTracker.getLinkByShortCode(shortCode);
       if (link) {
-        const domain = process.env.RAILWAY_PUBLIC_DOMAIN || `127.0.0.1:${process.env.PORT || 8800}`;
+        const domain = process.env.RAILWAY_PUBLIC_DOMAIN || `127.0.0.1:${process.env.PORT || 8790}`;
         const protocol = domain.includes("127.0.0.1") || domain.includes("localhost") ? "http" : "https";
         const shortUrl = `${protocol}://${domain}/go/${link.shortCode}`;
         
@@ -647,7 +677,9 @@ ${catalogContext}
 
     // Execute in background
     const pipelineRunId = `pl_${Date.now()}`;
-    executePipeline(id, product.trim(), promptProduct).catch(() => {});
+    executePipeline(id, product.trim(), promptProduct).catch((err) => {
+      console.error(`[Pipeline] ❌ Pipeline ${id} failed:`, err);
+    });
 
     res.json({
       ok: true,
@@ -661,38 +693,62 @@ ${catalogContext}
     });
   });
 
-  // Daily Recommended Trends
-  app.get("/api/trends/recommended", (_req, res) => {
-    // In a real app, this would scrape Shopee's top-seller or TikTok trending products.
-    // For now, we return 3 highly profitable affiliate products mocked for today.
-    const trends = [
-      {
-        id: "trend_1",
-        name: "พัดลมพกพา Jisulife Pro",
-        url: "https://shopee.co.th/Jisulife-Pro-Portable-Fan-i.1234.5678",
-        imageUrl: "https://down-th.img.susercontent.com/file/th-11134207-7r98o-lstn9p", // mock image (use any real or mock)
-        commissionRate: "12%",
-        reason: "🔥 ยอดค้นหาพุ่ง 300% ช่วงหน้าร้อน"
-      },
-      {
-        id: "trend_2",
-        name: "หูฟัง Bluetooth Baseus WM02",
-        url: "https://shopee.co.th/Baseus-WM02-TWS-Bluetooth-5.3-i.5678.1234",
-        imageUrl: "https://down-th.img.susercontent.com/file/sg-11134201-22100-qwe123asd", // mock image
-        commissionRate: "15%",
-        reason: "🎶 สินค้าขายดีอันดับ 1 หมวดหมู่ Gadget"
-      },
-      {
-        id: "trend_3",
-        name: "กล่องสุ่ม Popmart Labubu",
-        url: "https://shopee.co.th/Popmart-Labubu-Blind-Box-i.9999.8888",
-        imageUrl: "https://down-th.img.susercontent.com/file/th-11134207-7qul3-lh67hjg", // mock image
-        commissionRate: "5%",
-        reason: "📈 กระแสมาแรงที่สุดใน TikTok ตอนนี้"
-      }
-    ];
+  let cachedTrends: any[] | null = null;
+  let lastTrendFetch = 0;
 
-    res.json({ ok: true, trends });
+  // Daily Recommended Trends (AI Generated)
+  app.get("/api/trends/recommended", async (_req, res) => {
+    // Cache for 12 hours so we don't spam the API on every dashboard load
+    if (cachedTrends && Date.now() - lastTrendFetch < 12 * 60 * 60 * 1000) {
+      return res.json({ ok: true, trends: cachedTrends, source: "cache" });
+    }
+
+    try {
+      const { routedGenerate } = await import("./agent-router.ts");
+      const prompt = `Give me 3 highly profitable e-commerce affiliate products currently trending in Thailand right now.
+      Return ONLY a raw JSON array (no markdown wrapping, no \`\`\`json) of objects with these exact keys:
+      - id (string, unique like 'trend_1')
+      - name (string)
+      - url (string, e.g. shopee/lazada link)
+      - imageUrl (string, a realistic product image URL that works. Use standard shopee/lazada image CDNs if possible, or placeholder like https://picsum.photos/400?random=x)
+      - commissionRate (string, e.g. '15%')
+      - reason (string, why it's trending in Thai, e.g. '🔥 ฮิตมากใน TikTok')`;
+
+      const result = await routedGenerate({
+        agentRole: "trend_hunter",
+        taskType: "trend-research",
+        prompt: prompt,
+        systemInstruction: "You are an expert affiliate trend hunter. Output exact valid JSON only."
+      });
+
+      let jsonText = result.text.trim();
+      if (jsonText.startsWith('```json')) {
+        jsonText = jsonText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      }
+
+      const trends = JSON.parse(jsonText);
+      if (Array.isArray(trends) && trends.length > 0) {
+        cachedTrends = trends;
+        lastTrendFetch = Date.now();
+        return res.json({ ok: true, trends: cachedTrends, source: "ai" });
+      } else {
+        throw new Error("Invalid format");
+      }
+    } catch (err) {
+      console.error("[Trend Scraper] Failed to fetch AI trends, falling back to static", err);
+      // Fallback data if AI fails or rate limits
+      const fallbackTrends = [
+        {
+          id: "trend_fb_1",
+          name: "พัดลมพกพา (Hot Item)",
+          url: "https://shopee.co.th/search?keyword=พัดลมพกพา",
+          imageUrl: "https://picsum.photos/400?random=1",
+          commissionRate: "12%",
+          reason: "🔥 AI Fallback: สินค้าขายดีตลอดกาล"
+        }
+      ];
+      return res.json({ ok: true, trends: fallbackTrends, source: "fallback" });
+    }
   });
 
   // List active/recent pipelines

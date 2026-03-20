@@ -153,6 +153,14 @@ function initStudioTables(db: DatabaseSync): void {
       acknowledged INTEGER DEFAULT 0,
       timestamp TEXT NOT NULL DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS studio_knowledge (
+      id TEXT PRIMARY KEY,
+      topic TEXT NOT NULL,
+      content TEXT NOT NULL,
+      category TEXT DEFAULT 'general',
+      timestamp TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 }
 
@@ -162,7 +170,48 @@ function initStudioTables(db: DatabaseSync): void {
 function resolveJsonPath(filename: string): string {
   const envDbPath = process.env.DB_PATH;
   const dataDir = envDbPath ? path.join(path.dirname(envDbPath), "..") : "./data";
+  try {
+    fs.unlinkSync(path.join(dataDir, "fb-posts.json"));
+  } catch {}
   return path.resolve(dataDir, filename);
+}
+
+// ---------------------------------------------------------------------------
+// Knowledge Base (Agent Memory / RAG)
+// ---------------------------------------------------------------------------
+export interface StudioKnowledge {
+  id: string;
+  topic: string;
+  content: string;
+  category: string;
+  timestamp: string;
+}
+
+export function dbAddKnowledge(knowledge: StudioKnowledge): void {
+  const db = getStudioDb();
+  const insert = db.prepare(`INSERT OR REPLACE INTO studio_knowledge (id, topic, content, category, timestamp) VALUES (?, ?, ?, ?, ?)`);
+  insert.run(knowledge.id, knowledge.topic, knowledge.content, knowledge.category, knowledge.timestamp);
+}
+
+export function dbGetRelevantKnowledge(query: string, limit = 3): StudioKnowledge[] {
+  const db = getStudioDb();
+  // Basic substring matching for lightweight RAG
+  const select = db.prepare(`
+    SELECT * FROM studio_knowledge 
+    WHERE topic LIKE ? OR content LIKE ?
+    ORDER BY timestamp DESC LIMIT ?
+  `);
+  return select.all(`%${query}%`, `%${query}%`, limit) as unknown as StudioKnowledge[];
+}
+
+export function dbGetAllKnowledge(): StudioKnowledge[] {
+  const db = getStudioDb();
+  return db.prepare(`SELECT * FROM studio_knowledge ORDER BY timestamp DESC`).all() as unknown as StudioKnowledge[];
+}
+
+export function dbDeleteKnowledge(id: string): void {
+  const db = getStudioDb();
+  db.prepare(`DELETE FROM studio_knowledge WHERE id = ?`).run(id);
 }
 
 function runAutoMigration(db: DatabaseSync): void {
@@ -303,6 +352,11 @@ export function dbGetTotalClicks(): number {
   const db = getStudioDb();
   const row = db.prepare("SELECT COALESCE(SUM(clicks), 0) as total FROM studio_links").get() as any;
   return row?.total || 0;
+}
+
+export function dbIncrementLinkRevenue(id: string, amount: number): void {
+  const db = getStudioDb();
+  db.prepare("UPDATE studio_links SET revenue = revenue + ? WHERE id = ?").run(amount, id);
 }
 
 export function dbGetUnderperformingLinks(): StudioLink[] {
@@ -540,7 +594,6 @@ export function dbIncrementPipelineCount(id: string): void {
   const db = getStudioDb();
   db.prepare("UPDATE studio_products SET pipeline_count = pipeline_count + 1 WHERE id = ?").run(id);
 }
-
 function toProduct(r: any): StudioProduct {
   return { id: r.id, name: r.name, category: r.category, url: r.url, platform: r.platform, price: r.price, commission: r.commission, notes: r.notes, pipelineCount: r.pipeline_count || 0, createdAt: r.created_at };
 }

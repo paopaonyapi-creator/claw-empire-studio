@@ -183,8 +183,10 @@ function mergeChannelConfig(
   }
 
   const nextToken = hasOwn(persisted, "token") ? decryptMessengerTokenForRuntime(channel, persisted.token) : base.token;
-  // Fallback: use env var when DB token is missing (e.g. after redeploy)
-  const effectiveToken = nextToken || (channel === "telegram" ? (process.env.TELEGRAM_BOT_TOKEN ?? "") : "");
+  // Override: env var always wins when set (easier to rotate tokens via .env)
+  const effectiveToken = (channel === "telegram" && process.env.TELEGRAM_BOT_TOKEN)
+    ? process.env.TELEGRAM_BOT_TOKEN
+    : (nextToken || "");
 
   let nextSessions = base.sessions;
   if (hasOwn(persisted, "sessions") && Array.isArray(persisted.sessions)) {
@@ -678,6 +680,10 @@ function resolveSessionTokenForTarget(
   channelConfig: MessengerChannelConfig,
   targetId: string,
 ): string {
+  // Override: env var always wins for telegram
+  if (channel === "telegram" && process.env.TELEGRAM_BOT_TOKEN) {
+    return process.env.TELEGRAM_BOT_TOKEN;
+  }
   const target = normalizeComparableTarget(channel, targetId);
   if (!target) return channelConfig.token;
   for (const session of channelConfig.sessions) {
@@ -851,7 +857,10 @@ export async function sendMessengerSessionTyping(sessionKey: string): Promise<vo
     return;
   }
 
-  const token = normalizeText(resolved.session.token) || config[resolved.channel].token;
+  // Override: env var always wins for telegram
+  const token = (resolved.channel === "telegram" && process.env.TELEGRAM_BOT_TOKEN)
+    ? process.env.TELEGRAM_BOT_TOKEN
+    : (normalizeText(resolved.session.token) || config[resolved.channel].token);
   await sendTypingByChannel(resolved.channel, token, resolved.session.targetId);
 }
 
@@ -871,7 +880,10 @@ export async function sendMessengerSessionMessage(sessionKey: string, text: stri
     throw new Error("session not found");
   }
 
-  const token = normalizeText(resolved.session.token) || config[resolved.channel].token;
+  // Override: env var always wins for telegram
+  const token = (resolved.channel === "telegram" && process.env.TELEGRAM_BOT_TOKEN)
+    ? process.env.TELEGRAM_BOT_TOKEN
+    : (normalizeText(resolved.session.token) || config[resolved.channel].token);
   await sendByChannel(resolved.channel, token, resolved.session.targetId, payload);
 }
 

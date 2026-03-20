@@ -140,7 +140,6 @@ export function routeAgentToModel(agentRole: string, taskType: string): AgentMod
   return DEFAULT_ROUTE;
 }
 
-// Generate using the routed provider
 export async function routedGenerate(opts: {
   agentRole: string;
   taskType: string;
@@ -151,29 +150,63 @@ export async function routedGenerate(opts: {
   const route = routeAgentToModel(opts.agentRole, opts.taskType);
   const start = Date.now();
 
-  // Try primary
-  const primaryResult = await callProvider(route.primary, opts);
-  if (primaryResult.text && !primaryResult.error) {
-    return {
-      text: primaryResult.text,
-      provider: route.primary.provider,
-      model: route.primary.model,
-      latencyMs: Date.now() - start,
-      usedFallback: false,
-    };
+  // Inject RAG (Agent Memory) from SQLite
+  let enrichedSysInstruction = opts.systemInstruction || "";
+  try {
+    const { dbGetRelevantKnowledge } = await import("./studio-db.ts");
+    const searchTerms = `${opts.agentRole} ${opts.taskType}`.substring(0, 100);
+    const knowledge = dbGetRelevantKnowledge(searchTerms, 2);
+    if (knowledge && knowledge.length > 0) {
+      const memoryContext = knowledge.map((k) => `[MEMORY: ${k.topic}] ${k.content}`).join("\n");
+      enrichedSysInstruction += `\n\n--- STUDIO BRAND GUIDELINES & MEMORY ---\n${memoryContext}\n----------------------------------------\n`;
+    }
+  } catch (err) {
+    console.warn("[RAG] Failed to inject knowledge base:", String(err));
   }
 
-  // Try fallback
-  console.log(`[Router] ⚠️ Primary ${route.primary.provider} failed, trying fallback ${route.fallback.provider}`);
-  const fallbackResult = await callProvider(route.fallback, opts);
+  // Try primary
+  const primaryResult = await callProvider(route.primary, { ...opts, systemInstruction: enrichedSysInstruction });
+  let textToReturn = primaryResult.text;
+  let finalProvider = route.primary.provider;
+  let finalModel = route.primary.model;
+  let finalError = primaryResult.error;
+  let usedFallback = false;
+
+  if (!primaryResult.text || primaryResult.error) {
+    // Try fallback
+    console.log(`[Router] ⚠️ Primary ${route.primary.provider} failed, trying fallback ${route.fallback.provider}`);
+    const fallbackResult = await callProvider(route.fallback, { ...opts, systemInstruction: enrichedSysInstruction });
+    textToReturn = fallbackResult.text;
+    finalProvider = route.fallback.provider;
+    finalModel = route.fallback.model;
+    finalError = fallbackResult.error;
+    usedFallback = true;
+  }
+
+  // Feature 2: Creative Assets AI - Auto Generate Image if it's a Thumbnail Brief
+  if (opts.taskType === "thumbnail-brief" && textToReturn && !finalError) {
+    try {
+      const { openaiGenerateImage } = await import("./openai-provider.ts");
+      console.log(`[Router] 🎨 Generating DALL-E 3 Image for thumbnail brief...`);
+      // We use the original prompt + the first few lines of the brief as context for DALL-E
+      const imagePrompt = `Create a youtube/tiktok thumbnail style image. Context: ${opts.prompt}. Text info: ${textToReturn.substring(0, 500)}`;
+      const imgRes = await openaiGenerateImage(imagePrompt);
+      if (imgRes.url) {
+        textToReturn += `\n\n### 🎨 AI Generated Creative Asset\n![AI Generated Thumbnail](${imgRes.url})\n*(Generated via DALL-E 3)*`;
+        console.log(`[Router] 🖼️ Image generation successful! Attached to response.`);
+      }
+    } catch (err) {
+      console.warn(`[Router] ❌ Image generation failed:`, err);
+    }
+  }
 
   return {
-    text: fallbackResult.text,
-    provider: route.fallback.provider,
-    model: route.fallback.model,
+    text: textToReturn,
+    provider: finalProvider,
+    model: finalModel,
     latencyMs: Date.now() - start,
-    usedFallback: true,
-    error: fallbackResult.error,
+    usedFallback,
+    error: finalError,
   };
 }
 

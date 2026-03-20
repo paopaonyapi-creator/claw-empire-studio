@@ -170,8 +170,8 @@ function resolveTelegramConfig(db: DatabaseSync): TelegramReceiverConfig {
   if (Object.prototype.hasOwnProperty.call(telegram, "token")) {
     channelToken = decryptMessengerTokenForRuntime("telegram", telegram.token);
   }
-  // Fallback: use TELEGRAM_BOT_TOKEN env var when DB token is missing (e.g. after redeploy)
-  if (!channelToken && process.env.TELEGRAM_BOT_TOKEN) {
+  // Override: always prefer TELEGRAM_BOT_TOKEN env var when set (easier to rotate tokens)
+  if (process.env.TELEGRAM_BOT_TOKEN) {
     channelToken = process.env.TELEGRAM_BOT_TOKEN;
   }
 
@@ -186,7 +186,11 @@ function resolveTelegramConfig(db: DatabaseSync): TelegramReceiverConfig {
       const chatId = normalizeChatId(session.targetId);
       if (!chatId) continue;
       hasSession = true;
-      const sessionToken = decryptMessengerTokenForRuntime("telegram", session.token);
+      let sessionToken = decryptMessengerTokenForRuntime("telegram", session.token);
+      // Override: env var always wins when set (matches channel-level override above)
+      if (process.env.TELEGRAM_BOT_TOKEN) {
+        sessionToken = "";
+      }
       const effectiveToken = sessionToken || channelToken;
       if (!effectiveToken) continue;
       const chats = tokenToChatIds.get(effectiveToken) ?? new Set<string>();

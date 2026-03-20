@@ -6,7 +6,7 @@
 import type { Express } from "express";
 import crypto from "crypto";
 
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 8790;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || "claw-empire-webhook-2024";
 
 // ---------------------------------------------------------------------------

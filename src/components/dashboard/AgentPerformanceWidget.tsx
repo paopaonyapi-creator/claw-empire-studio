@@ -19,7 +19,7 @@ export default function AgentPerformanceWidget() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/agents/performance")
+    fetch("/api/agent-performance")
       .then((r) => r.json())
       .then((data) => {
         if (data.ok) setAgents(data.agents || []);

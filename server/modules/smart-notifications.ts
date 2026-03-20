@@ -5,7 +5,7 @@
 
 import type { Express } from "express";
 
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 8790;
 
 // Track last known tiers for change detection
 const lastKnownTiers: Map<string, string> = new Map();
@@ -25,7 +25,7 @@ async function sendTg(text: string): Promise<void> {
 // Check for tier changes and milestones
 export async function checkAndNotify(): Promise<void> {
   try {
-    const res = await fetch(`http://127.0.0.1:${PORT}/api/agents/performance`);
+    const res = await fetch(`http://127.0.0.1:${PORT}/api/agent-performance`);
     if (!res.ok) return;
     const data = (await res.json()) as any;
     const agents = data.agents || [];
@@ -78,7 +78,7 @@ export async function checkAndNotify(): Promise<void> {
 // Daily performance summary
 export async function sendDailyPerformanceSummary(): Promise<void> {
   try {
-    const res = await fetch(`http://127.0.0.1:${PORT}/api/agents/performance`);
+    const res = await fetch(`http://127.0.0.1:${PORT}/api/agent-performance`);
     if (!res.ok) return;
     const data = (await res.json()) as any;
     const agents = (data.agents || []).slice(0, 5);

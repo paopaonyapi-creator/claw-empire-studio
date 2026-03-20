@@ -52,6 +52,7 @@ import { RevenueGoalWidget } from "./dashboard/RevenueGoalWidget";
 import AgentPerformanceWidget from "./dashboard/AgentPerformanceWidget";
 import AgentChatWidget from "./dashboard/AgentChatWidget";
 import AICommandCenter from "./dashboard/AICommandCenter";
+import { SafeWidget } from "./dashboard/SafeWidget";
 import { DEPT_COLORS, useNow } from "./dashboard/model";
 
 interface DashboardProps {
@@ -245,84 +246,84 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
         <NotificationCenter />
       </div>
 
-      <MorningBrief />
+      <SafeWidget name="MorningBrief"><MorningBrief /></SafeWidget>
 
-      <ApiHealthWidget />
+      <SafeWidget name="ApiHealth"><ApiHealthWidget /></SafeWidget>
 
-      <AlertsWidget />
+      <SafeWidget name="Alerts"><AlertsWidget /></SafeWidget>
 
-      <GoalWidget />
+      <SafeWidget name="Goals"><GoalWidget /></SafeWidget>
 
       <DashboardTodayKpi t={t} numberFormatter={numberFormatter} />
 
-      <AffiliatePipelineWidget />
+      <SafeWidget name="Pipeline"><AffiliatePipelineWidget /></SafeWidget>
 
-      <CarouselStudioWidget />
+      <SafeWidget name="CarouselStudio"><CarouselStudioWidget /></SafeWidget>
 
-      <CompetitorSpyWidget />
+      <SafeWidget name="CompetitorSpy"><CompetitorSpyWidget /></SafeWidget>
 
-      <AutoReplyWidget />
+      <SafeWidget name="AutoReply"><AutoReplyWidget /></SafeWidget>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <NotificationHub />
-        <UserManagementWidget />
+        <SafeWidget name="NotificationHub"><NotificationHub /></SafeWidget>
+        <SafeWidget name="UserManagement"><UserManagementWidget /></SafeWidget>
       </div>
 
-      <AnalyticsWidget />
+      <SafeWidget name="Analytics"><AnalyticsWidget /></SafeWidget>
 
-      <KpiGoalsWidget />
+      <SafeWidget name="KpiGoals"><KpiGoalsWidget /></SafeWidget>
 
-      <RevenueDashboardWidget />
+      <SafeWidget name="RevenueDashboard"><RevenueDashboardWidget /></SafeWidget>
 
-      <GamificationWidget />
+      <SafeWidget name="Gamification"><GamificationWidget /></SafeWidget>
 
-      <TeamPerformanceWidget />
+      <SafeWidget name="TeamPerformance"><TeamPerformanceWidget /></SafeWidget>
 
-      <PushAlertsWidget />
+      <SafeWidget name="PushAlerts"><PushAlertsWidget /></SafeWidget>
 
-      <PerformanceCharts />
+      <SafeWidget name="PerformanceCharts"><PerformanceCharts /></SafeWidget>
 
-      <ContentGeneratorWidget />
+      <SafeWidget name="ContentGenerator"><ContentGeneratorWidget /></SafeWidget>
 
-      <FacebookWidget />
+      <SafeWidget name="Facebook"><FacebookWidget /></SafeWidget>
 
-      <LinkShortenerWidget />
+      <SafeWidget name="LinkShortener"><LinkShortenerWidget /></SafeWidget>
 
-      <StudioExtrasWidget />
+      <SafeWidget name="StudioExtras"><StudioExtrasWidget /></SafeWidget>
 
-      <ContentLibrary />
+      <SafeWidget name="ContentLibrary"><ContentLibrary /></SafeWidget>
 
-      <ContentCalendar />
+      <SafeWidget name="ContentCalendar"><ContentCalendar /></SafeWidget>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <LinkStatsWidget />
-        <AgentLeaderboard />
+        <SafeWidget name="LinkStats"><LinkStatsWidget /></SafeWidget>
+        <SafeWidget name="AgentLeaderboard"><AgentLeaderboard /></SafeWidget>
       </div>
 
-      <RevenueWidget />
+      <SafeWidget name="Revenue"><RevenueWidget /></SafeWidget>
 
-      <DataExportWidget />
+      <SafeWidget name="DataExport"><DataExportWidget /></SafeWidget>
 
-      <ActivityLogWidget />
+      <SafeWidget name="ActivityLog"><ActivityLogWidget /></SafeWidget>
 
-      <BackupManagerWidget />
+      <SafeWidget name="BackupManager"><BackupManagerWidget /></SafeWidget>
 
-      <AiSchedulerWidget />
+      <SafeWidget name="AiScheduler"><AiSchedulerWidget /></SafeWidget>
 
-      <ContentCalendarProWidget />
+      <SafeWidget name="ContentCalendarPro"><ContentCalendarProWidget /></SafeWidget>
 
-      <SystemSettingsWidget />
+      <SafeWidget name="SystemSettings"><SystemSettingsWidget /></SafeWidget>
 
-      <SmartInsightsProWidget />
+      <SafeWidget name="SmartInsightsPro"><SmartInsightsProWidget /></SafeWidget>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <TikTokIdeasWidget />
-        <RevenueGoalWidget />
+        <SafeWidget name="TikTokIdeas"><TikTokIdeasWidget /></SafeWidget>
+        <SafeWidget name="RevenueGoal"><RevenueGoalWidget /></SafeWidget>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <AgentPerformanceWidget />
-        <AgentChatWidget />
+        <SafeWidget name="AgentPerformance"><AgentPerformanceWidget /></SafeWidget>
+        <SafeWidget name="AgentChat"><AgentChatWidget /></SafeWidget>
       </div>
 
       <DashboardRankingBoard
@@ -345,7 +346,7 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
         t={t}
       />
 
-      <AICommandCenter />
+      <SafeWidget name="AICommandCenter"><AICommandCenter /></SafeWidget>
 
       <DashboardMissionLog
         recentTasks={recentTasks}

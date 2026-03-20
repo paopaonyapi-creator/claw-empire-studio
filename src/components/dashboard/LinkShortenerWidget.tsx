@@ -68,7 +68,7 @@ export function LinkShortenerWidget() {
           {links.slice(0, 8).map((l) => (
             <div key={l.code} style={styles.linkRow}>
               <span style={styles.linkCode}>/s/{l.code}</span>
-              <span style={styles.linkUrl}>{l.url.substring(0, 40)}{l.url.length > 40 ? "..." : ""}</span>
+              <span style={styles.linkUrl}>{(l.url || "").substring(0, 40)}{(l.url || "").length > 40 ? "..." : ""}</span>
               <span style={styles.linkClicks}>{l.clicks} 👆</span>
             </div>
           ))}

@@ -74,6 +74,7 @@ import { registerRateLimiterRoutes } from "./rate-limiter.ts";
 import { registerAgentPersonaRoutes } from "./agent-persona.ts";
 import { registerContentTemplateRoutes } from "./content-templates.ts";
 import { registerRealtimeAnalyticsRoutes } from "./realtime-analytics.ts";
+import { startRevenueSimulator } from "./revenue-simulator.ts";
 
 export function startLifecycle(ctx: RuntimeContext): void {
   const {
@@ -196,6 +197,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   startFbScheduler();
   startHealthScheduler();
   startDailyReportCron();
+  startRevenueSimulator();
 
   // Register central error handler AFTER all routes
   registerErrorHandler(app);

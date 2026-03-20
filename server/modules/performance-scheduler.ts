@@ -6,7 +6,7 @@
 
 import type { Express } from "express";
 
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 8790;
 
 // ---------------------------------------------------------------------------
 // Types
@@ -198,7 +198,7 @@ export async function getEliteAgents(): Promise<AgentPerformance[]> {
 
 export function registerPerformanceSchedulerRoutes(app: Express): void {
   // Get all agents performance + ranking
-  app.get("/api/agents/performance", async (_req, res) => {
+  app.get("/api/agent-performance", async (_req, res) => {
     const ranking = await getAgentRanking();
     res.json({ ok: true, agents: ranking, totalAgents: ranking.length });
   });

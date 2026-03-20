@@ -59,6 +59,31 @@ export async function testOpenAIConnection(): Promise<{ ok: boolean; model: stri
   return { ok: !result.error, model: OPENAI_MODELS.gpt4o_mini, message: result.text || result.error || "No response", latencyMs: result.latencyMs };
 }
 
+export async function openaiGenerateImage(prompt: string): Promise<{ url: string; error?: string }> {
+  if (!OPENAI_API_KEY) return { url: "", error: "OPENAI_API_KEY not configured" };
+  try {
+    const res = await fetch(`${OPENAI_BASE_URL}/images/generations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${OPENAI_API_KEY}` },
+      body: JSON.stringify({
+        model: "dall-e-3",
+        prompt: prompt.substring(0, 4000), // DALL-E 3 prompt limit
+        n: 1,
+        size: "1024x1024",
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      console.error(`[OpenAI-Image] ❌ HTTP ${res.status}: ${errText.slice(0, 200)}`);
+      return { url: "", error: `DALL-E 3 API error: ${res.status}` };
+    }
+    const data = await res.json() as any;
+    return { url: data.data?.[0]?.url || "" };
+  } catch (err) {
+    return { url: "", error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 export function registerOpenAIRoutes(app: Express): void {
   app.get("/api/openai/status", async (_req, res) => {
     const result = await testOpenAIConnection();

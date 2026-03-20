@@ -38,7 +38,7 @@ export function registerRevenueGoalsRoutes(app: Express): void {
         const monthStart = `${g.month}-01`;
         const monthEnd = `${g.month}-31`;
         const revenueRow = db.prepare(
-          "SELECT COALESCE(SUM(amount), 0) as total FROM studio_revenue WHERE date >= ? AND date <= ?"
+          "SELECT COALESCE(SUM(amount), 0) as total FROM studio_revenue WHERE timestamp >= ? AND timestamp <= ?"
         ).get(monthStart, monthEnd) as { total: number } | undefined;
 
         const actual = revenueRow?.total ?? 0;
@@ -68,7 +68,7 @@ export function registerRevenueGoalsRoutes(app: Express): void {
       const monthStart = `${month}-01`;
       const monthEnd = `${month}-31`;
       const revenueRow = db.prepare(
-        "SELECT COALESCE(SUM(amount), 0) as total FROM studio_revenue WHERE date >= ? AND date <= ?"
+        "SELECT COALESCE(SUM(amount), 0) as total FROM studio_revenue WHERE timestamp >= ? AND timestamp <= ?"
       ).get(monthStart, monthEnd) as { total: number } | undefined;
 
       const actual = revenueRow?.total ?? 0;

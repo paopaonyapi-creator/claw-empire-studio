@@ -5,7 +5,7 @@
 
 import type { Express } from "express";
 
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 8790;
 const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
@@ -93,7 +93,7 @@ const COMMANDS: Record<string, { handler: CommandHandler; description: string }>
     description: "อันดับ agents",
     handler: async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:${PORT}/api/agents/performance`);
+        const res = await fetch(`http://127.0.0.1:${PORT}/api/agent-performance`);
         if (!res.ok) return "❌ Cannot fetch rankings";
         const data = (await res.json()) as any;
         const agents = (data.agents || []).slice(0, 5);
