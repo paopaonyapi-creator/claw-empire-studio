@@ -1,7 +1,7 @@
 /**
  * Provider Health Check — Monitor AI providers and auto-switch on failure
- * Checks: Gemini, Groq, OpenAI, Anthropic
- * Auto-failover when primary provider is down
+ * Checks: Gemini, Groq, OpenAI, Anthropic, KIMI
+ * Uses LIGHTWEIGHT calls (model listing) instead of full generation
  */
 
 import type { Express } from "express";
@@ -35,13 +35,13 @@ function initProvider(name: string, configured: boolean): ProviderHealth {
   
   const health: ProviderHealth = {
     name,
-    status: "unchecked",
-    statusEmoji: "⚪",
+    status: configured ? "unchecked" : "down",
+    statusEmoji: configured ? "⚪" : "⚫",
     latencyMs: null,
     lastChecked: null,
-    lastError: null,
+    lastError: configured ? null : "API key not configured",
     configured,
-    uptime: 100,
+    uptime: 0,
     checksTotal: 0,
     checksSuccess: 0,
   };
@@ -69,74 +69,115 @@ function updateStatus(health: ProviderHealth, ok: boolean, latencyMs: number, er
 }
 
 // ---------------------------------------------------------------------------
-// Health Checks
+// Lightweight Health Checks (use model listing, not generation)
 // ---------------------------------------------------------------------------
 
+async function fetchWithTimeout(url: string, opts: RequestInit, timeoutMs: number = 8000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { ...opts, signal: controller.signal });
+    return response;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 async function checkGemini(): Promise<void> {
-  const health = initProvider("gemini", !!process.env.GEMINI_API_KEY);
-  if (!health.configured) { health.status = "unchecked"; health.statusEmoji = "⚪"; return; }
+  const key = process.env.GEMINI_API_KEY || "";
+  const health = initProvider("gemini", !!key);
+  if (!key) { health.status = "down"; health.statusEmoji = "🔴"; health.lastError = "No API key"; return; }
 
   const start = Date.now();
   try {
-    const { testGeminiConnection } = await import("./gemini-provider.ts");
-    const result = await testGeminiConnection();
-    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
+    const res = await fetchWithTimeout(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`,
+      { method: "GET" }
+    );
+    updateStatus(health, res.ok, Date.now() - start, res.ok ? undefined : `HTTP ${res.status}`);
   } catch (err) {
     updateStatus(health, false, Date.now() - start, String(err));
   }
 }
 
 async function checkGroq(): Promise<void> {
-  const health = initProvider("groq", !!process.env.GROQ_API_KEY);
-  if (!health.configured) { health.status = "unchecked"; health.statusEmoji = "⚪"; return; }
+  const key = process.env.GROQ_API_KEY || "";
+  const health = initProvider("groq", !!key);
+  if (!key) { health.status = "down"; health.statusEmoji = "🔴"; health.lastError = "No API key"; return; }
 
   const start = Date.now();
   try {
-    const { testGroqConnection } = await import("./groq-provider.ts");
-    const result = await testGroqConnection();
-    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
+    const res = await fetchWithTimeout(
+      "https://api.groq.com/openai/v1/models",
+      { method: "GET", headers: { "Authorization": `Bearer ${key}` } }
+    );
+    updateStatus(health, res.ok, Date.now() - start, res.ok ? undefined : `HTTP ${res.status}`);
   } catch (err) {
     updateStatus(health, false, Date.now() - start, String(err));
   }
 }
 
 async function checkOpenAI(): Promise<void> {
-  const health = initProvider("openai", !!process.env.OPENAI_API_KEY);
-  if (!health.configured) { health.status = "unchecked"; health.statusEmoji = "⚪"; return; }
+  const key = process.env.OPENAI_API_KEY || "";
+  const health = initProvider("openai", !!key);
+  if (!key) { health.status = "down"; health.statusEmoji = "🔴"; health.lastError = "No API key"; return; }
 
   const start = Date.now();
   try {
-    const { testOpenAIConnection } = await import("./openai-provider.ts");
-    const result = await testOpenAIConnection();
-    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
+    const res = await fetchWithTimeout(
+      "https://api.openai.com/v1/models",
+      { method: "GET", headers: { "Authorization": `Bearer ${key}` } }
+    );
+    updateStatus(health, res.ok, Date.now() - start, res.ok ? undefined : `HTTP ${res.status}`);
   } catch (err) {
     updateStatus(health, false, Date.now() - start, String(err));
   }
 }
 
 async function checkAnthropic(): Promise<void> {
-  const health = initProvider("anthropic", !!process.env.ANTHROPIC_API_KEY);
-  if (!health.configured) { health.status = "unchecked"; health.statusEmoji = "⚪"; return; }
+  const key = process.env.ANTHROPIC_API_KEY || "";
+  const health = initProvider("anthropic", !!key);
+  if (!key) { health.status = "down"; health.statusEmoji = "🔴"; health.lastError = "No API key"; return; }
 
   const start = Date.now();
   try {
-    const { testAnthropicConnection } = await import("./anthropic-provider.ts");
-    const result = await testAnthropicConnection();
-    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
+    // Anthropic doesn't have a /models endpoint; use a small messages call
+    const res = await fetchWithTimeout(
+      "https://api.anthropic.com/v1/messages",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": key,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: "claude-3-5-haiku-20241022",
+          max_tokens: 5,
+          messages: [{ role: "user", content: "hi" }],
+        }),
+      }
+    );
+    // 200 = success, 401 = bad key, 429 = rate limit (still means reachable)
+    const reachable = res.ok || res.status === 429;
+    updateStatus(health, reachable, Date.now() - start, reachable ? undefined : `HTTP ${res.status}`);
   } catch (err) {
     updateStatus(health, false, Date.now() - start, String(err));
   }
 }
 
 async function checkKimi(): Promise<void> {
-  const health = initProvider("kimi", !!process.env.KIMI_API_KEY);
-  if (!health.configured) { health.status = "unchecked"; health.statusEmoji = "⚪"; return; }
+  const key = process.env.KIMI_API_KEY || "";
+  const health = initProvider("kimi", !!key);
+  if (!key) { health.status = "down"; health.statusEmoji = "🔴"; health.lastError = "No API key"; return; }
 
   const start = Date.now();
   try {
-    const { testKimiConnection } = await import("./kimi-provider.ts");
-    const result = await testKimiConnection();
-    updateStatus(health, result.ok, Date.now() - start, result.ok ? undefined : result.message);
+    const res = await fetchWithTimeout(
+      "https://api.moonshot.cn/v1/models",
+      { method: "GET", headers: { "Authorization": `Bearer ${key}` } }
+    );
+    updateStatus(health, res.ok, Date.now() - start, res.ok ? undefined : `HTTP ${res.status}`);
   } catch (err) {
     updateStatus(health, false, Date.now() - start, String(err));
   }
@@ -164,8 +205,8 @@ export function getBestProvider(): string {
 let healthInterval: ReturnType<typeof setInterval> | null = null;
 
 export function startHealthMonitor(): void {
-  // Initial check after 10 seconds
-  setTimeout(runAllChecks, 10000);
+  // Initial check after 5 seconds
+  setTimeout(runAllChecks, 5000);
 
   // Check every 5 minutes
   healthInterval = setInterval(runAllChecks, 5 * 60 * 1000);
@@ -177,7 +218,7 @@ export function startHealthMonitor(): void {
   initProvider("anthropic", !!process.env.ANTHROPIC_API_KEY);
   initProvider("kimi", !!process.env.KIMI_API_KEY);
 
-  console.log("[Health Monitor] ✅ Provider health checks active (5 min interval)");
+  console.log("[Health Monitor] ✅ Provider health checks active (lightweight, 5 min interval)");
 }
 
 // ---------------------------------------------------------------------------
@@ -188,7 +229,8 @@ export function registerProviderHealthRoutes(app: Express): void {
   // Get all provider status
   app.get("/api/providers/health", async (_req, res) => {
     const results = await runAllChecks();
-    const allHealthy = results.filter(r => r.configured).every(r => r.status === "healthy");
+    const configured = results.filter(r => r.configured);
+    const allHealthy = configured.length > 0 && configured.every(r => r.status === "healthy");
     res.json({
       ok: true,
       overall: allHealthy ? "🟢 All Systems Operational" : "⚠️ Some Issues Detected",
