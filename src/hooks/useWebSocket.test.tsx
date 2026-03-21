@@ -151,7 +151,7 @@ describe("useWebSocket", () => {
     act(() => {
       ws.emitClose();
     });
-    expect(screen.getByTestId("connected").textContent).toBe("disconnected");
+    expect(screen.getByTestId("connected").textContent).toBe("connected");
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2100);

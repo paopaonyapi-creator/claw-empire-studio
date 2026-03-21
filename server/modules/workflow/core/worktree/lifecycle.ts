@@ -198,11 +198,19 @@ export function createWorktreeLifecycleTools(deps: CreateWorktreeLifecycleToolsD
           created = true;
           break;
         } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error("DEBUG WT ADD FAIL:", candidateBranch, err.message, (err as any).stderr?.toString());
+          }
           lastError = err;
         }
       }
 
-      if (!created) throw lastError instanceof Error ? lastError : new Error("worktree_add_failed");
+      if (!created) {
+        if (lastError instanceof Error) {
+          console.error("WORKTREE ADD FAILED:", lastError.message, (lastError as any).stdout?.toString(), (lastError as any).stderr?.toString());
+        }
+        throw lastError instanceof Error ? lastError : new Error("worktree_add_failed");
+      }
 
       // Propagate .claude/skills into the worktree so agents can resolve installed skills
       try {

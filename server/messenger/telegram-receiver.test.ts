@@ -37,6 +37,7 @@ async function importReceiverModule(env: Record<string, string | undefined>) {
     DB_PATH: env.DB_PATH,
     INBOX_WEBHOOK_SECRET: env.INBOX_WEBHOOK_SECRET,
   };
+  process.env.TELEGRAM_BOT_TOKEN = "";
 
   return import("./telegram-receiver.ts");
 }

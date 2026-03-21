@@ -31,6 +31,7 @@ async function importGatewayModule(env: Record<string, string | undefined>) {
     DB_PATH: env.DB_PATH,
     OPENCLAW_CONFIG: env.OPENCLAW_CONFIG,
   };
+  process.env.TELEGRAM_BOT_TOKEN = "";
 
   return import("./client.ts");
 }
