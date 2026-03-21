@@ -9,7 +9,7 @@
  * Enabled via CONTENT_SCHEDULE_ENABLED=1 environment variable.
  */
 
-import { PORT } from "../config/runtime.ts";
+import { PORT, SESSION_AUTH_TOKEN } from "../config/runtime.ts";
 
 // ---------------------------------------------------------------------------
 // Schedule definition
@@ -88,10 +88,14 @@ function dateKey(d: Date): string {
 
 async function dispatchDirective(content: string, scheduleId: string): Promise<void> {
   const url = `http://127.0.0.1:${PORT}/api/directives`;
+  const authHeaders = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${SESSION_AUTH_TOKEN}`,
+  };
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders,
       body: JSON.stringify({ content, source: "content-scheduler" }),
     });
     const status = res.status;
@@ -102,7 +106,7 @@ async function dispatchDirective(content: string, scheduleId: string): Promise<v
       setTimeout(async () => {
         try {
           const tasksRes = await fetch(`http://127.0.0.1:${PORT}/api/tasks?status=inbox&limit=5`, {
-            headers: { "Content-Type": "application/json" },
+            headers: authHeaders,
           });
           if (!tasksRes.ok) return;
           const tasksData = (await tasksRes.json()) as { tasks?: Array<{ id: string; title: string; assigned_agent_id?: string }> };
@@ -118,7 +122,7 @@ async function dispatchDirective(content: string, scheduleId: string): Promise<v
 
           const runRes = await fetch(`http://127.0.0.1:${PORT}/api/tasks/${task.id}/run`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: authHeaders,
           });
           console.log(
             `[ContentScheduler] 🤖 Auto-run "${task.title}": ${runRes.ok ? "✅ STARTED" : `⚠️ HTTP ${runRes.status}`}`,
@@ -144,9 +148,13 @@ async function checkChainCompletions(): Promise<void> {
   if (chainPendingToday.size === 0) return;
 
   try {
+    const authHeaders = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${SESSION_AUTH_TOKEN}`,
+    };
     const url = `http://127.0.0.1:${PORT}/api/tasks?status=done&limit=20`;
     const res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders,
     });
     if (!res.ok) return;
     const data = (await res.json()) as { tasks?: Array<{ id: string; title: string; status: string; description?: string }> };
@@ -193,8 +201,12 @@ async function checkChainCompletions(): Promise<void> {
 async function sendDailySummary(): Promise<void> {
   try {
     // Fetch stats from existing /api/stats endpoint
+    const internalAuthHeaders = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${SESSION_AUTH_TOKEN}`,
+    };
     const statsUrl = `http://127.0.0.1:${PORT}/api/stats`;
-    const statsRes = await fetch(statsUrl, { headers: { "Content-Type": "application/json" } });
+    const statsRes = await fetch(statsUrl, { headers: internalAuthHeaders });
     let statsText = "";
 
     if (statsRes.ok) {

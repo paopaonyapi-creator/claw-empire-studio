@@ -584,7 +584,27 @@ export function startLifecycle(ctx: RuntimeContext): void {
       .map(([name]) => name);
 
     if (authenticated.length === 0) {
-      console.log("[Claw-Empire] Auto-assign skipped: no authenticated CLI providers");
+      // In production (Railway), no CLI tools are installed — fall back to API-based provider
+      // so agents can still work via Gemini/OpenAI API keys
+      const IS_RAILWAY = !!process.env.RAILWAY_PUBLIC_DOMAIN;
+      if (IS_RAILWAY) {
+        const agents = db.prepare("SELECT id, name, cli_provider FROM agents").all() as Array<{
+          id: string;
+          name: string;
+          cli_provider: string | null;
+        }>;
+        let count = 0;
+        for (const agent of agents) {
+          const prov = agent.cli_provider || "";
+          if (prov === "api" || prov === "copilot" || prov === "antigravity") continue;
+          db.prepare("UPDATE agents SET cli_provider = 'api' WHERE id = ?").run(agent.id);
+          broadcast("agent_status", db.prepare("SELECT * FROM agents WHERE id = ?").get(agent.id));
+          count++;
+        }
+        if (count > 0) console.log(`[Claw-Empire] Production auto-assign: ${count} agent(s) → api (Gemini API)`);
+      } else {
+        console.log("[Claw-Empire] Auto-assign skipped: no authenticated CLI providers");
+      }
       return;
     }
 
