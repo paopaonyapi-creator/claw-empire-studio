@@ -109,11 +109,8 @@ function writeStoredCsrfToken(token: string): void {
 }
 
 function promptForApiAuthToken(hasExistingToken: boolean): string {
-  if (typeof window === "undefined") return "";
-  const promptText = hasExistingToken
-    ? "Stored API token was rejected. Enter a new API token:"
-    : "Enter API token for this server:";
-  return normalizeApiAuthToken(window.prompt(promptText));
+  // Disabled: API token prompt is not used in production UI
+  return "";
 }
 
 export function setApiAuthToken(token?: string | null): void {
