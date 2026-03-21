@@ -18,19 +18,20 @@ export const GEMINI_MODELS = {
   flash: "gemini-2.5-flash",           // Fast, free, great for most tasks
   flashLite: "gemini-2.5-flash-lite",   // Ultra-fast, lighter tasks
   pro: "gemini-2.5-pro",               // Most capable
+  imageGen: "gemini-2.5-flash-image",  // Image generation (Nano Banana)
 } as const;
 
-export type GeminiModel = (typeof GEMINI_MODELS)[keyof typeof GEMINI_MODELS];
+export type GeminiModel = (typeof GEMINI_MODELS)[keyof typeof GEMINI_MODELS] | string;
 
 interface GeminiMessage {
   role: "user" | "model";
-  parts: Array<{ text: string }>;
+  parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>;
 }
 
 interface GeminiResponse {
   candidates?: Array<{
     content?: {
-      parts?: Array<{ text?: string }>;
+      parts?: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>;
     };
     finishReason?: string;
   }>;
@@ -154,6 +155,100 @@ export async function geminiChat(opts: {
   } catch (err) {
     return { text: "", error: err instanceof Error ? err.message : String(err) };
   }
+}
+
+// ---------------------------------------------------------------------------
+// Image Generation with Gemini
+// ---------------------------------------------------------------------------
+
+export async function geminiGenerateImage(opts: {
+  prompt: string;
+  model?: string;
+  inputImage?: { data: Buffer; mimeType: string };
+}): Promise<{ imageData?: Buffer; mimeType?: string; error?: string }> {
+  if (!GEMINI_API_KEY) {
+    return { error: "GEMINI_API_KEY not configured" };
+  }
+
+  // Try multiple model names since availability varies
+  const modelsToTry = opts.model
+    ? [opts.model]
+    : [
+        GEMINI_MODELS.imageGen,
+        "gemini-3.1-flash-image-preview",
+        "gemini-3-pro-image-preview",
+        "gemini-2.5-flash-image",
+        "gemini-2.0-flash-exp",
+      ];
+
+  // Build parts: text prompt + optional input image
+  const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [];
+  if (opts.inputImage) {
+    parts.push({
+      inlineData: {
+        mimeType: opts.inputImage.mimeType,
+        data: opts.inputImage.data.toString("base64"),
+      },
+    });
+    console.log(`[Gemini] 📷 Input image: ${opts.inputImage.data.length} bytes (${opts.inputImage.mimeType})`);
+  }
+  parts.push({ text: opts.prompt });
+
+  const body = {
+    contents: [{ parts }],
+    generationConfig: {
+      responseModalities: ["IMAGE", "TEXT"],
+      temperature: 1.0,
+    },
+  };
+
+  let lastError = "";
+
+  for (const model of modelsToTry) {
+    try {
+      const url = `${GEMINI_BASE_URL}/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+      console.log(`[Gemini] 🎨 Trying image gen with ${model}...`);
+      
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        lastError = `${model}: HTTP ${res.status}`;
+        console.log(`[Gemini] ⚠️ ${model} failed (${res.status}), trying next...`);
+        continue; // Try next model
+      }
+
+      const data = (await res.json()) as GeminiResponse;
+      if (data.error) {
+        lastError = `${model}: ${data.error.message}`;
+        continue;
+      }
+
+      // Find the image part in the response
+      const parts = data.candidates?.[0]?.content?.parts || [];
+      for (const part of parts) {
+        if (part.inlineData?.data) {
+          const imageBuffer = Buffer.from(part.inlineData.data, "base64");
+          console.log(`[Gemini] ✅ Image generated with ${model}: ${imageBuffer.length} bytes (${part.inlineData.mimeType})`);
+          return {
+            imageData: imageBuffer,
+            mimeType: part.inlineData.mimeType || "image/png",
+          };
+        }
+      }
+      lastError = `${model}: No image in response`;
+    } catch (err) {
+      lastError = `${model}: ${err instanceof Error ? err.message : String(err)}`;
+      console.log(`[Gemini] ⚠️ ${model} error: ${lastError}`);
+    }
+  }
+
+  console.error(`[Gemini] ❌ All image models failed. Last: ${lastError}`);
+  return { error: `All image models failed: ${lastError}` };
 }
 
 // ---------------------------------------------------------------------------

@@ -96,6 +96,14 @@ export function useAppLabels({
 
           th: "ตั้งค่า",
         })}`;
+      case "pipeline":
+        return `🚀 ${pickLang(uiLanguage, {
+          ko: "파이프라인",
+          en: "Pipeline",
+          ja: "パイプライン",
+          zh: "管道",
+          th: "Pipeline",
+        })}`;
       default:
         return "";
     }

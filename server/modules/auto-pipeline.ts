@@ -201,6 +201,90 @@ export async function sendTgNotification(text: string, reply_markup?: any): Prom
   }).catch(() => {});
 }
 
+// Send photo with caption + inline keyboard
+export async function sendTgPhotoNotification(
+  photoUrl: string,
+  caption: string,
+  reply_markup?: any,
+): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN || "";
+  const chatId = process.env.TELEGRAM_CHAT_ID || "";
+  if (!token || !chatId) return;
+
+  const payload: any = {
+    chat_id: chatId,
+    photo: photoUrl,
+    caption: caption.slice(0, 1024), // TG caption limit
+    parse_mode: "HTML",
+  };
+  if (reply_markup) payload.reply_markup = reply_markup;
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }).catch(() => null);
+
+  // If photo fails (e.g. SVG not supported), fallback to text
+  if (res && !res.ok) {
+    console.log("[TG] Photo send failed, falling back to text");
+    await sendTgNotification(caption, reply_markup);
+  }
+}
+
+// Send a file (SVG/PNG) as document with caption + inline keyboard
+export async function sendTgDocumentNotification(
+  filePath: string,
+  caption: string,
+  reply_markup?: any,
+): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN || "";
+  const chatId = process.env.TELEGRAM_CHAT_ID || "";
+  if (!token || !chatId) return;
+
+  const { readFileSync } = await import("node:fs");
+
+  try {
+    const fileData = readFileSync(filePath);
+    const fileName = filePath.split(/[\\/]/).pop() || "promo.svg";
+
+    // Build multipart form data manually
+    const boundary = "----TgBoundary" + Date.now();
+    const parts: Buffer[] = [];
+
+    const addField = (name: string, value: string) => {
+      parts.push(Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n${value}\r\n`));
+    };
+
+    addField("chat_id", chatId);
+    addField("caption", caption.slice(0, 1024));
+    addField("parse_mode", "HTML");
+    if (reply_markup) addField("reply_markup", JSON.stringify(reply_markup));
+
+    // File part
+    parts.push(Buffer.from(
+      `--${boundary}\r\nContent-Disposition: form-data; name="document"; filename="${fileName}"\r\nContent-Type: image/svg+xml\r\n\r\n`
+    ));
+    parts.push(fileData);
+    parts.push(Buffer.from(`\r\n--${boundary}--\r\n`));
+
+    const body = Buffer.concat(parts);
+
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendDocument`, {
+      method: "POST",
+      headers: { "Content-Type": `multipart/form-data; boundary=${boundary}` },
+      body,
+    });
+
+    if (!res.ok) {
+      console.log("[TG] Document send failed, falling back to text");
+      await sendTgNotification(caption, reply_markup);
+    }
+  } catch {
+    await sendTgNotification(caption, reply_markup);
+  }
+}
+
 async function executePipeline(pipelineId: string, displayProduct: string, promptProduct: string): Promise<ActivePipeline> {
   const template = PIPELINES.find((p) => p.id === pipelineId);
   if (!template) throw new Error(`Pipeline ${pipelineId} not found`);
@@ -402,6 +486,10 @@ export async function handleTelegramCallback(queryId: string, data: string, chat
     } catch(err) {
       console.error(err);
     }
+  } else if (data.startsWith("approve_aff_") || data.startsWith("reject_aff_")) {
+    // Delegate to affiliate pipeline handler
+    const { handleAffiliateCallback } = await import("./affiliate-pipeline.ts");
+    await handleAffiliateCallback(queryId, data);
   }
 }
 

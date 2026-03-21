@@ -6,6 +6,7 @@ import TaskBoard from "../components/TaskBoard";
 import AgentManager from "../components/AgentManager";
 import SkillsLibrary from "../components/SkillsLibrary";
 import SettingsPanel from "../components/SettingsPanel";
+import PipelinePage from "../components/PipelinePage";
 import { I18nProvider } from "../i18n";
 import type {
   Agent,
@@ -558,6 +559,8 @@ export default function AppMainLayout({
                 onOauthResultClear={onOauthResultClear}
               />
             )}
+
+            {view === "pipeline" && <PipelinePage />}
           </div>
         </main>
 

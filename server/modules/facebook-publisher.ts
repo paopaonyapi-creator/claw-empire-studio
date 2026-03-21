@@ -1,7 +1,11 @@
 /**
  * Facebook Publisher — Auto-post to Facebook Pages via Graph API
  * NOW BACKED BY SQLite (via studio-db.ts).
+ * Supports text posts, link posts, and photo posts.
  */
+
+import { createReadStream, existsSync } from "node:fs";
+import { basename } from "node:path";
 
 import type { Express, Request, Response } from "express";
 import {
@@ -67,6 +71,64 @@ async function postToPage(message: string, link?: string): Promise<{ ok: boolean
     const data = await res.json() as Record<string, unknown>;
     if (!res.ok) return { ok: false, error: String((data as { error?: { message?: string } }).error?.message || "Post failed") };
     return { ok: true, postId: String(data.id || "") };
+  } catch (e) { return { ok: false, error: String(e) }; }
+}
+
+// Post a photo (local file or URL) to the Facebook page
+async function postPhotoToPage(
+  message: string,
+  imageSource: string,
+): Promise<{ ok: boolean; postId?: string; error?: string }> {
+  if (!FB_ACCESS_TOKEN) return { ok: false, error: "FACEBOOK_ACCESS_TOKEN not set" };
+
+  const pagesResult = await fbGet("/me/accounts");
+  let pageId: string | null = null;
+  let pageToken = FB_ACCESS_TOKEN;
+
+  if (pagesResult.ok && pagesResult.data) {
+    const accounts = pagesResult.data.data as Array<{ id: string; name: string; access_token: string }> | undefined;
+    if (accounts && accounts.length > 0) {
+      pageId = accounts[0].id;
+      pageToken = accounts[0].access_token || FB_ACCESS_TOKEN;
+    }
+  }
+  if (!pageId) {
+    const me = await fbGet("/me");
+    if (me.ok && me.data?.id) pageId = String(me.data.id);
+  }
+  if (!pageId) return { ok: false, error: "Cannot determine page ID" };
+
+  try {
+    const isUrl = imageSource.startsWith("http://") || imageSource.startsWith("https://");
+    const isLocalFile = !isUrl && existsSync(imageSource);
+
+    if (isUrl) {
+      const body: Record<string, string> = { message, url: imageSource, access_token: pageToken };
+      const res = await fetch(`${GRAPH_API}/${pageId}/photos`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json() as Record<string, unknown>;
+      if (!res.ok) return { ok: false, error: String((data as { error?: { message?: string } }).error?.message || "Photo post failed") };
+      return { ok: true, postId: String(data.post_id || data.id || "") };
+    } else if (isLocalFile) {
+      const fileBuffer = await import("node:fs/promises").then(fs => fs.readFile(imageSource));
+      const blob = new Blob([fileBuffer], { type: "image/png" });
+      const formData = new FormData();
+      formData.append("source", blob, basename(imageSource));
+      formData.append("message", message);
+      formData.append("access_token", pageToken);
+
+      const res = await fetch(`${GRAPH_API}/${pageId}/photos`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json() as Record<string, unknown>;
+      if (!res.ok) return { ok: false, error: String((data as { error?: { message?: string } }).error?.message || "Photo upload failed") };
+      return { ok: true, postId: String(data.post_id || data.id || "") };
+    } else {
+      return { ok: false, error: `Image not found: ${imageSource}` };
+    }
   } catch (e) { return { ok: false, error: String(e) }; }
 }
 
@@ -187,6 +249,26 @@ export function registerFacebookRoutes(app: Express): void {
     const result = await postToPage(message, link || undefined);
     const record: StudioFbPost = {
       id: `fb-${Date.now()}`, fbPostId: result.postId || "", message,
+      link: link || undefined, platform: "facebook",
+      status: result.ok ? "posted" : "failed",
+      timestamp: new Date().toISOString(), error: result.error,
+    };
+    dbAddFbPost(record);
+
+    if (result.ok) res.json({ success: true, postId: result.postId });
+    else res.status(500).json({ error: result.error });
+  });
+
+  // Post with photo (local file path or image URL)
+  app.post("/api/fb/post-photo", async (req: Request, res: Response) => {
+    const { message = "", imagePath = "", link = "" } = req.body || {};
+    if (!message) { res.status(400).json({ error: "message required" }); return; }
+    if (!imagePath) { res.status(400).json({ error: "imagePath required" }); return; }
+
+    const fullMessage = link ? `${message}\n\n🔗 ${link}` : message;
+    const result = await postPhotoToPage(fullMessage, imagePath);
+    const record: StudioFbPost = {
+      id: `fb-${Date.now()}`, fbPostId: result.postId || "", message: fullMessage,
       link: link || undefined, platform: "facebook",
       status: result.ok ? "posted" : "failed",
       timestamp: new Date().toISOString(), error: result.error,

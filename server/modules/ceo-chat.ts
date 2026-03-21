@@ -33,6 +33,7 @@ import { geminiChat, isGeminiConfigured } from "./gemini-provider.ts";
 import { getStudioDb } from "./studio-db.ts";
 import { handleNotifCommand } from "./tg-notifier.ts";
 import { handleSummaryCommand } from "./auto-summary.ts";
+import { startAffiliatePipeline } from "./affiliate-pipeline.ts";
 
 const TG_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TG_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
@@ -293,6 +294,9 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
       `/pipeline-tiktok <สินค้า>\n` +
       `/pipeline-review <สินค้า>\n` +
       `/pipeline-unbox <สินค้า>\n\n` +
+      `<b>🚀 Affiliate Pipeline:</b>\n` +
+      `/aff <shopee-url> — เริ่ม 10-Agent Pipeline\n` +
+      `หรือวางลิงก์ Shopee ตรงๆ — auto-start!\n\n` +
       `<b>📎 Links:</b>\n` +
       `/link — ดู links\n` +
       `/link <url> — สร้าง short link\n` +
@@ -509,12 +513,131 @@ export async function processCeoTelegramMessage(text: string): Promise<void> {
         await sendTg(reply);
         return;
       }
+      // Affiliate Pipeline command
+      if (cmd === "/aff") {
+        reply = await handleAffCommand(arg);
+        await sendTg(reply);
+        return;
+      }
+    }
+
+    // Auto-detect Shopee URLs in plain messages (supports multiple URLs!)
+    const shopeeMatches = [...trimmed.matchAll(/https?:\/\/(?:s\.shopee\.co\.th|shopee\.co\.th)\/\S+/gi)];
+    if (shopeeMatches.length > 0) {
+      if (shopeeMatches.length === 1) {
+        reply = await handleAffCommand(shopeeMatches[0][0]);
+      } else {
+        // Multiple URLs — start all
+        const results: string[] = [];
+        results.push(`🚀 <b>เริ่ม ${shopeeMatches.length} Pipelines!</b>\n`);
+        for (let i = 0; i < shopeeMatches.length; i++) {
+          const url = shopeeMatches[i][0];
+          try {
+            const pipeline = await startAffiliatePipeline({
+              productName: `สินค้า #${i + 1}`,
+              productUrl: url,
+              priceMin: 0,
+              priceMax: 0,
+            });
+            results.push(`✅ #${i + 1} — ${url.slice(0, 40)}... → ${pipeline.id}`);
+          } catch {
+            results.push(`❌ #${i + 1} — ${url.slice(0, 40)}... → ล้มเหลว`);
+          }
+        }
+        results.push(`\n⏱ ${shopeeMatches.length * 10} Agents กำลังทำงาน...`);
+        reply = results.join("\n");
+      }
+      await sendTg(reply);
+      return;
     }
 
     reply = await handleSmartReply(trimmed);
   }
 
   await sendTg(reply);
+}
+
+// ---------------------------------------------------------------------------
+// /aff — Affiliate Content Pipeline via TG
+// ---------------------------------------------------------------------------
+async function handleAffCommand(arg: string): Promise<string> {
+  const url = (arg || "").trim();
+  if (!url) {
+    return `🚀 <b>Affiliate Pipeline</b>\n\nUsage:\n/aff <shopee-url>\n\nหรือวางลิงก์ Shopee ตรงๆ เลย!\n\nตัวอย่าง:\n/aff https://s.shopee.co.th/1gE2uEm6oX`;
+  }
+
+  // Validate it's a Shopee URL
+  if (!url.includes("shopee.co.th") && !url.includes("shopee.com")) {
+    return `❌ ลิงก์ไม่ใช่ Shopee\n\nกรุณาใช้ลิงก์จาก Shopee เท่านั้น\nตัวอย่าง: https://s.shopee.co.th/xxx`;
+  }
+
+  // Try to scrape product info from the URL
+  let productName = "สินค้า Shopee";
+  let priceMin = 0;
+  let priceMax = 0;
+
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" },
+      redirect: "follow",
+    });
+    const html = await res.text();
+
+    // Try to extract title from meta tags or page title
+    const titleMatch =
+      html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i) ||
+      html.match(/<title>([^<]+)<\/title>/i);
+    if (titleMatch?.[1]) {
+      // Clean up the title
+      productName = titleMatch[1]
+        .replace(/ \| shopee.*/i, "")
+        .replace(/ - shopee.*/i, "")
+        .trim()
+        .slice(0, 80);
+    }
+
+    // Try to extract price from meta or structured data
+    const priceMatch =
+      html.match(/<meta\s+property="product:price:amount"\s+content="(\d+)"/i) ||
+      html.match(/"price":\s*"?(\d+)"?/i) ||
+      html.match(/฿\s*(\d[\d,]*)/);
+    if (priceMatch?.[1]) {
+      const p = parseInt(priceMatch[1].replace(/,/g, ""));
+      priceMin = p;
+      priceMax = p;
+    }
+
+    // Try price range
+    const rangeMatch = html.match(/฿\s*(\d[\d,]*)\s*[-–]\s*฿?\s*(\d[\d,]*)/);
+    if (rangeMatch) {
+      priceMin = parseInt(rangeMatch[1].replace(/,/g, ""));
+      priceMax = parseInt(rangeMatch[2].replace(/,/g, ""));
+    }
+  } catch {
+    // Scraping failed — use defaults, pipeline will still work
+  }
+
+  // Start the pipeline
+  try {
+    const pipeline = await startAffiliatePipeline({
+      productName,
+      productUrl: url,
+      priceMin,
+      priceMax,
+    });
+
+    return (
+      `🚀 <b>Affiliate Pipeline เริ่มแล้ว!</b>\n\n` +
+      `🛍️ ${productName}\n` +
+      `💰 ${priceMin > 0 ? `฿${priceMin}` : ""}${priceMax > 0 && priceMax !== priceMin ? `-${priceMax}` : ""}\n` +
+      `🔗 ${url}\n` +
+      `📋 Pipeline ID: <code>${pipeline.id}</code>\n\n` +
+      `⏱ 10 Agents กำลังทำงาน...\n` +
+      `จะส่ง preview ให้อนุมัติเมื่อเสร็จ 👆`
+    );
+  } catch (e) {
+    return `❌ เริ่ม Pipeline ไม่สำเร็จ: ${e instanceof Error ? e.message : String(e)}`;
+  }
 }
 
 // ---------------------------------------------------------------------------

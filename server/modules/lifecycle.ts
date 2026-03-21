@@ -15,6 +15,7 @@ import { applyAgentSpecialization, registerSpecializationRoutes } from "./agent-
 import { registerContentTemplateRoutes as registerTemplateRoutes } from "./content-templates.ts";
 import { registerTelegramWebhookRoutes, autoSetupTelegramWebhook } from "./telegram-webhook.ts";
 import { registerAutoPipelineRoutes } from "./auto-pipeline.ts";
+import { registerAffiliatePipelineRoutes } from "./affiliate-pipeline.ts";
 import { registerLinkTrackerRoutes } from "./link-tracker.ts";
 import { startDailyReportScheduler } from "./daily-report.ts";
 import { registerProductManagerRoutes } from "./product-manager.ts";
@@ -172,6 +173,7 @@ export function startLifecycle(ctx: RuntimeContext): void {
   registerTemplateRoutes(app);
   registerTelegramWebhookRoutes(app);
   registerAutoPipelineRoutes(app);
+  registerAffiliatePipelineRoutes(app);
   registerLinkTrackerRoutes(app);
   registerProductManagerRoutes(app);
   registerSupabaseBackupRoutes(app);
