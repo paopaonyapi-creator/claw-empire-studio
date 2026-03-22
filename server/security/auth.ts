@@ -2,6 +2,7 @@ import cors from "cors";
 import express, { type Express, type NextFunction, type Request, type Response } from "express";
 import { createHash, timingSafeEqual } from "node:crypto";
 import type { IncomingMessage } from "node:http";
+import { isValidRbacToken } from "../modules/auth.ts";
 
 import {
   ALLOWED_ORIGINS,
@@ -108,6 +109,7 @@ export function cookieToken(req: Request): string | null {
 export function isAuthenticated(req: Request): boolean {
   const bearer = bearerToken(req);
   if (bearer && bearer === SESSION_AUTH_TOKEN) return true;
+  if (bearer && isValidRbacToken(bearer)) return true;
   const token = cookieToken(req);
   return token === SESSION_AUTH_TOKEN;
 }
@@ -187,6 +189,7 @@ export function incomingMessageCookieToken(req: IncomingMessage): string | null 
 export function isIncomingMessageAuthenticated(req: IncomingMessage): boolean {
   const bearer = incomingMessageBearerToken(req);
   if (bearer && bearer === SESSION_AUTH_TOKEN) return true;
+  if (bearer && isValidRbacToken(bearer)) return true;
   const cookie = incomingMessageCookieToken(req);
   return cookie === SESSION_AUTH_TOKEN;
 }

@@ -27,6 +27,21 @@ interface User {
 // In-memory session store (simple approach, no external deps)
 const sessions = new Map<string, { userId: string; username: string; role: UserRole; expiresAt: number }>();
 
+/**
+ * Check if a Bearer token is a valid RBAC session token.
+ * Used by security/auth.ts to accept Google OAuth + login tokens.
+ */
+export function isValidRbacToken(token: string | null | undefined): boolean {
+  if (!token) return false;
+  const session = sessions.get(token);
+  if (!session) return false;
+  if (session.expiresAt < Date.now()) {
+    sessions.delete(token);
+    return false;
+  }
+  return true;
+}
+
 function initAuthTable(): void {
   const db = getStudioDb();
   db.exec(`
