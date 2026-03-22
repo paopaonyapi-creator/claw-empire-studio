@@ -224,6 +224,7 @@ export function registerTaskCrudRoutes(deps: TaskCrudRouteDeps): void {
       }
     }
 
+    try {
     db.prepare(
       `
     INSERT INTO tasks (
@@ -259,6 +260,17 @@ export function registerTaskCrudRoutes(deps: TaskCrudRouteDeps): void {
       t,
       t,
     );
+    } catch (err: any) {
+      const msg = err?.message ?? String(err);
+      if (msg.includes("FOREIGN KEY constraint failed")) {
+        return res.status(400).json({
+          error: "invalid_reference",
+          message: "department_id, assigned_agent_id, or project_id references a non-existent record. Please verify these IDs exist.",
+        });
+      }
+      throw err;
+    }
+
     recordTaskCreationAudit({
       taskId: id,
       taskTitle: title,

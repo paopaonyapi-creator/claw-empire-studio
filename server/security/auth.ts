@@ -242,7 +242,8 @@ export function installSecurityMiddleware(app: Express): void {
   app.get("/api/auth/session", (req, res) => {
     const bearer = bearerToken(req);
     const hasBearerAuth = bearer === SESSION_AUTH_TOKEN;
-    if (!isLoopbackRequest(req) && !hasBearerAuth) {
+    const hasRbacAuth = !hasBearerAuth && isValidRbacToken(bearer);
+    if (!isLoopbackRequest(req) && !hasBearerAuth && !hasRbacAuth) {
       return res.status(401).json({ error: "unauthorized" });
     }
     issueSessionCookie(req, res);
