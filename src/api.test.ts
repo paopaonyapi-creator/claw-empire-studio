@@ -182,26 +182,19 @@ describe("api client", () => {
     expect(String(headerKey)).toMatch(/^ceo-message-/);
   });
 
-  it("bootstrapSession은 401에서 prompt 입력 토큰으로 재시도한다", async () => {
+  it("bootstrapSession은 prompt가 비활성화되어 401에서 false를 반환한다", async () => {
     const fetchMock = vi.fn();
-    fetchMock.mockResolvedValueOnce(jsonResponse({ error: "unauthorized" }, 401)).mockResolvedValueOnce(
-      jsonResponse(
-        {
-          ok: true,
-        },
-        200,
-      ),
-    );
+    fetchMock.mockResolvedValueOnce(jsonResponse({ error: "unauthorized" }, 401));
     vi.stubGlobal("fetch", fetchMock as unknown as typeof fetch);
-    vi.spyOn(window, "prompt").mockReturnValue("  refreshed-token  ");
 
     const api = await import("./api");
     const ok = await api.bootstrapSession({ promptOnUnauthorized: true });
 
-    expect(ok).toBe(true);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(window.sessionStorage.getItem("claw_api_auth_token")).toBe("refreshed-token");
+    // promptForApiAuthToken is disabled (returns ""), so bootstrap fails
+    expect(ok).toBe(false);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
+
 
   it("세션 부트스트랩 csrf 토큰을 저장하고 mutation 요청에 헤더를 붙인다", async () => {
     const fetchMock = vi.fn();
