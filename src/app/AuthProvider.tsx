@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { LoginPage } from "../components/LoginPage";
+import { setApiAuthToken } from "../api/core";
 
 interface AuthUser {
   id: string;
@@ -34,6 +35,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
   const [checking, setChecking] = useState(true);
 
+  // Sync auth token into the API core layer (sessionStorage) on every token change
+  // This bridges localStorage["auth_token"] ↔ sessionStorage["claw_api_auth_token"]
+  useEffect(() => {
+    setApiAuthToken(token ?? undefined);
+  }, [token]);
+
   // Verify token on mount
   useEffect(() => {
     if (!token) { setChecking(false); return; }
@@ -66,6 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     setToken(null);
     setUser(null);
+    setApiAuthToken(undefined);
     localStorage.removeItem("auth_token");
     localStorage.removeItem("auth_user");
   }, [token]);
@@ -73,6 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLogin = useCallback((newToken: string, newUser: AuthUser) => {
     setToken(newToken);
     setUser(newUser);
+    setApiAuthToken(newToken);
   }, []);
 
   const contextValue = useMemo(() => ({
